@@ -44,6 +44,8 @@ extension ReaderTests {
             reader.splitController.splitView.setPosition(width, ofDividerAt: 0)
             reader.window?.contentView?.layoutSubtreeIfNeeded()
             try await Task.sleep(nanoseconds: 100_000_000)
+            if width < 200 { XCTAssertLessThanOrEqual(sidebar.view.bounds.width, 190, "The divider must actually shrink the pane") }
+            else { XCTAssertGreaterThanOrEqual(sidebar.view.bounds.width, 300) }
             let frames = segmentFrames(control.accessibilityChildren() ?? [])
             print("LEAFLIT_SEGMENTS pane=\(sidebar.view.bounds.width) frame=\(control.frame) bounds=\(control.bounds) widths=\(control.width(forSegment: 0)),\(control.width(forSegment: 1)) AX=\(frames)")
             XCTAssertLessThanOrEqual(control.frame.maxX, sidebar.view.bounds.width)
@@ -55,6 +57,17 @@ extension ReaderTests {
                 XCTAssertLessThanOrEqual(frame.maxX, control.accessibilityFrame().maxX + 1)
             }
         }
+    }
+
+    func testScrollDuringInitialPausedFrameWaitIsPreserved() async throws {
+        try await loaded("# Initial")
+        let previous = reader.completedRevision
+        _ = try await js("window.requestAnimationFrame = () => 0; window.cancelAnimationFrame = () => {}; return true")
+        reader.open(try write("# Long\n\n" + String(repeating: "A paragraph to keep reading.\n\n", count: 100)))
+        _ = try await js("for(let n=0;n<100 && document.querySelector('h1')?.textContent !== 'Long';n++) await new Promise(resolve=>setTimeout(resolve,10)); await new Promise(resolve=>setTimeout(resolve,75)); scrollTo(0,1200); return scrollY")
+        try await wait({ self.reader.completedRevision > previous }, seconds: 3)
+        let y = try await js("return scrollY") as? Double ?? 0
+        XCTAssertGreaterThan(y, 1000, "Completion must preserve scrolling during the first frame wait")
     }
 
     func testFindAndRecoveryActionsFitMinimumWindowWidth() async throws {
