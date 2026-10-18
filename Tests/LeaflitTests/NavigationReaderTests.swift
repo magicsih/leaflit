@@ -5,6 +5,82 @@ import LeaflitCore
 
 @MainActor
 extension ReaderTests {
+    private func fileRow(_ name: String) -> Int? {
+        let list = reader.sidebar.filesView
+        return (0..<list.numberOfRows).first { (list.view(atColumn: 0, row: $0, makeIfNecessary: true) as? NSTableCellView)?.textField?.stringValue == name }
+    }
+    private func sidebarViews(_ view: NSView) -> [NSView] { [view] + view.subviews.flatMap(sidebarViews) }
+
+    func testReexpandedFolderRefreshesChangesMadeWhileCollapsed() async throws {
+        let nested = dir.appendingPathComponent("Guides")
+        try FileManager.default.createDirectory(at: nested, withIntermediateDirectories: true)
+        try "# Old".write(to: nested.appendingPathComponent("old.md"), atomically: true, encoding: .utf8)
+        reader.sidebar.chooseFolder(dir)
+        try await wait { self.fileRow("Guides") != nil }
+        let list = reader.sidebar.filesView
+        let folder = try XCTUnwrap(list.item(atRow: try XCTUnwrap(fileRow("Guides"))))
+        list.expandItem(folder)
+        try await wait { self.fileRow("old.md") != nil }
+        list.collapseItem(folder)
+        try "# New".write(to: nested.appendingPathComponent("new.md"), atomically: true, encoding: .utf8)
+        try await Task.sleep(nanoseconds: 180_000_000)
+        list.expandItem(folder)
+        try await wait { self.fileRow("new.md") != nil }
+    }
+
+    func testOtherDirectoryRefreshPreservesOutstandingFolderErrorAndRetry() async throws {
+        let a = dir.appendingPathComponent("A"), b = dir.appendingPathComponent("B")
+        for folder in [a, b] { try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true) }
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: a.path) }
+        try "# A".write(to: a.appendingPathComponent("a.md"), atomically: true, encoding: .utf8)
+        try "# B".write(to: b.appendingPathComponent("b.md"), atomically: true, encoding: .utf8)
+        reader.sidebar.chooseFolder(dir)
+        try await wait { self.fileRow("A") != nil && self.fileRow("B") != nil }
+        let list = reader.sidebar.filesView
+        list.expandItem(list.item(atRow: try XCTUnwrap(fileRow("A"))))
+        list.expandItem(list.item(atRow: try XCTUnwrap(fileRow("B"))))
+        try await wait { self.fileRow("a.md") != nil && self.fileRow("b.md") != nil }
+        try FileManager.default.setAttributes([.posixPermissions: 0], ofItemAtPath: a.path)
+        XCTAssertThrowsError(try FolderTree(root: dir).entries(in: a))
+        func hasError() -> Bool { sidebarViews(reader.sidebar.view).compactMap { $0 as? NSTextField }.contains { $0.stringValue == "Could not read A." } }
+        try await wait { hasError() }
+        try "# Added".write(to: b.appendingPathComponent("added.md"), atomically: true, encoding: .utf8)
+        try await wait { self.fileRow("added.md") != nil }
+        XCTAssertTrue(hasError())
+        let retry = try XCTUnwrap(sidebarViews(reader.sidebar.view).compactMap { $0 as? NSButton }.first { $0.title == "Retry" })
+        XCTAssertFalse(retry.isHiddenOrHasHiddenAncestor)
+        try FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: a.path)
+        retry.performClick(nil)
+        try await wait { !hasError() && self.fileRow("a.md") != nil }
+    }
+
+    func testFilesRevalidateAfterAsyncPositionAndRestoreRejectedSelection() async throws {
+        let root = dir.appendingPathComponent("Root")
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        let first = root.appendingPathComponent("first.md"), next = root.appendingPathComponent("next.md")
+        let outside = try write("# Outside", name: "outside.md")
+        try "# First".write(to: first, atomically: true, encoding: .utf8)
+        try "# Next".write(to: next, atomically: true, encoding: .utf8)
+        reader.open(first); try await wait { self.reader.completedRevision > 0 }
+        reader.sidebar.chooseFolder(root); try await wait { self.fileRow("next.md") != nil }
+        let list = reader.sidebar.filesView
+        var activatedExisting = false
+        reader.canNavigate = { _ in activatedExisting = true; return false }
+        list.selectRowIndexes(IndexSet(integer: try XCTUnwrap(fileRow("next.md"))), byExtendingSelection: false)
+        XCTAssertTrue(activatedExisting)
+        XCTAssertEqual(list.selectedRow, fileRow("first.md"))
+        reader.canNavigate = nil
+        _ = try await js("window.Leaflit.position = async () => { await new Promise(resolve => setTimeout(resolve, 250)); return {y:0}; }; return true")
+        list.selectRowIndexes(IndexSet(integer: try XCTUnwrap(fileRow("next.md"))), byExtendingSelection: false)
+        try FileManager.default.removeItem(at: next)
+        try FileManager.default.createSymbolicLink(at: next, withDestinationURL: outside)
+        try await Task.sleep(nanoseconds: 500_000_000)
+        XCTAssertEqual(reader.documentURL, DocumentPath.canonical(first))
+        try await assertJS("return document.querySelector('h1').textContent", "First")
+        XCTAssertThrowsError(try FolderDocumentReader.read(next, within: FolderTree(root: root)))
+        XCTAssertEqual(try FolderDocumentReader.read(first, within: FolderTree(root: root)).text, "# First")
+    }
+
     func testSidebarModesPreserveBodyAndNativeOutlineNavigates() async throws {
         let text = "# Hello **world**\n\n" + (0..<70).map { "## Section \($0)\n\nA paragraph to read.\n\n" }.joined() + "## 한글 😀\n\n## 한글 😀"
         let url = try write(text); let before = try Data(contentsOf: url)

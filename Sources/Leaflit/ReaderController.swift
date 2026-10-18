@@ -18,7 +18,8 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
     private var ready = false
     private var watcher: FileWatcher?
     private var reading: Task<Void, Never>?
-    private var history: [(URL, [String: Any])] = []
+    private var history: [(URL, [String: Any], FolderTree?)] = []
+    private var documentScope: FolderTree?
     private var pendingLocation: [String: Any]?
     private var lastText: String?
     private let search = NSSearchField()
@@ -59,7 +60,10 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         window.title = "Leaflit"; window.minSize = NSSize(width: 480, height: 340); window.center(); window.delegate = self
         window.isReleasedWhenClosed = false
         setupLayout(); setupToolbar()
-        sidebar.onFileSelected = { [weak self] in self?.navigate(to: $0) }
+        sidebar.onFileSelected = { [weak self] url in
+            guard let self, let folder = self.sidebar.folder else { return }
+            self.navigate(to: url, within: folder)
+        }
         sidebar.onHeadingSelected = { [weak self] id in
             guard let self, self.displayedRevision == self.revision.current else { return }
             self.webView.callAsyncJavaScript("window.Leaflit.anchor(value)", arguments: ["value": id], in: nil, in: .page) { _ in }
@@ -150,8 +154,10 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         item.image = NSImage(systemSymbolName: symbol, accessibilityDescription: label)
         return item
     }
-    func open(_ url: URL, location: [String: Any]? = nil) {
+    func open(_ url: URL, location: [String: Any]? = nil, within folder: FolderTree? = nil) {
+        guard folder?.canOpen(url) != false else { showError("This file is no longer available in the selected folder."); return }
         navigationSerial += 1
+        documentScope = folder
         documentURL = DocumentPath.canonical(url); pendingLocation = location
         requestedAt = Date()
         lastText = nil; watcher = nil
@@ -166,8 +172,9 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         let request = readRevision.next()
         let requestDate = preserve ? Date() : requestedAt
         let location = pendingLocation; pendingLocation = nil
+        let scope = documentScope
         reading = Task { [weak self] in
-            let result = await Task.detached(priority: .userInitiated) { Result { try DocumentSnapshot.read(url) } }.value
+            let result = await Task.detached(priority: .userInitiated) { Result { try FolderDocumentReader.read(url, within: scope) } }.value
             guard let self, !Task.isCancelled, self.readRevision.accepts(request) else { return }
             switch result {
             case .failure:
@@ -220,17 +227,18 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         case .blocked: NSSound.beep()
         }
     }
-    func navigate(to target: URL, anchor: String? = nil) {
-        let target = DocumentPath.canonical(target)
-        guard DocumentPath.isMarkdown(target), canNavigate?(target) != false else { return }
+    func navigate(to raw: URL, anchor: String? = nil, within folder: FolderTree? = nil) {
+        let target = DocumentPath.canonical(raw)
+        guard DocumentPath.isMarkdown(target), folder?.canOpen(raw) != false, canNavigate?(target) != false else { sidebar.setDocument(documentURL); return }
         if target == documentURL { if let anchor { navigate("#" + anchor) }; return }
-        guard let origin = documentURL, ready else { open(target, location: anchor.map { ["anchor": $0] }); return }
+        guard let origin = documentURL, ready else { open(raw, location: anchor.map { ["anchor": $0] }, within: folder); return }
         navigationSerial += 1; let request = navigationSerial
         webView.callAsyncJavaScript("return window.Leaflit.position()", arguments: [:], in: nil, in: .page) { [weak self] result in
             guard let self, self.navigationSerial == request, self.documentURL == origin else { return }
+            if let folder, (self.sidebar.folder?.root != folder.root || !folder.canOpen(raw)) { self.sidebar.setDocument(self.documentURL); return }
             let location = (try? result.get()) as? [String: Any] ?? [:]
-            self.history.append((origin, location)); self.back.isEnabled = true
-            self.open(target, location: anchor.map { ["anchor": $0] })
+            self.history.append((origin, location, self.documentScope)); self.back.isEnabled = true
+            self.open(raw, location: anchor.map { ["anchor": $0] }, within: folder)
         }
     }
     @objc func toggleSidebar() {
@@ -269,8 +277,8 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
     }
     @objc func openPanel() { (NSApp.delegate as? AppDelegate)?.openPanel(nil) }
     @objc func goBack() {
-        guard let (url, location) = history.popLast() else { return }
-        back.isEnabled = !history.isEmpty; open(url, location: location)
+        guard let (url, location, scope) = history.popLast() else { return }
+        back.isEnabled = !history.isEmpty; open(url, location: location, within: scope)
     }
     @objc func showFind() { findBar.isHidden = false; window?.makeFirstResponder(search) }
     override func cancelOperation(_ sender: Any?) { hideFind() }

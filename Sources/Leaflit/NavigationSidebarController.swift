@@ -31,6 +31,7 @@ final class NavigationSidebarController: NSViewController, NSOutlineViewDataSour
     private var nodes: [URL: FileNode] = [:]
     private var directoryTasks: [URL: Task<Void, Never>] = [:]
     private var directoryWatchers: [URL: FileWatcher] = [:]
+    private var directoryErrors: [URL: String] = [:]
     private var generation = 0
     private var documentURL: URL?
     private var outline = HeadingOutline([])
@@ -50,7 +51,7 @@ final class NavigationSidebarController: NSViewController, NSOutlineViewDataSour
     override func loadView() {
         let background = NSVisualEffectView(); background.material = .sidebar; background.blendingMode = .behindWindow
         view = background
-        modeControl.target = self; modeControl.action = #selector(changeMode)
+        modeControl.target = self; modeControl.action = #selector(sidebarModeChanged)
         modeControl.identifier = .init("sidebarMode"); modeControl.setAccessibilityLabel("Sidebar mode")
         modeControl.setToolTip("Browse files", forSegment: 0); modeControl.setToolTip("Navigate document headings", forSegment: 1)
         modeControl.segmentDistribution = .fillEqually
@@ -76,6 +77,7 @@ final class NavigationSidebarController: NSViewController, NSOutlineViewDataSour
         list.addTableColumn(column); list.outlineTableColumn = column; list.headerView = nil
         list.dataSource = self; list.delegate = self; list.rowSizeStyle = .default
         list.style = .sourceList; list.floatsGroupRows = false; list.columnAutoresizingStyle = .lastColumnOnlyAutoresizingStyle
+        list.autoresizingMask = [.width]
         list.setAccessibilityLabel(label); list.identifier = .init(label == "Markdown files" ? "filesTree" : "documentOutline")
     }
     private func buildPanel(_ panel: NSView, name: NSTextField, list: NSOutlineView, status: NSTextField, actions: [NSView]) {
@@ -92,7 +94,7 @@ final class NavigationSidebarController: NSViewController, NSOutlineViewDataSour
             status.topAnchor.constraint(equalTo: scroll.bottomAnchor, constant: 8), status.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 12), status.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -12), status.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -12)
         ])
     }
-    @objc private func changeMode() { setMode(modeControl.selectedSegment == 0 ? .files : .outline) }
+    @objc private func sidebarModeChanged() { setMode(modeControl.selectedSegment == 0 ? .files : .outline) }
     func setMode(_ mode: Mode) {
         self.mode = mode; preferences.set(mode.rawValue, forKey: "sidebar.mode")
         _ = view; displayMode(); onModeChanged?()
@@ -110,7 +112,7 @@ final class NavigationSidebarController: NSViewController, NSOutlineViewDataSour
         }
     }
     func chooseFolder(_ url: URL) {
-        _ = view; cancelDirectoryWork(); generation += 1
+        _ = view; cancelDirectoryWork(); directoryErrors.removeAll(); generation += 1
         let tree = FolderTree(root: url); folder = tree
         let root = FileNode(url: tree.root, name: tree.root.lastPathComponent, isDirectory: true)
         rootNode = root; nodes = [tree.root: root]
@@ -119,7 +121,7 @@ final class NavigationSidebarController: NSViewController, NSOutlineViewDataSour
     }
     @objc private func retryFolder() {
         guard let root = rootNode else { return }
-        for node in nodes.values where node === root || filesView.isItemExpanded(node) { refresh(node) }
+        for node in nodes.values where node === root || filesView.isItemExpanded(node) || directoryErrors[node.url] != nil { refresh(node) }
     }
     private func refresh(_ node: FileNode) {
         guard let tree = folder else { return }
@@ -139,12 +141,10 @@ final class NavigationSidebarController: NSViewController, NSOutlineViewDataSour
                     if let existing = previous[entry.url], existing.isDirectory == entry.isDirectory { return existing }
                     return FileNode(url: entry.url, name: entry.name, isDirectory: entry.isDirectory)
                 }
-                self.retryButton.isHidden = true
-                self.fileStatus.stringValue = ""
+                self.directoryErrors[node.url] = nil
             case .failure:
                 node.children = []
-                self.fileStatus.stringValue = node === self.rootNode ? "Folder unavailable" : "Could not read \(node.name)."
-                self.retryButton.isHidden = false
+                self.directoryErrors[node.url] = node === self.rootNode ? "Folder unavailable" : "Could not read \(node.name)."
             }
             self.reindexNodes()
             self.adjustingSelection = true
@@ -155,7 +155,7 @@ final class NavigationSidebarController: NSViewController, NSOutlineViewDataSour
             self.adjustingSelection = false
             self.rebuildWatchers(); self.updateFileSelection()
             if self.revealingDocument { self.revealDocument() }
-            if node === self.rootNode, node.children?.isEmpty == true, self.retryButton.isHidden { self.fileStatus.stringValue = "No Markdown files" }
+            self.updateFileStatus()
         }
     }
     private func reindexNodes() {
@@ -164,6 +164,7 @@ final class NavigationSidebarController: NSViewController, NSOutlineViewDataSour
         if let root = rootNode { add(root) }
         for (url, task) in directoryTasks where reachable[url] == nil { task.cancel(); directoryTasks[url] = nil }
         nodes = reachable
+        directoryErrors = directoryErrors.filter { reachable[$0.key] != nil }
     }
     private func rebuildWatchers() {
         guard let root = rootNode else { directoryWatchers.removeAll(); return }
@@ -206,8 +207,15 @@ final class NavigationSidebarController: NSViewController, NSOutlineViewDataSour
         if let documentURL, let node = nodes[documentURL], filesView.row(forItem: node) >= 0 {
             filesView.selectRowIndexes(IndexSet(integer: filesView.row(forItem: node)), byExtendingSelection: false)
         } else { filesView.deselectAll(nil) }
-        if let documentURL, let folder, !folder.contains(documentURL) { fileStatus.stringValue = "Outside selected folder" }
-        else if rootNode?.children?.isEmpty == false, retryButton.isHidden { fileStatus.stringValue = "" }
+        updateFileStatus()
+    }
+    private func updateFileStatus() {
+        retryButton.isHidden = directoryErrors.isEmpty
+        if let error = folder.flatMap({ directoryErrors[$0.root] }) ?? directoryErrors.sorted(by: { $0.key.path < $1.key.path }).first?.value { fileStatus.stringValue = error }
+        else if let documentURL, let folder, !folder.contains(documentURL) { fileStatus.stringValue = "Outside selected folder" }
+        else if rootNode == nil { fileStatus.stringValue = "Choose a folder to browse Markdown files." }
+        else if rootNode?.children == nil { fileStatus.stringValue = "Loading…" }
+        else { fileStatus.stringValue = rootNode?.children?.isEmpty == true ? "No Markdown files" : "" }
     }
     func setHeadings(_ headings: [DocumentHeading]) {
         _ = view; self.headings = headings; outline = HeadingOutline(headings)
@@ -269,7 +277,7 @@ final class NavigationSidebarController: NSViewController, NSOutlineViewDataSour
         } else if list === outlineView, let node = list.item(atRow: list.selectedRow) as? HeadingNode { onHeadingSelected?(node.heading.id) }
     }
     func outlineViewItemWillExpand(_ notification: Notification) {
-        if let node = notification.userInfo?["NSObject"] as? FileNode, node.children == nil { refresh(node) }
+        if let node = notification.userInfo?["NSObject"] as? FileNode { refresh(node) }
     }
     func outlineViewItemDidExpand(_ notification: Notification) {
         if let node = notification.userInfo?["NSObject"] as? HeadingNode, !adjustingSelection { collapsedHeadings.remove(node.heading.id) }

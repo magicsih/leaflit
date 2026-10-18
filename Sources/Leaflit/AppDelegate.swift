@@ -3,6 +3,7 @@ import UniformTypeIdentifiers
 import LeaflitCore
 
 @main
+@MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private(set) var readers: [ReaderController] = []
     static func main() {

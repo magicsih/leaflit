@@ -52,7 +52,7 @@ function failure(node, source, kind) {
 }
 window.Leaflit = {
   position,
-  setOutlineEnabled(value) { outlineEnabled = value === true; trackOutline(); },
+  setOutlineEnabled(value) { const enabled = value === true; if (enabled === outlineEnabled) return; outlineEnabled = enabled; trackOutline(); },
   anchor(value) { document.getElementById(value)?.scrollIntoView(); },
   async render(payload) {
     current = payload.revision;
