@@ -11,5 +11,5 @@ cask "leaflit" do
   depends_on macos: :sonoma
 
   app "Leaflit-#{version}/Leaflit.app"
-  binary "#{appdir}/Leaflit.app/Contents/Helpers/leaflit"
+  binary "#{appdir}/Leaflit.app/Contents/Resources/leaflit"
 end

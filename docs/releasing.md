@@ -24,7 +24,9 @@ python3 scripts/package-release.py prepare \
   --identity "$LEAFLIT_SIGN_IDENTITY" --team-id "$LEAFLIT_TEAM_ID"
 ```
 
-Preparation creates a new output directory, copies the verified app, bundles the launcher under `Contents/Helpers`, signs nested code before the outer app with hardened runtime, verifies the signature, and creates `build/releases/0.1.0/notarization-upload.zip`. It refuses an existing output directory rather than overwrite a previous candidate.
+Preparation creates a new output directory, copies the verified app, bundles the launcher under `Contents/Resources`, signs nested code before the outer app with hardened runtime, verifies the signature, and creates `build/releases/0.1.0/notarization-upload.zip`. It refuses an existing output directory rather than overwrite a previous candidate.
+
+The shell launcher belongs in Resources so its signature is sealed as a resource and survives archive transfer. See [Apple's code signing guidance](https://developer.apple.com/library/archive/technotes/tn2206/). The packaging integration test signs and extracts a temporary app to verify this boundary without a private signing identity.
 
 Submit that upload with the existing Apple API authorization. The following variables refer to the registered key file and its public identifiers; do not put their private contents in commands or logs.
 

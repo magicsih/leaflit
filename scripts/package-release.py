@@ -57,6 +57,14 @@ def signature(app, team_id):
     return details
 
 
+def bundle_launcher(app):
+    helper = app / 'Contents/Resources/leaflit'
+    helper.parent.mkdir(exist_ok=True)
+    shutil.copy2(ROOT / 'scripts/leaflit', helper)
+    helper.chmod(0o755)
+    return helper
+
+
 def prepare(args):
     source_sha = run('git', 'rev-parse', 'HEAD').strip()
     if run('git', 'status', '--porcelain').strip():
@@ -82,16 +90,13 @@ def prepare(args):
     payload.mkdir()
     app = payload / 'Leaflit.app'
     run('/usr/bin/ditto', source, app)
-    helper = app / 'Contents/Helpers/leaflit'
-    helper.parent.mkdir()
-    shutil.copy2(ROOT / 'scripts/leaflit', helper)
-    helper.chmod(0o755)
+    bundle_launcher(app)
     shutil.copy2(ROOT / 'scripts/leaflit', payload / 'leaflit')
     shutil.copy2(ROOT / 'LICENSE', payload / 'LICENSE')
     (payload / 'README.txt').write_text(
         'Leaflit 0.1.0 for Apple Silicon\n\n'
         'Move Leaflit.app to Applications and open it. Keep the standalone leaflit\n'
-        'launcher beside the app, or use the launcher inside Contents/Helpers.\n'
+        'launcher beside the app, or use the launcher inside Contents/Resources.\n'
         'Homebrew also installs the app and command:\n'
         '  brew install --cask magicsih/tap/leaflit\n\n'
         'Documentation and known limitations: https://github.com/magicsih/leaflit\n')
