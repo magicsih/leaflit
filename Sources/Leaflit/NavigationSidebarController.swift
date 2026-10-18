@@ -277,7 +277,8 @@ final class NavigationSidebarController: NSViewController, NSOutlineViewDataSour
         } else if list === outlineView, let node = list.item(atRow: list.selectedRow) as? HeadingNode { onHeadingSelected?(node.heading.id) }
     }
     func outlineViewItemWillExpand(_ notification: Notification) {
-        if let node = notification.userInfo?["NSObject"] as? FileNode { refresh(node) }
+        // Restoring expanded rows after a reload must not start another refresh.
+        if !adjustingSelection, let node = notification.userInfo?["NSObject"] as? FileNode { refresh(node) }
     }
     func outlineViewItemDidExpand(_ notification: Notification) {
         if let node = notification.userInfo?["NSObject"] as? HeadingNode, !adjustingSelection { collapsedHeadings.remove(node.heading.id) }
