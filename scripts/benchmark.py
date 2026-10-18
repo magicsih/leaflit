@@ -9,6 +9,7 @@ import datetime as dt
 import json
 import os
 from pathlib import Path
+import plistlib
 import queue
 import re
 import signal
@@ -18,7 +19,8 @@ import time
 
 root = Path(__file__).resolve().parent.parent
 parser = argparse.ArgumentParser()
-parser.add_argument('--app', type=Path, default=root / 'build/Leaflit-0.1.0/Leaflit.app')
+version = plistlib.loads((root / 'Sources/Leaflit/Info.plist').read_bytes())['CFBundleShortVersionString']
+parser.add_argument('--app', type=Path, default=root / f'build/Leaflit-{version}/Leaflit.app')
 parser.add_argument('--count', type=int, default=20)
 args = parser.parse_args()
 app = args.app.resolve()

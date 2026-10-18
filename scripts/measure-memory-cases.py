@@ -11,6 +11,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import plistlib
 import queue
 import signal
 import statistics
@@ -159,7 +160,8 @@ def samples(directory, phase, baseline, owned, pid, since):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--app', type=Path, default=ROOT / 'build/Leaflit-0.1.0/Leaflit.app')
+    version = plistlib.loads((ROOT / 'Sources/Leaflit/Info.plist').read_bytes())['CFBundleShortVersionString']
+    parser.add_argument('--app', type=Path, default=ROOT / f'build/Leaflit-{version}/Leaflit.app')
     parser.add_argument('--repeats', type=int, default=5)
     parser.add_argument('--resume', type=Path, help='Resume an incomplete output directory')
     parser.add_argument('--cases', nargs='+', choices=CASES, default=DEFAULT_CASES)
