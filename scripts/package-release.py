@@ -38,7 +38,7 @@ def validate_evidence(evidence, source_sha):
         raise ValueError('The complete release verification is missing')
     finished = dt.datetime.fromisoformat(evidence['finishedUTC'].replace('Z', '+00:00'))
     hours = (dt.datetime.now(dt.timezone.utc) - finished).total_seconds() / 3600
-    if not -.02 <= hours <= 168:
+    if not 0 <= hours <= 168:
         raise ValueError('Verification is stale or dated in the future')
 
 

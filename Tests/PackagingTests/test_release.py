@@ -26,9 +26,9 @@ class ReleaseGateTests(unittest.TestCase):
         with self.assertRaises(ValueError): release.validate_evidence(value, 'candidate')
 
     def test_rejects_stale_or_future_evidence(self):
-        for offset in [-169, 2]:
+        for seconds in [-169 * 3600, 2 * 3600, 30]:
             value = self.evidence()
-            value['finishedUTC'] = (dt.datetime.now(dt.timezone.utc) + dt.timedelta(hours=offset)).isoformat()
+            value['finishedUTC'] = (dt.datetime.now(dt.timezone.utc) + dt.timedelta(seconds=seconds)).isoformat()
             with self.assertRaises(ValueError): release.validate_evidence(value, 'candidate')
 
     def test_accepts_current_complete_evidence(self):
