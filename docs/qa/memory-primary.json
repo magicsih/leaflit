@@ -1,0 +1,4452 @@
+{
+  "startedAt": "2026-10-18T23:59:32.726171+09:00",
+  "app": {
+    "version": "0.1.0",
+    "sourceSHA": "8768530d030eca9b6e15c40b283d9e240296fd2c",
+    "architecture": "arm64",
+    "minimumOS": "14.0",
+    "binarySHA256": "e8a08c1690631337f49801d039a4ee11d3c93f60d9eb371b7515578bae82cce7",
+    "signing": "ad-hoc, no Developer ID or notarization"
+  },
+  "macOS": "26.6.2",
+  "hardware": "Mac15,13",
+  "architecture": "arm64",
+  "hostMemoryAtStart": "The system has 25769803776 (1572864 pages with a page size of 16384).\nSystem-wide memory free percentage: 37%",
+  "repeats": 5,
+  "settleSeconds": 15,
+  "closeDelaySeconds": 5,
+  "lateCloseDelaySeconds": 30,
+  "fixtures": {
+    "plain": {
+      "bytes": 102400,
+      "sha256": "95a3149702d6f994b3de166f4138df429c5ea55db4b0ebf03d4b41a8087b683f"
+    },
+    "math": {
+      "bytes": 102400,
+      "sha256": "fe3e052413110ae5dd3ea8f1b2a3a0a4a7433531c0b54e6a7b514d5bdc952e6d"
+    },
+    "mermaid": {
+      "bytes": 102400,
+      "sha256": "6b2e6ed84c63156ebbf6c97cf98ab0460761fca0a55ebf0679727802078e903e"
+    },
+    "combined": {
+      "bytes": 102400,
+      "sha256": "55464dacf92db737fbec845a17723c38da683d0fcef0b52d994a0040edff7f61"
+    }
+  },
+  "attribution": "Fresh app and new WebKit PIDs relative to the pre-launch baseline. Abort on unrelated new app/WebKit PIDs. No concurrent UI automation.",
+  "runs": [
+    {
+      "repeat": 1,
+      "case": "empty",
+      "renderCompleteEvent": null,
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 54.736961364746094,
+            "rssSumMiB": 142.875,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.42279052734375
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 13.031936645507812
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 6.54742431640625
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.000434875488281
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.325181082997005
+          },
+          {
+            "footprintMiB": 54.752586364746094,
+            "rssSumMiB": 142.953125,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.43841552734375
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 13.031936645507812
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 6.54742431640625
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.000434875488281
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.03200491698226
+          },
+          {
+            "footprintMiB": 54.752586364746094,
+            "rssSumMiB": 142.953125,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.43841552734375
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 13.031936645507812
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 6.54742431640625
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.000434875488281
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.680914749973454
+          }
+        ],
+        "medianMiB": 54.752586364746094
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 54.440086364746094,
+            "rssSumMiB": 135.65625,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.59466552734375
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 12.547561645507812
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 6.50054931640625
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.062934875488281
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 5.721598833042663
+          },
+          {
+            "footprintMiB": 54.471336364746094,
+            "rssSumMiB": 130.5625,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.62591552734375
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 12.547561645507812
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 6.50054931640625
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.062934875488281
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.748807416006457
+          },
+          {
+            "footprintMiB": 54.486961364746094,
+            "rssSumMiB": 129.1875,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.64154052734375
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 12.547561645507812
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 6.50054931640625
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.062934875488281
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 7.47703058301704
+          }
+        ],
+        "medianMiB": 54.471336364746094
+      }
+    },
+    {
+      "repeat": 1,
+      "case": "plain",
+      "renderCompleteEvent": "display phase=complete ms=1065.737009",
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 109.97195434570312,
+            "rssSumMiB": 109.546875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 60.37596130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.95404052734375
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.860221862792969
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.031730651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.775971625000238
+          },
+          {
+            "footprintMiB": 109.89382934570312,
+            "rssSumMiB": 109.828125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 60.37596130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.95404052734375
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.782096862792969
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.031730651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.609586459002458
+          },
+          {
+            "footprintMiB": 109.80007934570312,
+            "rssSumMiB": 109.4375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 60.37596130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.86029052734375
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.782096862792969
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.031730651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 17.5610286250012
+          }
+        ],
+        "medianMiB": 109.89382934570312
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 109.22195434570312,
+            "rssSumMiB": 123.921875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 60.31346130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.39154052734375
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.719596862792969
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.047355651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 5.640728791011497
+          },
+          {
+            "footprintMiB": 109.22195434570312,
+            "rssSumMiB": 123.921875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 60.31346130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.39154052734375
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.719596862792969
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.047355651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.34647758299252
+          },
+          {
+            "footprintMiB": 109.22195434570312,
+            "rssSumMiB": 124.1875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 60.31346130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.39154052734375
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.719596862792969
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.047355651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 7.129127833002713
+          }
+        ],
+        "medianMiB": 109.22195434570312
+      }
+    },
+    {
+      "repeat": 1,
+      "case": "math",
+      "renderCompleteEvent": "display phase=complete ms=2754.717946",
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 113.31563568115234,
+            "rssSumMiB": 221.828125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 63.657188415527344
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.079086303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.766403198242188
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.078582763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.400413124996703
+          },
+          {
+            "footprintMiB": 113.31563568115234,
+            "rssSumMiB": 221.890625,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 63.657188415527344
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.079086303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.766403198242188
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.078582763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.138152666040696
+          },
+          {
+            "footprintMiB": 113.31563568115234,
+            "rssSumMiB": 221.890625,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 63.657188415527344
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.079086303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.766403198242188
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.078582763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.938211791042704
+          }
+        ],
+        "medianMiB": 113.31563568115234
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 113.55001068115234,
+            "rssSumMiB": 134.9375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 63.719688415527344
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.297836303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.735153198242188
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.062957763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 5.799263333959971
+          },
+          {
+            "footprintMiB": 113.48751068115234,
+            "rssSumMiB": 133.375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 63.719688415527344
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.297836303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.672653198242188
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.062957763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.611531083995942
+          },
+          {
+            "footprintMiB": 113.48751068115234,
+            "rssSumMiB": 133.34375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 63.719688415527344
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.297836303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.672653198242188
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.062957763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 7.364821499970276
+          }
+        ],
+        "medianMiB": 113.48751068115234
+      }
+    },
+    {
+      "repeat": 1,
+      "case": "mermaid",
+      "renderCompleteEvent": "display phase=complete ms=995.727062",
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 117.28440856933594,
+            "rssSumMiB": 298.671875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 69.78221130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.28216552734375
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 12.266448974609375
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.219207763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.278997499961406
+          },
+          {
+            "footprintMiB": 117.25315856933594,
+            "rssSumMiB": 298.640625,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 69.78221130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.28216552734375
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 12.250823974609375
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.203582763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.956521624990273
+          },
+          {
+            "footprintMiB": 117.25315856933594,
+            "rssSumMiB": 298.640625,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 69.78221130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.28216552734375
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 12.250823974609375
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.203582763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.634068290994037
+          }
+        ],
+        "medianMiB": 117.25315856933594
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 125.94065856933594,
+            "rssSumMiB": 215.109375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 75.46971130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.59466552734375
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.110198974609375
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.031707763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 5.852888708002865
+          },
+          {
+            "footprintMiB": 125.76878356933594,
+            "rssSumMiB": 215.03125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 75.37596130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.59466552734375
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.032073974609375
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.031707763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.64507358300034
+          },
+          {
+            "footprintMiB": 125.73753356933594,
+            "rssSumMiB": 215.03125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 75.36033630371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.59466552734375
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.016448974609375
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.031707763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 7.364054667006712
+          }
+        ],
+        "medianMiB": 125.76878356933594
+      }
+    },
+    {
+      "repeat": 1,
+      "case": "combined",
+      "renderCompleteEvent": "display phase=complete ms=1127.804041",
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 128.45626068115234,
+            "rssSumMiB": 237.78125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 78.70410919189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.485336303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.500732421875
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.031707763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.552728459006175
+          },
+          {
+            "footprintMiB": 128.37813568115234,
+            "rssSumMiB": 232.734375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 78.62598419189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.485336303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.500732421875
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.031707763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.39630354201654
+          },
+          {
+            "footprintMiB": 128.40938568115234,
+            "rssSumMiB": 228.703125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 78.62598419189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.516586303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.500732421875
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.031707763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 17.24892208405072
+          }
+        ],
+        "medianMiB": 128.40938568115234
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 132.37815856933594,
+            "rssSumMiB": 223.46875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 82.32910919189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.76660919189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.500732421875
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.047332763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 5.545293165952899
+          },
+          {
+            "footprintMiB": 132.14378356933594,
+            "rssSumMiB": 223.453125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 82.14160919189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.73535919189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.485107421875
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.047332763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.238653290958609
+          },
+          {
+            "footprintMiB": 131.87815856933594,
+            "rssSumMiB": 223.453125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 81.89160919189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.73535919189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.469482421875
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.047332763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.942767207976431
+          }
+        ],
+        "medianMiB": 132.14378356933594
+      }
+    },
+    {
+      "repeat": 2,
+      "case": "plain",
+      "renderCompleteEvent": "display phase=complete ms=1095.575929",
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 168.94065856933594,
+            "rssSumMiB": 152.828125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 69.62577819824219
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 63.532188415527344
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.047836303710938
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.000480651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.482580250012688
+          },
+          {
+            "footprintMiB": 178.00318145751953,
+            "rssSumMiB": 153.75,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 77.07892608642578
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 65.26656341552734
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.938461303710938
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.984855651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.127833375008777
+          },
+          {
+            "footprintMiB": 177.80005645751953,
+            "rssSumMiB": 153.75,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 77.03205108642578
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 65.20406341552734
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.844711303710938
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.984855651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.768763417028822
+          }
+        ],
+        "medianMiB": 177.80005645751953
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 112.73755645751953,
+            "rssSumMiB": 156.828125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 63.235313415527344
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.985336303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.750801086425781
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.031730651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 5.484683041984681
+          },
+          {
+            "footprintMiB": 112.61255645751953,
+            "rssSumMiB": 156.90625,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 63.188438415527344
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.907211303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.750801086425781
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.031730651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.135053000005428
+          },
+          {
+            "footprintMiB": 112.61255645751953,
+            "rssSumMiB": 156.921875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 63.188438415527344
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.907211303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.750801086425781
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.031730651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.782467374985572
+          }
+        ],
+        "medianMiB": 112.61255645751953
+      }
+    },
+    {
+      "repeat": 2,
+      "case": "math",
+      "renderCompleteEvent": "display phase=complete ms=851.629972",
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 111.92507934570312,
+            "rssSumMiB": 206.84375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 63.87598419189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.20410919189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.110153198242188
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.000457763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.23693633399671
+          },
+          {
+            "footprintMiB": 111.90945434570312,
+            "rssSumMiB": 205.96875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 63.87598419189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.20410919189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.110153198242188
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.984832763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.884983374970034
+          },
+          {
+            "footprintMiB": 111.90945434570312,
+            "rssSumMiB": 205.96875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 63.87598419189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.20410919189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.110153198242188
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.984832763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.530491916986648
+          }
+        ],
+        "medianMiB": 111.90945434570312
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 116.37822723388672,
+            "rssSumMiB": 209.078125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 67.50098419189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.516632080078125
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.578903198242188
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.047332763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 5.493478833988775
+          },
+          {
+            "footprintMiB": 116.31572723388672,
+            "rssSumMiB": 209.09375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 67.48535919189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.469757080078125
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.578903198242188
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.047332763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.111352875013836
+          },
+          {
+            "footprintMiB": 116.31572723388672,
+            "rssSumMiB": 209.109375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 67.48535919189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.469757080078125
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.578903198242188
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.047332763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.735007542010862
+          }
+        ],
+        "medianMiB": 116.31572723388672
+      }
+    },
+    {
+      "repeat": 2,
+      "case": "mermaid",
+      "renderCompleteEvent": "display phase=complete ms=745.253921",
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 124.75304412841797,
+            "rssSumMiB": 186.265625,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 75.26656341552734
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.56341552734375
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.188255310058594
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.000434875488281
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.39347595802974
+          },
+          {
+            "footprintMiB": 124.70616912841797,
+            "rssSumMiB": 186.25,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 75.26656341552734
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.53216552734375
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.188255310058594
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.984809875488281
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.249301125004422
+          },
+          {
+            "footprintMiB": 125.62804412841797,
+            "rssSumMiB": 188.21875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 75.32906341552734
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.36029052734375
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.219505310058594
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.984809875488281
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 17.057410833018366
+          }
+        ],
+        "medianMiB": 124.75304412841797
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 125.03429412841797,
+            "rssSumMiB": 195.40625,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 75.25093841552734
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.65716552734375
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.391380310058594
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.000434875488281
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 5.738250791968312
+          },
+          {
+            "footprintMiB": 124.95616912841797,
+            "rssSumMiB": 195.359375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 75.25093841552734
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.59466552734375
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.375755310058594
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.000434875488281
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.433417499996722
+          },
+          {
+            "footprintMiB": 124.86241912841797,
+            "rssSumMiB": 195.359375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 75.15718841552734
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.59466552734375
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.375755310058594
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.000434875488281
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 7.126055582950357
+          }
+        ],
+        "medianMiB": 124.95616912841797
+      }
+    },
+    {
+      "repeat": 2,
+      "case": "combined",
+      "renderCompleteEvent": "display phase=complete ms=1086.210966",
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 155.64382934570312,
+            "rssSumMiB": 222.28125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 104.68846130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.250961303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.907051086425781
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.062980651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.996407375030685
+          },
+          {
+            "footprintMiB": 129.94070434570312,
+            "rssSumMiB": 231.796875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 78.98533630371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.250961303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.907051086425781
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.062980651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 17.702661292045377
+          },
+          {
+            "footprintMiB": 129.78445434570312,
+            "rssSumMiB": 231.765625,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 78.82908630371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.250961303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.907051086425781
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.062980651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 18.406011959013995
+          }
+        ],
+        "medianMiB": 129.94070434570312
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 129.48757934570312,
+            "rssSumMiB": 233.5,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 78.59471130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.375961303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.703926086425781
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.078605651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 5.6522231249837205
+          },
+          {
+            "footprintMiB": 129.45632934570312,
+            "rssSumMiB": 232.859375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 78.64158630371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.282211303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.719551086425781
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.078605651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.416775499994401
+          },
+          {
+            "footprintMiB": 129.47195434570312,
+            "rssSumMiB": 233.390625,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 78.64158630371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.282211303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.719551086425781
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.094230651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 7.160202624974772
+          }
+        ],
+        "medianMiB": 129.47195434570312
+      }
+    },
+    {
+      "repeat": 2,
+      "case": "empty",
+      "renderCompleteEvent": null,
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 51.31513214111328,
+            "rssSumMiB": 170.515625,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.15723419189453
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.360015869140625
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 5.750572204589844
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.312934875488281
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.166955832974054
+          },
+          {
+            "footprintMiB": 51.26825714111328,
+            "rssSumMiB": 170.40625,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.12598419189453
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.360015869140625
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 5.750572204589844
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.297309875488281
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.77654937497573
+          },
+          {
+            "footprintMiB": 51.26825714111328,
+            "rssSumMiB": 170.40625,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.12598419189453
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.360015869140625
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 5.750572204589844
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.297309875488281
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.396128957974724
+          }
+        ],
+        "medianMiB": 51.26825714111328
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 51.98700714111328,
+            "rssSumMiB": 166.4375,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.34473419189453
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.188140869140625
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 6.141197204589844
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.578559875488281
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 5.405832457996439
+          },
+          {
+            "footprintMiB": 51.98700714111328,
+            "rssSumMiB": 166.4375,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.34473419189453
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.188140869140625
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 6.141197204589844
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.578559875488281
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.021905749978032
+          },
+          {
+            "footprintMiB": 51.98700714111328,
+            "rssSumMiB": 166.4375,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.34473419189453
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.188140869140625
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 6.141197204589844
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.578559875488281
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.641186290944461
+          }
+        ],
+        "medianMiB": 51.98700714111328
+      }
+    },
+    {
+      "repeat": 3,
+      "case": "math",
+      "renderCompleteEvent": "display phase=complete ms=494.603992",
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 143.67507934570312,
+            "rssSumMiB": 231.84375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 93.98538208007812
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.93848419189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.906982421875
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.109855651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.22694679198321
+          },
+          {
+            "footprintMiB": 143.70632934570312,
+            "rssSumMiB": 230.25,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 93.98538208007812
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.96973419189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.906982421875
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.109855651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.887220999982674
+          },
+          {
+            "footprintMiB": 143.69070434570312,
+            "rssSumMiB": 230.234375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 93.98538208007812
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.96973419189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.906982421875
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.094230651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.512196041992866
+          }
+        ],
+        "medianMiB": 143.69070434570312
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 144.09697723388672,
+            "rssSumMiB": 135.09375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 94.06350708007812
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.25098419189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.938255310058594
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.109855651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.5662654169718735
+          },
+          {
+            "footprintMiB": 144.08135223388672,
+            "rssSumMiB": 121.453125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 94.06350708007812
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.25098419189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.922630310058594
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.109855651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 7.538315374986269
+          },
+          {
+            "footprintMiB": 144.09697723388672,
+            "rssSumMiB": 121.21875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 94.07913208007812
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.25098419189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.922630310058594
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.109855651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 8.295107416983228
+          }
+        ],
+        "medianMiB": 144.09697723388672
+      }
+    },
+    {
+      "repeat": 3,
+      "case": "mermaid",
+      "renderCompleteEvent": "display phase=complete ms=804.845929",
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 121.28438568115234,
+            "rssSumMiB": 67.6875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 72.12596130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.93848419189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.516334533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.969230651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.250219791021664
+          },
+          {
+            "footprintMiB": 121.28438568115234,
+            "rssSumMiB": 66.46875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 72.12596130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.93848419189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.516334533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.969230651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.966791625018232
+          },
+          {
+            "footprintMiB": 121.26876068115234,
+            "rssSumMiB": 62.9375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 72.12596130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.93848419189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.516334533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.953605651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.706430791004095
+          }
+        ],
+        "medianMiB": 121.28438568115234
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 120.78438568115234,
+            "rssSumMiB": 60.15625,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 72.12596130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.48535919189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.485084533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.953605651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.563153167022392
+          },
+          {
+            "footprintMiB": 120.78438568115234,
+            "rssSumMiB": 59.171875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 72.12596130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.48535919189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.485084533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.953605651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 7.3307579579995945
+          },
+          {
+            "footprintMiB": 120.78438568115234,
+            "rssSumMiB": 58.578125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 72.12596130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.48535919189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.485084533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.953605651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 8.100054625014309
+          }
+        ],
+        "medianMiB": 120.78438568115234
+      }
+    },
+    {
+      "repeat": 3,
+      "case": "combined",
+      "renderCompleteEvent": "display phase=complete ms=980.641961",
+      "raisedWindowBeforeWait": true,
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 131.70632934570312,
+            "rssSumMiB": 230.46875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 79.03223419189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 33.51660919189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.250778198242188
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.156707763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.332484291982837
+          },
+          {
+            "footprintMiB": 131.33132934570312,
+            "rssSumMiB": 230.25,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 78.78223419189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 33.45410919189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.250778198242188
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.094207763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.284891708986834
+          },
+          {
+            "footprintMiB": 131.33132934570312,
+            "rssSumMiB": 229.828125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 78.78223419189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 33.45410919189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.250778198242188
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.094207763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 17.162824541970622
+          }
+        ],
+        "medianMiB": 131.33132934570312
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 131.00320434570312,
+            "rssSumMiB": 229.40625,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 78.70410919189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 33.45410919189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.000778198242188
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.094207763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 5.537818416021764
+          },
+          {
+            "footprintMiB": 130.98757934570312,
+            "rssSumMiB": 229.40625,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 78.70410919189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 33.43848419189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.000778198242188
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.094207763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.175783040991519
+          },
+          {
+            "footprintMiB": 130.98757934570312,
+            "rssSumMiB": 229.40625,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 78.70410919189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 33.43848419189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.000778198242188
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.094207763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.803534500009846
+          }
+        ],
+        "medianMiB": 130.98757934570312
+      }
+    },
+    {
+      "repeat": 3,
+      "case": "empty",
+      "renderCompleteEvent": null,
+      "raisedWindowBeforeWait": true,
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 54.2213134765625,
+            "rssSumMiB": 174.953125,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 33.344688415527344
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.188140869140625
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 5.688026428222656
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.266082763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.291840082965791
+          },
+          {
+            "footprintMiB": 54.2056884765625,
+            "rssSumMiB": 174.953125,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 33.344688415527344
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.172515869140625
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 5.688026428222656
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.266082763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.933739583007991
+          },
+          {
+            "footprintMiB": 54.2056884765625,
+            "rssSumMiB": 174.953125,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 33.344688415527344
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.172515869140625
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 5.688026428222656
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.266082763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.594075999979395
+          }
+        ],
+        "medianMiB": 54.2056884765625
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 57.5494384765625,
+            "rssSumMiB": 146.296875,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 33.610313415527344
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 12.672515869140625
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 6.531776428222656
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.000457763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 5.744372874964029
+          },
+          {
+            "footprintMiB": 57.5494384765625,
+            "rssSumMiB": 146.28125,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 33.610313415527344
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 12.672515869140625
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 6.531776428222656
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.000457763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.410943249997217
+          },
+          {
+            "footprintMiB": 57.5494384765625,
+            "rssSumMiB": 146.28125,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 33.610313415527344
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 12.672515869140625
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 6.531776428222656
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.000457763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 7.074323833978269
+          }
+        ],
+        "medianMiB": 57.5494384765625
+      }
+    },
+    {
+      "repeat": 3,
+      "case": "plain",
+      "renderCompleteEvent": "display phase=complete ms=701.164961",
+      "raisedWindowBeforeWait": true,
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 112.09686279296875,
+            "rssSumMiB": 203.171875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 60.266632080078125
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 33.89158630371094
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.172561645507812
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.031707763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.83489895897219
+          },
+          {
+            "footprintMiB": 112.48748779296875,
+            "rssSumMiB": 203.75,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 60.579132080078125
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 33.93846130371094
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.203811645507812
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.031707763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 17.575067958969157
+          },
+          {
+            "footprintMiB": 170.89373779296875,
+            "rssSumMiB": 204.09375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 67.71943664550781
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 64.31350708007812
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 34.09471130371094
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.031707763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 18.490463249967434
+          }
+        ],
+        "medianMiB": 112.48748779296875
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 44.564125061035156,
+            "rssSumMiB": 128.234375,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.14158630371094
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 12.531913757324219
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 5.689609833003487
+          },
+          {
+            "footprintMiB": 44.251625061035156,
+            "rssSumMiB": 128.234375,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.954086303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 12.406913757324219
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.4203127910150215
+          },
+          {
+            "footprintMiB": 44.236000061035156,
+            "rssSumMiB": 128.234375,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.954086303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 12.391288757324219
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 7.067119250015821
+          }
+        ],
+        "medianMiB": 44.251625061035156
+      }
+    },
+    {
+      "repeat": 4,
+      "case": "mermaid",
+      "renderCompleteEvent": "display phase=complete ms=814.283013",
+      "raisedWindowBeforeWait": true,
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 117.30005645751953,
+            "rssSumMiB": 301.21875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 70.39158630371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.860336303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 12.063301086425781
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.250457763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.34762304200558
+          },
+          {
+            "footprintMiB": 117.30005645751953,
+            "rssSumMiB": 301.203125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 70.39158630371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.860336303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 12.063301086425781
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.250457763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.060952958010603
+          },
+          {
+            "footprintMiB": 117.19068145751953,
+            "rssSumMiB": 301.09375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 70.39158630371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.860336303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 11.953926086425781
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.250457763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.768793958006427
+          }
+        ],
+        "medianMiB": 117.30005645751953
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 117.25318145751953,
+            "rssSumMiB": 301.3125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 70.36033630371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.063461303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 11.875801086425781
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.219207763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 5.652306832955219
+          },
+          {
+            "footprintMiB": 117.28443145751953,
+            "rssSumMiB": 301.34375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 70.36033630371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.063461303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 11.907051086425781
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.219207763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.454859749996103
+          },
+          {
+            "footprintMiB": 117.20630645751953,
+            "rssSumMiB": 301.34375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 70.28221130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.063461303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 11.907051086425781
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.219207763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 7.7160503329942
+          }
+        ],
+        "medianMiB": 117.25318145751953
+      }
+    },
+    {
+      "repeat": 4,
+      "case": "combined",
+      "renderCompleteEvent": "display phase=complete ms=1156.326056",
+      "raisedWindowBeforeWait": true,
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 131.17498779296875,
+            "rssSumMiB": 236.328125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 79.20406341552734
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 33.172882080078125
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.000709533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.062957763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.334754459036049
+          },
+          {
+            "footprintMiB": 131.06561279296875,
+            "rssSumMiB": 236.328125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 79.20406341552734
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 33.063507080078125
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.000709533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.062957763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 17.00753529201029
+          },
+          {
+            "footprintMiB": 131.06561279296875,
+            "rssSumMiB": 236.21875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 79.20406341552734
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 33.063507080078125
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 14.000709533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.062957763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 17.714494417014066
+          }
+        ],
+        "medianMiB": 131.06561279296875
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 130.23748779296875,
+            "rssSumMiB": 236.6875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 79.12593841552734
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.376007080078125
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.938209533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.062957763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 5.53893695800798
+          },
+          {
+            "footprintMiB": 130.22186279296875,
+            "rssSumMiB": 236.6875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 79.11031341552734
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.376007080078125
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.938209533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.062957763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.251947125012521
+          },
+          {
+            "footprintMiB": 130.22186279296875,
+            "rssSumMiB": 236.6875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 79.11031341552734
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.376007080078125
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.938209533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.062957763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 7.019158041046467
+          }
+        ],
+        "medianMiB": 130.22186279296875
+      }
+    },
+    {
+      "repeat": 4,
+      "case": "empty",
+      "renderCompleteEvent": null,
+      "raisedWindowBeforeWait": true,
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 53.15892791748047,
+            "rssSumMiB": 169.171875,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.954086303710938
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.485038757324219
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 5.703697204589844
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.281730651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.313835707958788
+          },
+          {
+            "footprintMiB": 53.15892791748047,
+            "rssSumMiB": 169.15625,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.954086303710938
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.485038757324219
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 5.703697204589844
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.281730651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.96196195797529
+          },
+          {
+            "footprintMiB": 53.15892791748047,
+            "rssSumMiB": 169.15625,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.954086303710938
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.485038757324219
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 5.703697204589844
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.281730651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.629338291997556
+          }
+        ],
+        "medianMiB": 53.15892791748047
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 53.28392791748047,
+            "rssSumMiB": 169.609375,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.32908630371094
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.235038757324219
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 5.688072204589844
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.297355651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 5.376011333952192
+          },
+          {
+            "footprintMiB": 53.06517791748047,
+            "rssSumMiB": 169.609375,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.11033630371094
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.235038757324219
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 5.688072204589844
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.297355651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 5.989330124983098
+          },
+          {
+            "footprintMiB": 53.06517791748047,
+            "rssSumMiB": 169.609375,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.11033630371094
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.235038757324219
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 5.688072204589844
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.297355651855469
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.61546116694808
+          }
+        ],
+        "medianMiB": 53.06517791748047
+      }
+    },
+    {
+      "repeat": 4,
+      "case": "plain",
+      "renderCompleteEvent": "display phase=complete ms=585.493922",
+      "raisedWindowBeforeWait": true,
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 129.67501068115234,
+            "rssSumMiB": 290.140625,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 81.78225708007812
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.204063415527344
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 11.688232421875
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.266082763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.180087999964599
+          },
+          {
+            "footprintMiB": 129.65938568115234,
+            "rssSumMiB": 290.125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 81.78225708007812
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.204063415527344
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 11.688232421875
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.250457763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.789728834002744
+          },
+          {
+            "footprintMiB": 129.65938568115234,
+            "rssSumMiB": 290.125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 81.78225708007812
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.204063415527344
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 11.688232421875
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.250457763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.405262166983448
+          }
+        ],
+        "medianMiB": 129.65938568115234
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 41.95477294921875,
+            "rssSumMiB": 139.484375,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.172813415527344
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 10.891334533691406
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.503888333973009
+          },
+          {
+            "footprintMiB": 41.95477294921875,
+            "rssSumMiB": 139.484375,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.172813415527344
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 10.891334533691406
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 7.1300164589774795
+          },
+          {
+            "footprintMiB": 41.95477294921875,
+            "rssSumMiB": 139.484375,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.172813415527344
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 10.891334533691406
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 7.755688624980394
+          }
+        ],
+        "medianMiB": 41.95477294921875
+      }
+    },
+    {
+      "repeat": 4,
+      "case": "math",
+      "renderCompleteEvent": "display phase=complete ms=690.495968",
+      "raisedWindowBeforeWait": true,
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 109.80001068115234,
+            "rssSumMiB": 300.34375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 61.17285919189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.92285919189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 11.781959533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.187957763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.159007082984317
+          },
+          {
+            "footprintMiB": 109.62813568115234,
+            "rssSumMiB": 300.171875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 61.11035919189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.82910919189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 11.781959533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.172332763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.76841133297421
+          },
+          {
+            "footprintMiB": 109.42501068115234,
+            "rssSumMiB": 300.171875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 60.86035919189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.87598419189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 11.781959533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.172332763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.383874207967892
+          }
+        ],
+        "medianMiB": 109.62813568115234
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 109.40938568115234,
+            "rssSumMiB": 300.484375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 60.78223419189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.96973419189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 11.735084533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.187957763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 5.412526750005782
+          },
+          {
+            "footprintMiB": 109.40938568115234,
+            "rssSumMiB": 300.484375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 60.78223419189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.96973419189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 11.735084533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.187957763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.047042999998666
+          },
+          {
+            "footprintMiB": 109.40938568115234,
+            "rssSumMiB": 300.484375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 60.78223419189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.96973419189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 11.735084533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.187957763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.65633795800386
+          }
+        ],
+        "medianMiB": 109.40938568115234
+      }
+    },
+    {
+      "repeat": 5,
+      "case": "combined",
+      "renderCompleteEvent": "display phase=complete ms=593.697071",
+      "raisedWindowBeforeWait": true,
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 153.78433990478516,
+            "rssSumMiB": 313.03125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 105.07910919189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.688438415527344
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 12.031959533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.250457763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.176406499987934
+          },
+          {
+            "footprintMiB": 153.79996490478516,
+            "rssSumMiB": 313.046875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 105.07910919189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.719688415527344
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 12.031959533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.234832763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.818280457984656
+          },
+          {
+            "footprintMiB": 153.79996490478516,
+            "rssSumMiB": 313.03125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 105.07910919189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.719688415527344
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 12.031959533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.234832763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.462103083031252
+          }
+        ],
+        "medianMiB": 153.79996490478516
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 159.75308990478516,
+            "rssSumMiB": 239.234375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 108.23535919189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.938438415527344
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.844459533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.000457763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 5.518031292012893
+          },
+          {
+            "footprintMiB": 159.61246490478516,
+            "rssSumMiB": 239.234375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 108.23535919189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.844688415527344
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.797584533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.000457763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.174752582970541
+          },
+          {
+            "footprintMiB": 159.61246490478516,
+            "rssSumMiB": 239.1875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 108.23535919189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.844688415527344
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.797584533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.000457763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.815503041958436
+          }
+        ],
+        "medianMiB": 159.61246490478516
+      },
+      "afterCloseLate": {
+        "samples": [
+          {
+            "footprintMiB": 159.44058990478516,
+            "rssSumMiB": 231.953125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 108.15723419189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.813438415527344
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.750709533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.984832763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 30.468006082985085
+          },
+          {
+            "footprintMiB": 159.44058990478516,
+            "rssSumMiB": 231.953125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 108.15723419189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.813438415527344
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.750709533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.984832763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 31.10997424996458
+          },
+          {
+            "footprintMiB": 159.44058990478516,
+            "rssSumMiB": 231.953125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 108.15723419189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.813438415527344
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.750709533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.984832763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 31.746066291991156
+          }
+        ],
+        "medianMiB": 159.44058990478516
+      }
+    },
+    {
+      "repeat": 5,
+      "case": "empty",
+      "renderCompleteEvent": null,
+      "raisedWindowBeforeWait": true,
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 53.79948425292969,
+            "rssSumMiB": 170.90625,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.31346130371094
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.766288757324219
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 5.703651428222656
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.281707763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 15.595734500035178
+          },
+          {
+            "footprintMiB": 53.79948425292969,
+            "rssSumMiB": 170.90625,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.31346130371094
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.766288757324219
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 5.703651428222656
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.281707763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 16.630908750055823
+          },
+          {
+            "footprintMiB": 53.79948425292969,
+            "rssSumMiB": 170.90625,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.31346130371094
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.766288757324219
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 5.703651428222656
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.281707763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 17.576185167010408
+          }
+        ],
+        "medianMiB": 53.79948425292969
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 53.47135925292969,
+            "rssSumMiB": 170.78125,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.25096130371094
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.531913757324219
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 5.672401428222656
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.281707763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 5.389977957995143
+          },
+          {
+            "footprintMiB": 53.47135925292969,
+            "rssSumMiB": 170.78125,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.25096130371094
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.531913757324219
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 5.672401428222656
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.281707763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.00884154101368
+          },
+          {
+            "footprintMiB": 53.47135925292969,
+            "rssSumMiB": 170.78125,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.25096130371094
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 11.531913757324219
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 5.672401428222656
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 4.281707763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 6.648521833005361
+          }
+        ],
+        "medianMiB": 53.47135925292969
+      },
+      "afterCloseLate": {
+        "samples": [
+          {
+            "footprintMiB": 55.11198425292969,
+            "rssSumMiB": 86.921875,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.985336303710938
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 12.672538757324219
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 6.625526428222656
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.094207763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 33.07838683301816
+          },
+          {
+            "footprintMiB": 55.09635925292969,
+            "rssSumMiB": 87.765625,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.985336303710938
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 12.672538757324219
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 6.625526428222656
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.078582763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 35.052475708012935
+          },
+          {
+            "footprintMiB": 55.20573425292969,
+            "rssSumMiB": 87.625,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.000961303710938
+              },
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 12.672538757324219
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 6.625526428222656
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.172332763671875
+              }
+            ],
+            "warnings": [],
+            "secondsSincePhaseStart": 36.15362270799233
+          }
+        ],
+        "medianMiB": 55.11198425292969
+      }
+    },
+    {
+      "repeat": 5,
+      "case": "plain",
+      "renderCompleteEvent": "display phase=complete ms=4413.810968",
+      "raisedWindowBeforeWait": true,
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 109.08116912841797,
+            "rssSumMiB": 61.84375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 58.547813415527344
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.50096130371094
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.172561645507812
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.125457763671875
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 15.288920666964259
+          },
+          {
+            "footprintMiB": 109.06554412841797,
+            "rssSumMiB": 61.9375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 58.547813415527344
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.50096130371094
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.156936645507812
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.125457763671875
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 15.976247624959797
+          },
+          {
+            "footprintMiB": 109.06554412841797,
+            "rssSumMiB": 61.9375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 58.547813415527344
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.50096130371094
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.156936645507812
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.125457763671875
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 16.659652917005587
+          }
+        ],
+        "medianMiB": 109.06554412841797
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 109.01864624023438,
+            "rssSumMiB": 68.890625,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 58.53216552734375
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.46971130371094
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.156936645507812
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.125457763671875
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 5.556334917026106
+          },
+          {
+            "footprintMiB": 109.01864624023438,
+            "rssSumMiB": 68.890625,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 58.53216552734375
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.46971130371094
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.156936645507812
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.125457763671875
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 6.205358667008113
+          },
+          {
+            "footprintMiB": 109.01864624023438,
+            "rssSumMiB": 68.890625,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 58.53216552734375
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.46971130371094
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.156936645507812
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.125457763671875
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 6.847285958996508
+          }
+        ],
+        "medianMiB": 109.01864624023438
+      },
+      "afterCloseLate": {
+        "samples": [
+          {
+            "footprintMiB": 108.90927124023438,
+            "rssSumMiB": 58.96875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 58.51654052734375
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.48533630371094
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.125686645507812
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.047332763671875
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 30.707152292015962
+          },
+          {
+            "footprintMiB": 108.90927124023438,
+            "rssSumMiB": 58.359375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 58.51654052734375
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.48533630371094
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.125686645507812
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.047332763671875
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 31.4203808340244
+          },
+          {
+            "footprintMiB": 108.90927124023438,
+            "rssSumMiB": 58.3125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 58.51654052734375
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 32.48533630371094
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.125686645507812
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.047332763671875
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 32.14568070898531
+          }
+        ],
+        "medianMiB": 108.90927124023438
+      }
+    },
+    {
+      "repeat": 5,
+      "case": "math",
+      "renderCompleteEvent": "display phase=complete ms=1204.191089",
+      "raisedWindowBeforeWait": true,
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 113.14371490478516,
+            "rssSumMiB": 212.84375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 63.79783630371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.579086303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.938209533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.094207763671875
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 15.320057667035144
+          },
+          {
+            "footprintMiB": 113.14371490478516,
+            "rssSumMiB": 212.84375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 63.79783630371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.579086303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.938209533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.094207763671875
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 16.06595645903144
+          },
+          {
+            "footprintMiB": 113.14371490478516,
+            "rssSumMiB": 212.84375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 63.79783630371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.579086303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.938209533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.094207763671875
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 16.7448724170099
+          }
+        ],
+        "medianMiB": 113.14371490478516
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 116.70621490478516,
+            "rssSumMiB": 130.109375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 67.26658630371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.875961303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.735084533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.094207763671875
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 5.654533749970142
+          },
+          {
+            "footprintMiB": 116.95621490478516,
+            "rssSumMiB": 96.703125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 67.17283630371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.922836303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.938209533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.187957763671875
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 6.381056665966753
+          },
+          {
+            "footprintMiB": 116.76871490478516,
+            "rssSumMiB": 96.234375,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 67.11033630371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.860336303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.875709533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.187957763671875
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 7.080310499994084
+          }
+        ],
+        "medianMiB": 116.76871490478516
+      },
+      "afterCloseLate": {
+        "samples": [
+          {
+            "footprintMiB": 116.34683990478516,
+            "rssSumMiB": 92.3125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 67.06346130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.688461303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.781959533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.078582763671875
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 30.55297249997966
+          },
+          {
+            "footprintMiB": 116.34683990478516,
+            "rssSumMiB": 92.3125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 67.06346130371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.688461303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.781959533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.078582763671875
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 31.266588457976468
+          },
+          {
+            "footprintMiB": 116.33121490478516,
+            "rssSumMiB": 92.3125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 67.04783630371094
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.688461303710938
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.781959533691406
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.078582763671875
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 31.98031270800857
+          }
+        ],
+        "medianMiB": 116.34683990478516
+      }
+    },
+    {
+      "repeat": 5,
+      "case": "mermaid",
+      "renderCompleteEvent": "display phase=complete ms=1004.824996",
+      "raisedWindowBeforeWait": true,
+      "loaded": {
+        "samples": [
+          {
+            "footprintMiB": 155.70632934570312,
+            "rssSumMiB": 256.15625,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 106.61035919189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.48535919189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 12.828880310058594
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.047355651855469
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 17.03841816703789
+          },
+          {
+            "footprintMiB": 155.76882934570312,
+            "rssSumMiB": 255.8125,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 106.62598419189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.53223419189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 12.828880310058594
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.047355651855469
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 17.931748084025458
+          },
+          {
+            "footprintMiB": 155.72195434570312,
+            "rssSumMiB": 255.875,
+            "processes": [
+              {
+                "name": "com.apple.WebKit.WebContent",
+                "footprintMiB": 106.61035919189453
+              },
+              {
+                "name": "Leaflit",
+                "footprintMiB": 31.50098419189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 12.828880310058594
+              },
+              {
+                "name": "com.apple.WebKit.Networking",
+                "footprintMiB": 5.047355651855469
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 18.9817654590006
+          }
+        ],
+        "medianMiB": 155.72195434570312
+      },
+      "afterClose": {
+        "samples": [
+          {
+            "footprintMiB": 43.126670837402344,
+            "rssSumMiB": 107.6875,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.06348419189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.172561645507812
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 6.07427533302689
+          },
+          {
+            "footprintMiB": 43.126670837402344,
+            "rssSumMiB": 107.640625,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.06348419189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.172561645507812
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 6.909270957985427
+          },
+          {
+            "footprintMiB": 43.126670837402344,
+            "rssSumMiB": 107.640625,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 30.06348419189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.172561645507812
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 7.7472499160212465
+          }
+        ],
+        "medianMiB": 43.126670837402344
+      },
+      "afterCloseLate": {
+        "samples": [
+          {
+            "footprintMiB": 42.907920837402344,
+            "rssSumMiB": 91.5625,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 29.89160919189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.125686645507812
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 30.91571687499527
+          },
+          {
+            "footprintMiB": 42.907920837402344,
+            "rssSumMiB": 91.578125,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 29.89160919189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.125686645507812
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 31.737812665989622
+          },
+          {
+            "footprintMiB": 42.907920837402344,
+            "rssSumMiB": 91.578125,
+            "processes": [
+              {
+                "name": "Leaflit",
+                "footprintMiB": 29.89160919189453
+              },
+              {
+                "name": "com.apple.WebKit.GPU",
+                "footprintMiB": 13.125686645507812
+              }
+            ],
+            "warnings": [],
+            "helperExitRetries": 0,
+            "secondsSincePhaseStart": 32.51036912499694
+          }
+        ],
+        "medianMiB": 42.907920837402344
+      }
+    }
+  ],
+  "resumedAt": [
+    "2026-10-19T00:07:24.591264+09:00",
+    "2026-10-19T00:14:31.955593+09:00"
+  ],
+  "completedAt": "2026-10-19T00:17:17.536128+09:00",
+  "hostMemoryAtEnd": "The system has 25769803776 (1572864 pages with a page size of 16384).\nSystem-wide memory free percentage: 34%",
+  "summary": {
+    "empty": {
+      "loaded": {
+        "medianMiB": 53.79948425292969,
+        "minMiB": 51.26825714111328,
+        "maxMiB": 54.752586364746094,
+        "runs": 5
+      },
+      "afterClose": {
+        "medianMiB": 53.47135925292969,
+        "minMiB": 51.98700714111328,
+        "maxMiB": 57.5494384765625,
+        "runs": 5
+      },
+      "afterCloseLate": {
+        "medianMiB": 55.11198425292969,
+        "minMiB": 55.11198425292969,
+        "maxMiB": 55.11198425292969,
+        "runs": 1
+      }
+    },
+    "plain": {
+      "loaded": {
+        "medianMiB": 112.48748779296875,
+        "minMiB": 109.06554412841797,
+        "maxMiB": 177.80005645751953,
+        "runs": 5
+      },
+      "afterClose": {
+        "medianMiB": 109.01864624023438,
+        "minMiB": 41.95477294921875,
+        "maxMiB": 112.61255645751953,
+        "runs": 5
+      },
+      "afterCloseLate": {
+        "medianMiB": 108.90927124023438,
+        "minMiB": 108.90927124023438,
+        "maxMiB": 108.90927124023438,
+        "runs": 1
+      }
+    },
+    "math": {
+      "loaded": {
+        "medianMiB": 113.14371490478516,
+        "minMiB": 109.62813568115234,
+        "maxMiB": 143.69070434570312,
+        "runs": 5
+      },
+      "afterClose": {
+        "medianMiB": 116.31572723388672,
+        "minMiB": 109.40938568115234,
+        "maxMiB": 144.09697723388672,
+        "runs": 5
+      },
+      "afterCloseLate": {
+        "medianMiB": 116.34683990478516,
+        "minMiB": 116.34683990478516,
+        "maxMiB": 116.34683990478516,
+        "runs": 1
+      }
+    },
+    "mermaid": {
+      "loaded": {
+        "medianMiB": 121.28438568115234,
+        "minMiB": 117.25315856933594,
+        "maxMiB": 155.72195434570312,
+        "runs": 5
+      },
+      "afterClose": {
+        "medianMiB": 120.78438568115234,
+        "minMiB": 43.126670837402344,
+        "maxMiB": 125.76878356933594,
+        "runs": 5
+      },
+      "afterCloseLate": {
+        "medianMiB": 42.907920837402344,
+        "minMiB": 42.907920837402344,
+        "maxMiB": 42.907920837402344,
+        "runs": 1
+      }
+    },
+    "combined": {
+      "loaded": {
+        "medianMiB": 131.06561279296875,
+        "minMiB": 128.40938568115234,
+        "maxMiB": 153.79996490478516,
+        "runs": 5
+      },
+      "afterClose": {
+        "medianMiB": 130.98757934570312,
+        "minMiB": 129.47195434570312,
+        "maxMiB": 159.61246490478516,
+        "runs": 5
+      },
+      "afterCloseLate": {
+        "medianMiB": 159.44058990478516,
+        "minMiB": 159.44058990478516,
+        "maxMiB": 159.44058990478516,
+        "runs": 1
+      }
+    }
+  }
+}

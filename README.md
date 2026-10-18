@@ -49,6 +49,8 @@ Finder의 Open With, File의 Open 메뉴, 파일 드롭이나 `leaflit` 실행 �
 # 첫 표시 20회 측정과 자원 측정은 다른 앱 검수와 분리해 실행
 python3 scripts/benchmark.py
 python3 scripts/measure-resources.py
+# 빈 창과 기능별 메모리 비교, 창 닫기 뒤 사용량 측정
+python3 scripts/measure-memory-cases.py
 # Foundation 문서 처리 모듈만 확인
 swift test
 # 웹 문법 처리만 확인
@@ -56,6 +58,8 @@ npm test
 ```
 
 [실행 설계](docs/design/0.1.0/design.md), [테스트 계획](docs/design/0.1.0/test-plan.json)과 [검수 보고서](docs/qa/report.md)를 참고한다. 설치 크기와 성능은 실제 측정 결과를 보고하며 초기 목표 충족을 가정하지 않는다.
+
+[메모리 분리 측정](docs/qa/memory-analysis.md)은 같은 Release 앱에서 빈 창, 일반 본문, 수식과 Mermaid의 사용량을 비교한다. 생성한 문서와 측정 원본은 `build/memory-cases`에 남는다.
 
 프로젝트 구조를 바꿀 때만 `ruby scripts/generate-project.rb`로 프로젝트를 재생성한다. 이 명령에는 xcodeproj 1.27.0이 필요하다. 생성된 Xcode 프로젝트와 scheme은 저장소에 포함한다.
 
