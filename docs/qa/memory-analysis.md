@@ -1,91 +1,85 @@
-# 메모리 사용량 분리 측정
+# Memory measurements by document feature
 
-2026-10-18부터 19일까지 사용자의 측정 요청에 따라 빈 창, 일반 Markdown, 수식과 Mermaid의 영향을 비교한다. 제품 코드와 Release 앱은 변경하지 않는다.
+Measured across 2026-10-18 and 2026-10-19 at the owner's request, comparing an empty window, plain Markdown, math and Mermaid. Product code and the Release app were unchanged.
 
-## 결과
+## Results
 
-기본 다섯 조건을 각각 5회 측정했다. 빈 창의 합계 중앙값은 53.8MiB, 제목이 많은 100KiB 일반 본문은 112.5MiB, 같은 본문에 수식과 Mermaid를 함께 넣으면 131.1MiB였다. 추가로 비교한 짧은 1KiB 문서는 69.7MiB, 제목이 적은 100KiB 문서는 85.6MiB였다. 일반 본문에서 이미 메모리가 크게 늘어났으며, 이전 보고서의 148.5MiB를 수식과 Mermaid의 비용만으로 설명할 수는 없다.
+Each of the five primary conditions ran five times. Combined app/WebKit median footprint was 53.8MiB for the empty window, 112.5MiB for the heading-heavy 100KiB plain document, and 131.1MiB for that document with math and Mermaid. Additional inputs measured 69.7MiB for a 1KiB document and 85.6MiB for a heading-light 100KiB document. Plain rendering already accounts for substantial growth; the original single 148.5MiB observation cannot be attributed entirely to math and Mermaid.
 
-아래 범위는 실행별 중앙값의 최솟값과 최댓값이며 신뢰구간이 아니다. 창 닫기 30초 값은 마지막 실행 한 번의 결과다.
+Ranges below are minima/maxima of per-run medians, not confidence intervals. The 30-second post-close result comes from only the final run of each primary condition.
 
-| 조건 | 표시 후 중앙값 | 표시 후 범위 | 창 닫기 5초 중앙값 | 창 닫기 30초 한 실행 |
+| Condition | Loaded median | Loaded range | 5s after close, median | 30s after close, one run |
 | --- | ---: | ---: | ---: | ---: |
-| 빈 창 | 53.8MiB | 51.3–54.8MiB | 53.5MiB | 55.1MiB |
-| 일반 본문 100KiB | 112.5MiB | 109.1–177.8MiB | 109.0MiB | 108.9MiB |
-| 수식 포함 100KiB | 113.1MiB | 109.6–143.7MiB | 116.3MiB | 116.3MiB |
-| Mermaid 포함 100KiB | 121.3MiB | 117.3–155.7MiB | 120.8MiB | 42.9MiB |
-| 수식과 Mermaid 포함 100KiB | 131.1MiB | 128.4–153.8MiB | 131.0MiB | 159.4MiB |
+| Empty window | 53.8MiB | 51.3–54.8MiB | 53.5MiB | 55.1MiB |
+| Plain, 100KiB | 112.5MiB | 109.1–177.8MiB | 109.0MiB | 108.9MiB |
+| Math, 100KiB | 113.1MiB | 109.6–143.7MiB | 116.3MiB | 116.3MiB |
+| Mermaid, 100KiB | 121.3MiB | 117.3–155.7MiB | 120.8MiB | 42.9MiB |
+| Math and Mermaid, 100KiB | 131.1MiB | 128.4–153.8MiB | 131.0MiB | 159.4MiB |
 
-표시 후 프로세스별 중앙값은 다음과 같다. 각 열의 중앙값을 따로 구하므로 합산한 값이 위 합계의 중앙값과 같을 필요는 없다.
+Loaded process medians follow. Columns are independently summarized, so their sum need not equal the median aggregate above.
 
-| 조건 | Leaflit | WebKit 문서 | WebKit GPU | WebKit 통신 |
+| Condition | Leaflit | WebKit content | WebKit GPU | WebKit networking |
 | --- | ---: | ---: | ---: | ---: |
-| 빈 창 | 32.0MiB | 11.5MiB | 5.7MiB | 4.3MiB |
-| 일반 본문 | 32.2MiB | 60.6MiB | 13.2MiB | 5.0MiB |
-| 수식 포함 | 31.0MiB | 63.8MiB | 13.8MiB | 5.1MiB |
-| Mermaid 포함 | 30.9MiB | 72.1MiB | 12.8MiB | 5.0MiB |
-| 수식과 Mermaid 포함 | 32.7MiB | 79.0MiB | 14.3MiB | 5.1MiB |
+| Empty window | 32.0MiB | 11.5MiB | 5.7MiB | 4.3MiB |
+| Plain | 32.2MiB | 60.6MiB | 13.2MiB | 5.0MiB |
+| Math | 31.0MiB | 63.8MiB | 13.8MiB | 5.1MiB |
+| Mermaid | 30.9MiB | 72.1MiB | 12.8MiB | 5.0MiB |
+| Math and Mermaid | 32.7MiB | 79.0MiB | 14.3MiB | 5.1MiB |
 
-수식 조건과 일반 조건의 전체 사용량 범위가 겹치므로 0.6MiB라는 중앙값 차이를 KaTeX의 정확한 추가 비용으로 해석하지 않는다. Mermaid도 도형 하나인 조건이며 복잡한 다이어그램으로 일반화할 수 없다.
+The math and plain aggregate ranges overlap. Their 0.6MiB median difference is not a precise allocation cost for KaTeX. Mermaid coverage uses only one simple flowchart and does not generalize to complex diagrams.
 
-창을 닫았을 때 사용량이 바로 줄어들지 않는 실행이 많았다. 일반 본문에서는 5초 값이 약 42MiB로 내려간 실행도 있었고 약 113MiB가 남은 실행도 있었다. 마지막 Mermaid 실행에서는 보조 프로세스 일부가 종료됐지만, 마지막 복합 실행에서는 30초 뒤에도 문서 프로세스가 약 108MiB를 유지했다. 프로세스 캐시, 아직 해제되지 않은 참조와 메모리 회수 시점을 이 측정만으로 구분하지 못했으므로 누수로 확정하지 않는다. 각 실행이 끝나고 앱을 종료하면 그 실행에서 시작한 앱과 보조 프로세스가 모두 종료되는지 확인했다.
+Closing a window often did not promptly lower usage. Plain-document runs ranged from about 42MiB to about 113MiB five seconds after close. Some helpers exited in the final Mermaid run, while the final combined run retained approximately 108MiB in WebContent after thirty seconds. Process caching, retained references and delayed reclamation were not distinguished; these observations do not establish a leak. After quitting each measured app, the harness confirmed that its app and newly started helper PIDs had exited.
 
-[본 측정의 전체 표본](memory-primary.json)에 25개 실행과 각 footprint 수집값을 기록한다.
+[Primary samples](memory-primary.json) preserve 25 complete runs and every footprint snapshot.
 
-추가 두 조건은 각각 3회 실행했다. 아래에도 실행별 중앙값의 범위를 표시한다.
+Each additional condition ran three times:
 
-| 추가 조건 | 표시 후 중앙값 | 표시 후 범위 | 창 닫기 5초 중앙값 |
+| Additional condition | Loaded median | Loaded range | 5s after close, median |
 | --- | ---: | ---: | ---: |
-| 짧은 일반 본문 1KiB | 69.7MiB | 69.5–69.8MiB | 69.9MiB |
-| 제목이 적은 일반 본문 100KiB | 85.6MiB | 85.4–88.5MiB | 85.7MiB |
+| Short plain document, 1KiB | 69.7MiB | 69.5–69.8MiB | 69.9MiB |
+| Heading-light plain document, 100KiB | 85.6MiB | 85.4–88.5MiB | 85.7MiB |
 
-[추가 조건의 전체 표본](memory-additional.json)에 6개 실행을 기록한다. 수식과 Mermaid를 쓰지 않는 짧은 문서에서도 최초 비교 목표 60MiB를 넘었다. 같은 크기의 두 일반 문서에서 약 27MiB의 중앙값 차이를 관찰했으므로 파일 바이트 수만으로 메모리 사용량을 예상하기 어렵다. 이 비교는 문서 구조가 다른 두 입력의 관찰 결과다.
+[Additional samples](memory-additional.json) preserve six complete runs. Even the short document without math or Mermaid exceeded the initial 60MiB comparison goal. Two different 100KiB structures differed by about 27MiB in median usage, so byte count alone is insufficient to predict memory. This compares different document structures, not a single isolated heading-count variable.
 
-메모리를 줄이는 후속 작업에서는 일반 본문의 렌더링 비용과 창 종료 후 자원 해제를 우선 조사할 근거가 생겼다. 아직 렌더러를 교체하거나 해제 코드를 수정하지 않았고, 개선 후 사용량을 측정한 결과도 없다.
+Follow-up investigation should examine ordinary document-rendering costs and resource lifetime after window close. No renderer replacement or teardown fix was made, and no improvement has been measured.
 
-## 후보와 측정 방법
+## Candidate and method
 
-- 후보 소스: `8768530d030eca9b6e15c40b283d9e240296fd2c`, Leaflit 0.1.0 Release arm64.
-- 실행 파일 SHA-256: `e8a08c1690631337f49801d039a4ee11d3c93f60d9eb371b7515578bae82cce7`.
-- 환경: Apple M3, macOS 26.6.2. 이전 macOS와 Intel 결과는 포함하지 않는다.
-- 도구: `footprint -f bytes --noCategories -j`, `ps`, 앱의 기존 표시 완료 로그, 대상 PID를 지정한 macOS 접근성 창 닫기.
-- 지표: 앱과 새 WebKit 보조 프로세스를 함께 지정한 `total footprint`. RSS와 같은 지표로 취급하지 않는다. 1MiB는 1,048,576바이트다.
-- 각 실행은 새 앱과 새 보조 프로세스로 시작한다. 실행 전 PID 목록과 비교하고 관련 없는 새 Leaflit 또는 WebKit 프로세스가 나타나면 중단한다. 기존 앱과 다른 사용자의 프로세스를 종료하지 않는다.
-- 문서 표시 완료 후 15초 대기하고 약 0.5초 간격으로 footprint를 3번 수집한다. 빈 창은 창이 나타난 시점부터 기다린다. 이 세 값의 중앙값을 실행별 값으로 삼는다.
-- 기본 다섯 조건은 5회씩 실행하며 매 회차 시작 조건을 바꾼다. 표에는 실행별 값 5개의 중앙값과 최솟값, 최댓값을 기록한다.
-- 창 닫기 버튼을 실행한 뒤 접근성 창 수가 0인지 확인한다. 앱은 종료하지 않고 5초 뒤 같은 방식으로 3번 측정한다. 마지막 회차에는 닫은 뒤 30초 값도 측정한다. 30초 결과는 조건당 한 실행이며 5회 반복값으로 표시하지 않는다.
-- OS 파일 캐시를 비우거나 다른 앱을 닫지 않는다. 전체 시스템을 전용 측정 환경으로 격리한 결과는 아니다. 실행 전후 시스템 메모리 상태도 결과 JSON에 남긴다.
-- 생성한 문서의 바이트 수와 SHA-256을 기록하고 실행 후 원문 불변을 확인한다. PATH, Finder 연결, 네트워크 설정과 시스템 외관은 바꾸지 않는다.
+- Source: `8768530d030eca9b6e15c40b283d9e240296fd2c`, Leaflit 0.1.0 Release arm64.
+- Executable SHA-256: `e8a08c1690631337f49801d039a4ee11d3c93f60d9eb371b7515578bae82cce7`.
+- Environment: Apple M3, macOS 26.6.2. No earlier macOS or Intel result is implied.
+- Tools: `footprint -f bytes --noCategories -j`, `ps`, existing app display-completion logs, and target-PID accessibility window closing.
+- Metric: `total footprint` for the app and its new WebKit helpers. RSS is a different metric. One MiB is 1,048,576 bytes.
+- Each run starts a new app and new helpers, identified against prelaunch PIDs. The harness aborts on an unrelated new Leaflit/WebKit process. It does not stop preexisting user processes.
+- Wait fifteen seconds after document completion, or after window appearance for the empty condition. Collect three snapshots about half a second apart and use their median as the run value.
+- Run each primary condition five times, rotating the first condition in each round. Summarize the five run values by median, minimum and maximum.
+- Press the actual close button and verify accessibility window count zero. Keep the app running. Collect three snapshots after five seconds; in the final primary round also collect three after thirty seconds. The latter is one run per condition, not five repeated runs.
+- Do not clear OS caches or close unrelated apps. This is not a dedicated, otherwise idle system. Record host memory state before and after collection.
+- Record generated-input byte counts and SHA-256 values and confirm unchanged content after each run. Do not change PATH, Finder defaults, networking or system appearance.
 
-## 문서 조건
+## Input structure
 
-기본 조건은 기존 `Fixtures/Benchmark100KiB.md`의 본문을 공유한다. 수식 한 개와 Mermaid 흐름도 한 개를 각각 일반 텍스트와 공백으로 대체해 모든 문서를 102,400바이트로 맞춘다. 줄바꿈과 뒤쪽 본문의 시작 위치도 보존한다. Mermaid만 있는 조건에는 수식이 없고, 수식만 있는 조건에는 Mermaid가 없다. 실제 파서 결과로 이를 확인했다.
+Primary documents share the body of `Fixtures/Benchmark100KiB.md`. Replace the one formula and/or one flowchart with plain text and spaces while preserving newline positions, body offsets and the exact 102400-byte length. Actual parser results confirm one formula only in math/combined, and one diagram only in Mermaid/combined.
 
-이 고정 문서는 제목이 1,484개이고 일반 조건의 본문 HTML 요소가 4,452개다. 모든 100KiB 문서를 대표한다고 해석하면 안 된다. 추가 조건으로 1KiB 일반 문서와 제목이 적은 100KiB 일반 문서를 비교한다. 이 두 조건은 각각 3회이며 수식과 Mermaid가 없다.
+The heading-heavy plain input has 1,484 headings and 4,452 body HTML elements. It does not represent every 100KiB document. The additional 1KiB input has one heading and eleven elements; the heading-light 100KiB input has thirteen headings and 919 elements. Both additional inputs include bold, Korean and emoji to exercise the same font range. Words and line breaks also differ, so this is not a heading-count-only causal experiment.
 
-추가 1KiB 문서는 제목 한 개와 본문 HTML 요소 11개, 추가 100KiB 문서는 제목 13개와 본문 HTML 요소 919개다. 두 문서에도 굵은 글씨, 한글과 이모지를 넣어 기본 문서와 같은 글꼴 범위를 사용한다. 단어와 줄바꿈 등 문서 구조가 다르므로 제목 개수만의 영향을 분리한 실험으로 해석하지 않는다.
+## Preliminary and primary collection
 
-## 예비 측정과 본 측정 구분
+The preliminary pass sampled about five seconds after completion, similar to the original resource run. Some GPU snapshots fell from about 72MiB to about 12MiB while collecting. One math run changed from 208.2 to 203.6 to 140.2MiB across three snapshots. That preliminary pass was stopped and the settling delay increased to fifteen seconds. Preliminary samples were not counted toward primary repetitions.
 
-처음에는 기존 자원 측정과 비슷하게 표시 완료 후 5초에 수집했다. 일부 실행에서 WebKit GPU의 footprint가 약 72MiB에서 약 12MiB로 내려가는 과정이 표본에 포함됐다. 예를 들어 수식 조건의 합계가 세 표본 동안 208.2, 203.6, 140.2MiB로 변했다. 이 예비 실행은 중단하고 대기 시간을 15초로 늘렸다. 예비 표본을 본 측정의 반복 횟수에 합치지 않는다.
+GPU and content usage still varied after fifteen seconds. This point is not assumed to be a universally stable minimum; retain ranges and process details.
 
-15초 이후에도 그래픽 프로세스와 문서 프로세스의 값이 실행마다 달라졌다. 이 측정 시점을 언제나 안정된 최솟값이라고 간주하지 않고 반복 범위와 프로세스별 수치를 함께 기록한다.
+Primary collection stopped once when a display-completion event was missing, and once when a helper exited during post-close footprint enumeration. Neither incomplete execution was counted. Collection resumed while preserving completed runs. The cause of the missing event was not assigned to either the app or the harness. After resuming, the harness additionally raised the target window through accessibility, beyond the app's existing activation request. Per-run `raisedWindowBeforeWait` and dataset `resumedAt` distinguish that change. When a helper exits during enumeration, preserve the failed raw capture and remeasure surviving originally owned PIDs.
 
-본 측정 중 표시 완료 로그를 받지 못한 실행 한 개와 창 닫기 후 보조 프로세스가 조회 도중 종료된 실행 한 개에서 수집이 중단됐다. 두 실행은 완료 표본으로 세지 않고, 이미 완료한 조건을 보존한 상태에서 이어서 수집했다. 로그 누락의 원인을 제품과 수집기 중 어느 쪽이라고 확정하지 못했다. 재개 뒤에는 앱의 기존 활성화 요청에 더해 대상 창을 접근성 기능으로 앞으로 올리는 절차를 넣었다. 실행별 `raisedWindowBeforeWait`와 데이터의 `resumedAt`으로 이를 구분한다. 보조 프로세스 종료 시에는 실패한 footprint 원본을 보존하고 살아 있는 원래 대상 PID만 다시 조회한다.
+## Reproduction and tool verification
 
-## 재현
-
-Leaflit을 닫은 상태에서 실행한다. 접근성 권한이 이미 허용된 로컬 실행 환경에서 확인했다. 결과와 생성한 문서, footprint 원본은 `build/memory-cases/<실행 시각>/`에 남는다. 원래 문서는 수정하지 않는다.
+Start with Leaflit closed. The local environment already had accessibility permission. Inputs, raw footprint JSON/text and results remain under `build/memory-cases/<timestamp>/`. Original repository documents are not changed.
 
 ```sh
 python3 scripts/measure-memory-cases.py
 python3 scripts/measure-memory-cases.py --cases short prose --repeats 3 --late-close-delay 0
-# 중단된 수집은 같은 조건과 바이너리인지 확인한 뒤 이어서 실행
+# Resume only after validating the same candidate and measurement parameters.
 python3 scripts/measure-memory-cases.py --resume build/memory-cases/20261018-235932
 ```
 
-메모리 감소를 위한 제품 변경과 개선 효과는 이번 측정에 포함하지 않는다.
-
-## 측정 도구 확인
-
-Python 구문 검사, 생성 문서 여섯 개의 정확한 바이트 수와 UTF-8, 실제 Markdown 파서의 수식 및 다이어그램 개수, 31개 완료 실행의 반복 횟수와 표본 수를 확인했다. 각 실행에서 원문 해시가 그대로인지 확인했고 최종 앱 실행 파일 해시도 측정 전과 같았다. 제품 소스와 웹 자산 소스의 변경은 없다. 이번 작업에서 제품의 전체 회귀 검수를 다시 실행하지 않았다.
+Verified Python syntax, exact byte counts and UTF-8 for all six generated inputs, formula/diagram counts with the actual Markdown parser, and repetition/snapshot counts for all 31 complete runs. All 201 completed snapshots were validated: 93 loaded, 93 post-close and fifteen late-close. Input and executable hashes were unchanged. Product and web sources were unchanged. A product-wide regression suite was not rerun for this measurement-only work. No memory-reduction implementation or measured improvement is claimed.
