@@ -236,6 +236,7 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         webView.callAsyncJavaScript("return window.Leaflit.position()", arguments: [:], in: nil, in: .page) { [weak self] result in
             guard let self, self.navigationSerial == request, self.documentURL == origin else { return }
             if let folder, (self.sidebar.folder?.root != folder.root || !folder.canOpen(raw)) { self.sidebar.setDocument(self.documentURL); return }
+            guard self.canNavigate?(target) != false else { self.sidebar.setDocument(self.documentURL); return }
             let location = (try? result.get()) as? [String: Any] ?? [:]
             self.history.append((origin, location, self.documentScope)); self.back.isEnabled = true
             self.open(raw, location: anchor.map { ["anchor": $0] }, within: folder)

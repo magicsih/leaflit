@@ -81,6 +81,27 @@ extension ReaderTests {
         XCTAssertEqual(try FolderDocumentReader.read(first, within: FolderTree(root: root)).text, "# First")
     }
 
+    func testFileOpenedElsewhereDuringPositionCaptureKeepsOriginalDocument() async throws {
+        let first = try write("# First", name: "first.md"), next = try write("# Next", name: "next.md")
+        reader.open(first); try await wait { self.reader.completedRevision > 0 }
+        reader.sidebar.chooseFolder(dir); try await wait { self.fileRow("next.md") != nil }
+        _ = try await js("window.Leaflit.position = async () => { await new Promise(resolve => setTimeout(resolve, 250)); return {y:0}; }; return true")
+        var openedElsewhere = false, evaluations = 0
+        reader.canNavigate = { target in
+            XCTAssertEqual(target, DocumentPath.canonical(next))
+            evaluations += 1
+            return !openedElsewhere
+        }
+        let list = reader.sidebar.filesView
+        list.selectRowIndexes(IndexSet(integer: try XCTUnwrap(fileRow("next.md"))), byExtendingSelection: false)
+        XCTAssertEqual(evaluations, 1)
+        openedElsewhere = true
+        try await wait { evaluations == 2 }
+        XCTAssertEqual(reader.documentURL, DocumentPath.canonical(first))
+        XCTAssertEqual(list.selectedRow, fileRow("first.md"))
+        try await assertJS("return document.querySelector('h1').textContent", "First")
+    }
+
     func testSidebarModesPreserveBodyAndNativeOutlineNavigates() async throws {
         let text = "# Hello **world**\n\n" + (0..<70).map { "## Section \($0)\n\nA paragraph to read.\n\n" }.joined() + "## 한글 😀\n\n## 한글 😀"
         let url = try write(text); let before = try Data(contentsOf: url)
@@ -103,7 +124,7 @@ extension ReaderTests {
         list.selectRowIndexes(IndexSet(integer: try XCTUnwrap(row)), byExtendingSelection: false)
         try await wait { self.reader.sidebar.activeHeadingID == "section-40" }
         let top = try await js("return document.getElementById('section-40').getBoundingClientRect().top") as? Double ?? 100
-        XCTAssertLessThan(abs(top), 2)
+        XCTAssertEqual(top, 24, accuracy: 2)
         _ = try await js("window.webkit.messageHandlers.leaflit.postMessage({type:'activeHeading',revision:0,id:'obsolete'}); return true")
         try await Task.sleep(nanoseconds: 80_000_000)
         XCTAssertEqual(reader.sidebar.activeHeadingID, "section-40")
