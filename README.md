@@ -4,6 +4,17 @@ A read-only Markdown viewer for macOS, with offline Mermaid diagrams and LaTeX m
 
 Built with Swift, AppKit and WKWebView for Apple Silicon. The deployment target is macOS 14 or later; runtime verification so far covers Apple M3 on macOS 26.6.2. Earlier macOS releases and Intel Macs have not been verified.
 
+## Install
+
+Download the [0.1.0 preview](https://github.com/magicsih/leaflit/releases/tag/v0.1.0), extract the ZIP and move Leaflit.app to Applications. The public app is signed and notarized. Homebrew installs the app and launcher together:
+
+```sh
+brew install --cask magicsih/tap/leaflit
+leaflit "path/to/document.md"
+```
+
+The launcher does not change Finder's default application. See the [release procedure](docs/releasing.md) for signing, publication and artifact verification.
+
 ## Read
 
 - Open `.md`, `.markdown` and `.mdown` files from Finder, the Open menu, drag and drop, or the `leaflit` launcher.

@@ -1,11 +1,14 @@
 #!/bin/zsh
 set -euo pipefail
 app="${0:A:h}/Leaflit.app"
+if [[ ! -d "$app" && "${0:A}" == */Leaflit.app/Contents/Helpers/leaflit ]]; then
+  app="${0:A:h:h:h}"
+fi
 if [[ ! -d "$app" ]]; then
   app="${0:A:h:h}/build/Leaflit-0.1.0/Leaflit.app"
 fi
 if [[ ! -d "$app" ]]; then
-  print -u2 'Leaflit.app was not found. Keep this tool beside Leaflit.app or run scripts/build.sh.'
+  print -u2 'Leaflit.app was not found. Keep this tool beside Leaflit.app, use the bundled launcher, or run scripts/build.sh.'
   exit 1
 fi
 files=()
