@@ -51,7 +51,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if panel.runModal() == .OK { open(panel.urls) }
     }
     private var activeReader: ReaderController? {
-        for window in [NSApp.keyWindow, NSApp.mainWindow] {
+        for window in [NSApp.keyWindow, NSApp.mainWindow] + NSApp.orderedWindows.map({ Optional($0) }) {
             if let reader = window?.delegate as? ReaderController { return reader }
         }
         return nil

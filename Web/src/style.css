@@ -20,3 +20,5 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 2em 0; }
 .math { overflow-x: auto; } span.math { display: inline; } .render-error { padding: 12px; border: 1px solid var(--line); border-radius: 6px; }
 .render-error pre { margin: .5em 0 0; } ::selection { background: Highlight; color: HighlightText; }
 @media (max-width: 640px) { article { padding: 20px; } }
+
+.math.render-error { display: block; margin: .5em 0 1em; }

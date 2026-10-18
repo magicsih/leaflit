@@ -9,3 +9,5 @@ xcuserdata/
 .serena/cache/
 .serena/project.local.yml
 *.log
+__pycache__/
+*.pyc

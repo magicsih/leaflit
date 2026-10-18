@@ -9,7 +9,9 @@ public enum DocumentLink: Equatable {
 
 public enum DocumentPath {
     public static let extensions: Set<String> = ["md", "markdown", "mdown"]
-    public static func canonical(_ url: URL) -> URL { url.standardizedFileURL.resolvingSymlinksInPath() }
+    public static func canonical(_ url: URL) -> URL {
+        URL(fileURLWithPath: url.standardizedFileURL.resolvingSymlinksInPath().path)
+    }
     public static func isMarkdown(_ url: URL) -> Bool { url.isFileURL && extensions.contains(url.pathExtension.lowercased()) }
     public static func link(_ href: String, from document: URL) -> DocumentLink {
         let raw = href.trimmingCharacters(in: .whitespacesAndNewlines)

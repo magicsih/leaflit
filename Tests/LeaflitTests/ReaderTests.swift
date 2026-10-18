@@ -12,6 +12,8 @@ final class ReaderTests: XCTestCase {
         dir = FileManager.default.temporaryDirectory.appendingPathComponent("Leaflit Tests \(UUID().uuidString)")
         try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         reader = ReaderController(); reader.showWindow(nil)
+        reader.window?.level = .floating
+        reader.window?.orderFrontRegardless()
     }
     override func tearDown() async throws {
         reader.close(); reader = nil
@@ -23,6 +25,7 @@ final class ReaderTests: XCTestCase {
     func wait(_ condition: @escaping () -> Bool, seconds: Double = 20, file: StaticString = #filePath, line: UInt = #line) async throws {
         let end = Date().addingTimeInterval(seconds)
         while !condition() && Date() < end { try await Task.sleep(nanoseconds: 30_000_000) }
+        if !condition() { print("LEAFLIT_TIMEOUT doc=\(String(describing: reader.documentURL)) rendered=\(String(describing: reader.renderedURL)) revision=\(reader.revision.current) body=\(reader.displayedRevision) complete=\(reader.completedRevision) visible=\(reader.window?.isVisible == true) occluded=\(reader.window?.occlusionState.contains(.visible) != true)") }
         XCTAssertTrue(condition(), "Timed out", file: file, line: line)
     }
     func js(_ source: String) async throws -> Any? {
@@ -40,6 +43,7 @@ final class ReaderTests: XCTestCase {
         try await assertJS("return document.querySelectorAll('.katex').length", 4)
         try await assertJS("return document.querySelectorAll('.diagram svg').length", 1)
         try await assertJS("return document.querySelector('.diagram svg').textContent.includes('Open')", true)
+        try await assertJS("return document.querySelector('.diagram').getAttribute('aria-label').includes('Read')", true)
         try await assertJS("return document.querySelector('input').disabled", true)
         try await assertJS("return document.querySelectorAll('table').length", 1)
     }
@@ -54,12 +58,16 @@ final class ReaderTests: XCTestCase {
         let first = try write("# First\n\n[Next](second%20page.md#target)", name: "first.md")
         _ = try write("# Second\n\n## Target\n\nHello", name: "second page.md")
         reader.open(first); try await wait { self.reader.completedRevision > 0 }
+        let firstRevision = reader.completedRevision
         reader.navigate("second%20page.md#target")
-        try await wait { self.reader.documentURL?.lastPathComponent == "second page.md" && self.reader.completedRevision == self.reader.revision.current }
+        try await wait { self.reader.documentURL?.lastPathComponent == "second page.md" && self.reader.completedRevision > firstRevision }
         let title = try await js("return document.querySelector('h1').textContent") as? String
         XCTAssertEqual(title, "Second")
-        reader.goBack()
-        try await wait { self.reader.documentURL == first && self.reader.completedRevision == self.reader.revision.current }
+        let secondRevision = reader.completedRevision
+        reader.window?.orderFrontRegardless()
+        let delegate = try XCTUnwrap(NSApp.delegate as? AppDelegate)
+        delegate.back(nil)
+        try await wait { self.reader.documentURL == DocumentPath.canonical(first) && self.reader.completedRevision > secondRevision }
         try await assertJS("return document.querySelector('h1').textContent", "First")
     }
     func testAtomicSaveRapidUpdatesDeletionAndRecovery() async throws {
@@ -132,6 +140,61 @@ final class ReaderTests: XCTestCase {
         print("LEAFLIT_TRANSITIONS " + String(data: data, encoding: .utf8)!)
         let attachment = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
         attachment.name = "100KiB-transitions-20"; attachment.lifetime = .keepAlways; add(attachment)
+    }
+
+    func testAppearanceZoomAndOfflinePolicy() async throws {
+        try await loaded("# Appearance\n\nA paragraph with 한글 and emoji 🌿.\n\n$x^2$\n\n```mermaid\nflowchart LR\n A[Open] --> B[Read]\n```\n\n```text\n" + String(repeating: "long ", count: 100) + "\n```\n")
+        reader.window?.setContentSize(NSSize(width: 640, height: 540))
+        reader.webView.pageZoom = 2
+        for (name, appearance) in [("light", NSAppearance.Name.aqua), ("dark", NSAppearance.Name.darkAqua)] {
+            reader.window?.appearance = NSAppearance(named: appearance)
+            try await Task.sleep(nanoseconds: 350_000_000)
+            try await assertJS("return matchMedia('(prefers-color-scheme: dark)').matches", name == "dark")
+            try await assertJS("return document.documentElement.scrollWidth <= innerWidth", true)
+            try await assertJS("return [...document.querySelectorAll('pre')].some(p => p.scrollWidth > p.clientWidth)", true)
+            let snapshot = try await reader.webView.takeSnapshot(configuration: nil)
+            let attachment = XCTAttachment(image: snapshot); attachment.name = "640pt-200percent-" + name; attachment.lifetime = .keepAlways; add(attachment)
+        }
+        try await assertJS("try { await fetch('https://example.com/blocked'); return false; } catch { return true; }", true)
+    }
+
+    func testReloadLatency100KiB() async throws {
+        let fixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent("Fixtures/Benchmark100KiB.md")
+        let text = try String(contentsOf: fixture, encoding: .utf8)
+        let url = try write(text)
+        reader.open(url); try await wait { self.reader.completedRevision > 0 }
+        let old = reader.displayedRevision
+        let start = Date()
+        try (text + "\nChanged.").write(to: url, atomically: true, encoding: .utf8)
+        try await wait { self.reader.displayedRevision > old }
+        print("LEAFLIT_RELOAD bodyMs=\(Date().timeIntervalSince(start) * 1000)")
+        try await wait { self.reader.completedRevision == self.reader.revision.current }
+    }
+
+    func testUnchangedSaveAndSiblingChangeKeepLinksActive() async throws {
+        let text = "# First\n\n[Next](next.md)"
+        let first = try write(text, name: "first.md")
+        _ = try write("# Next", name: "next.md")
+        reader.open(first); try await wait { self.reader.completedRevision > 0 }
+        let old = reader.completedRevision
+        try text.write(to: first, atomically: true, encoding: .utf8)
+        try "sibling".write(to: dir.appendingPathComponent("unrelated.txt"), atomically: true, encoding: .utf8)
+        try await Task.sleep(nanoseconds: 400_000_000)
+        XCTAssertEqual(reader.revision.current, old)
+        _ = try await js("document.querySelector('a').click(); return true")
+        try await wait { self.reader.documentURL?.lastPathComponent == "next.md" && self.reader.completedRevision > old }
+        try await assertJS("return document.querySelector('h1').textContent", "Next")
+    }
+
+    func testUserScrollDuringDiagramRenderingIsKept() async throws {
+        let diagrams = String(repeating: "```mermaid\nflowchart LR\n A[Open] --> B[Read]\n```\n\n", count: 10)
+        let text = "# Scroll\n\n" + diagrams + String(repeating: "A paragraph to read while rendering.\n\n", count: 100)
+        reader.open(try write(text))
+        try await wait { self.reader.displayedRevision > 0 }
+        _ = try await js("scrollTo(0, 1200); return true")
+        try await wait { self.reader.completedRevision == self.reader.revision.current }
+        let y = try await js("return scrollY") as? Double ?? 0
+        XCTAssertGreaterThan(y, 500)
     }
 
 }

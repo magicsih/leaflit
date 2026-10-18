@@ -1,5 +1,7 @@
 import { markdown } from './markdown.js';
 let current = 0;
+let scrollVersion = 0;
+addEventListener('scroll', () => { scrollVersion++; }, { passive: true });
 const article = document.querySelector('article');
 const post = payload => window.webkit?.messageHandlers?.leaflit?.postMessage(payload);
 const frame = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
@@ -10,7 +12,9 @@ function position() {
 }
 function restore(location) {
   if (typeof location?.anchor === 'string') {
-    document.getElementById(location.anchor)?.scrollIntoView(); return;
+    const target = document.getElementById(location.anchor);
+    if (target) target.scrollIntoView(); else scrollTo(0, 0);
+    return;
   }
   if (location?.line !== undefined) {
     const nodes = [...article.querySelectorAll('[data-source-line]')];
@@ -41,6 +45,7 @@ window.Leaflit = {
     restore(saved);
     await frame();
     if (revision !== current) return;
+    const initialScrollVersion = scrollVersion;
     post({ type: 'displayed', revision, phase: 'body', milliseconds: performance.now() - start });
     if (result.math.length) {
       const { default: katex } = await import('katex');
@@ -70,11 +75,13 @@ window.Leaflit = {
           if (revision !== current) return;
           node.innerHTML = DOMPurify.sanitize(svg, { USE_PROFILES: { svg: true, svgFilters: true }, FORBID_TAGS: ['a', 'image', 'foreignObject', 'script'], FORBID_ATTR: ['href', 'xlink:href'] });
           node.setAttribute('role', 'img');
+          const description = node.querySelector('desc')?.textContent || [...node.querySelectorAll('text')].map(text => text.textContent).filter(Boolean).join('. ') || item.content;
+          node.setAttribute('aria-label', `Diagram: ${description}`);
         } catch { if (revision === current) failure(node, item.content, 'Diagram'); }
       }
     }
     if (revision !== current) return;
-    restore(saved);
+    if (scrollVersion === initialScrollVersion) restore(saved);
     await frame();
     if (revision === current) post({ type: 'displayed', revision, phase: 'complete', milliseconds: performance.now() - start });
   }
@@ -83,7 +90,7 @@ document.addEventListener('click', event => {
   const a = event.target.closest('a');
   if (!a) return;
   event.preventDefault();
-  post({ type: 'navigate', href: a.getAttribute('href') });
+  post({ type: 'navigate', revision: current, href: a.getAttribute('href') });
 });
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => post({ type: 'appearance' }));
 post({ type: 'ready' });

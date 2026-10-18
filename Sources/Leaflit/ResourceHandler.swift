@@ -18,7 +18,8 @@ final class ResourceHandler: NSObject, WKURLSchemeHandler {
                 data = try Data(contentsOf: file)
                 mime = ["html":"text/html", "js":"text/javascript", "css":"text/css", "woff2":"font/woff2", "woff":"font/woff", "ttf":"font/ttf", "txt":"text/plain"][file.pathExtension] ?? "application/octet-stream"
             } else if url.scheme == "leaflit-image", url.host == String(revision) {
-                let path = String(url.path.dropFirst()).removingPercentEncoding ?? ""
+                let encoded = URLComponents(url: url, resolvingAgainstBaseURL: false)?.percentEncodedPath ?? ""
+                let path = String(encoded.dropFirst()).removingPercentEncoding ?? ""
                 guard let file = images[path] else { throw CocoaError(.fileReadNoPermission) }
                 data = try Data(contentsOf: file)
                 if data.starts(with: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]) { mime = "image/png" }

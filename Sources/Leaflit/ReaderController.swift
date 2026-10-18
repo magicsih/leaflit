@@ -8,6 +8,8 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
     let resources: ResourceHandler
     private(set) var documentURL: URL?
     private(set) var revision = RevisionGate()
+    private var readRevision = RevisionGate()
+    private(set) var renderedURL: URL?
     private(set) var displayedRevision = 0
     private(set) var completedRevision = 0
     private(set) var measurements: [String: Double] = [:]
@@ -114,15 +116,20 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
     func reload(preserve: Bool) {
         guard ready, let url = documentURL else { return }
         reading?.cancel()
-        let number = revision.next(); if preserve { requestedAt = Date() }; let location = pendingLocation; pendingLocation = nil
+        let request = readRevision.next()
+        let requestDate = preserve ? Date() : requestedAt
+        let location = pendingLocation; pendingLocation = nil
         reading = Task { [weak self] in
             let result = await Task.detached(priority: .userInitiated) { Result { try DocumentSnapshot.read(url) } }.value
-            guard let self, !Task.isCancelled, self.revision.accepts(number) else { return }
+            guard let self, !Task.isCancelled, self.readRevision.accepts(request) else { return }
             switch result {
             case .failure:
                 self.showError(self.lastText == nil ? "Could not read this file. Choose a UTF-8 Markdown file or retry." : "This file could not be refreshed. The previous content is still shown.")
             case .success(let snapshot):
                 if preserve && snapshot.text == self.lastText { self.errorBar.isHidden = true; return }
+                let number = self.revision.next()
+                self.requestedAt = requestDate
+                self.renderedURL = snapshot.url
                 self.lastText = snapshot.text
                 self.resources.images = snapshot.images; self.resources.revision = number
                 self.errorBar.isHidden = true; self.empty.isHidden = true; self.webView.isHidden = false
@@ -140,11 +147,12 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         switch type {
         case "ready": ready = true; reload(preserve: false)
         case "displayed":
-            guard let number = body["revision"] as? Int, revision.accepts(number), let phase = body["phase"] as? String else { return }
+            guard documentURL?.path == renderedURL?.path, let number = body["revision"] as? Int, revision.accepts(number), let phase = body["phase"] as? String else { return }
             measurements[phase] = Date().timeIntervalSince(requestedAt) * 1000
             performanceLog.info("display phase=\(phase, privacy: .public) ms=\(self.measurements[phase] ?? 0, privacy: .public)")
             if phase == "body" { displayedRevision = number } else if phase == "complete" { completedRevision = number }
-        case "navigate": if let href = body["href"] as? String { navigate(href) }
+        case "navigate":
+            if documentURL?.path == renderedURL?.path, let number = body["revision"] as? Int, revision.accepts(number), let href = body["href"] as? String { navigate(href) }
         case "appearance": lastText = nil; reload(preserve: true)
         default: break
         }

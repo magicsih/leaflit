@@ -45,4 +45,13 @@ final class DocumentTests: XCTestCase {
         XCTAssertNotNil(images["images/with space.png"])
     }
 
+    func testCanonicalPathsDiscardRelativeBase() {
+        let base = URL(fileURLWithPath: "/tmp/한글 folder/", isDirectory: true)
+        let relative = URL(string: "page.md", relativeTo: base)!
+        let canonical = DocumentPath.canonical(relative)
+        XCTAssertNil(canonical.baseURL)
+        XCTAssertEqual(canonical, DocumentPath.canonical(canonical))
+        XCTAssertEqual(canonical.lastPathComponent, "page.md")
+    }
+
 }
