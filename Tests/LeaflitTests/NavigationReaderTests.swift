@@ -31,11 +31,18 @@ extension ReaderTests {
     func testModeSegmentsRemainVisibleAfterDividerShrinks() async throws {
         try await loaded("# Sidebar")
         let sidebar = reader.sidebar, control = sidebar.modeControl
+        func segmentFrames(_ children: [Any]) -> [NSRect] {
+            children.flatMap { child -> [NSRect] in
+                guard let element = child as? NSAccessibilityProtocol else { return [] }
+                if element.accessibilityRole() == .radioButton { return [element.accessibilityFrame()] }
+                return segmentFrames(element.accessibilityChildren() ?? [])
+            }
+        }
         for width in [320.0, 188.0] {
             reader.splitController.splitView.setPosition(width, ofDividerAt: 0)
             reader.window?.contentView?.layoutSubtreeIfNeeded()
             try await Task.sleep(nanoseconds: 100_000_000)
-            let frames = (control.accessibilityChildren() ?? []).compactMap { ($0 as? NSAccessibilityProtocol)?.accessibilityFrame() }
+            let frames = segmentFrames(control.accessibilityChildren() ?? [])
             print("LEAFLIT_SEGMENTS pane=\(sidebar.view.bounds.width) frame=\(control.frame) bounds=\(control.bounds) widths=\(control.width(forSegment: 0)),\(control.width(forSegment: 1)) AX=\(frames)")
             XCTAssertLessThanOrEqual(control.frame.maxX, sidebar.view.bounds.width)
             XCTAssertEqual(frames.count, 2)
