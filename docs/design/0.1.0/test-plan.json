@@ -1,0 +1,13 @@
+{
+  "version": "0.1.0",
+  "approval": "2026-10-18 user supplied implementation plan",
+  "level": "L3",
+  "environments": ["macOS development app", "macOS Release app"],
+  "redesign": true,
+  "independentUIRounds": 3,
+  "release": {"target": "local Apple Silicon macOS app", "endpoint": "local-candidate", "remote": false},
+  "coverage": ["open routes and duplicate windows", "Markdown and Unicode", "search and copy", "relative navigation and anchors", "live reload and scroll", "recovery", "offline diagrams and math", "hostile content", "small window and zoom", "system appearance", "keyboard and VoiceOver", "100KiB 20 cold opens and 20 transitions", "1MiB and 5MiB", "memory and idle CPU", "source immutability"],
+  "policyScope": "Personal magicsih repository; Seorilabs central validator does not apply.",
+  "minimumOS": "14.0",
+  "unverifiedOS": ["macOS 14", "macOS 15"]
+}
