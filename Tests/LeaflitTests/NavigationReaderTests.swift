@@ -11,6 +11,29 @@ extension ReaderTests {
     }
     private func sidebarViews(_ view: NSView) -> [NSView] { [view] + view.subviews.flatMap(sidebarViews) }
 
+    func testExpandedFolderSettlesWithoutRepeatedExpansionAndAllowsNavigation() async throws {
+        let nested = dir.appendingPathComponent("Guides")
+        try FileManager.default.createDirectory(at: nested, withIntermediateDirectories: true)
+        try "# Guide".write(to: nested.appendingPathComponent("guide.md"), atomically: true, encoding: .utf8)
+        let first = try write("# First", name: "first.md"), next = try write("# Next", name: "next.md")
+        reader.open(first); try await wait { self.reader.completedRevision > 0 }
+        reader.sidebar.chooseFolder(dir); try await wait { self.fileRow("Guides") != nil }
+        let list = reader.sidebar.filesView
+        var expansions = 0
+        let observer = NotificationCenter.default.addObserver(forName: NSOutlineView.itemWillExpandNotification, object: list, queue: .main) { _ in expansions += 1 }
+        defer { NotificationCenter.default.removeObserver(observer) }
+        list.expandItem(list.item(atRow: try XCTUnwrap(fileRow("Guides"))))
+        try await wait { self.fileRow("guide.md") != nil }
+        try await Task.sleep(nanoseconds: 250_000_000)
+        let settledExpansions = expansions
+        try await Task.sleep(nanoseconds: 300_000_000)
+        XCTAssertEqual(expansions, settledExpansions, "A directory with no changes must settle after expansion")
+        let revision = reader.completedRevision
+        list.selectRowIndexes(IndexSet(integer: try XCTUnwrap(fileRow("next.md"))), byExtendingSelection: false)
+        try await wait { self.reader.documentURL == DocumentPath.canonical(next) && self.reader.completedRevision > revision }
+        try await assertJS("return document.querySelector('h1').textContent", "Next")
+    }
+
     func testReexpandedFolderRefreshesChangesMadeWhileCollapsed() async throws {
         let nested = dir.appendingPathComponent("Guides")
         try FileManager.default.createDirectory(at: nested, withIntermediateDirectories: true)
