@@ -1,15 +1,15 @@
 import { markdown } from './markdown.js';
+import { waitForFrames } from './frames.js';
 let current = 0;
 let scrollVersion = 0;
 addEventListener('scroll', () => { scrollVersion++; scheduleOutline(); }, { passive: true });
 const article = document.querySelector('article');
 const post = payload => window.webkit?.messageHandlers?.leaflit?.postMessage(payload);
-const frame = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 let outlineEnabled = false, outlinePending = false, headingIDs = [], headingNodes = [], activeHeading = null;
 function scheduleOutline() {
   if (!outlineEnabled || outlinePending) return;
   outlinePending = true;
-  requestAnimationFrame(() => {
+  waitForFrames(1).then(() => {
     outlinePending = false;
     if (!outlineEnabled) return;
     let low = 0, high = headingNodes.length - 1, index = 0;
@@ -66,10 +66,10 @@ window.Leaflit = {
       img.addEventListener('error', () => { const fallback = document.createElement('span'); fallback.className = 'image-fallback'; fallback.textContent = `${img.alt || 'Image'} — image unavailable`; img.replaceWith(fallback); });
     });
     restore(saved);
-    await frame();
+    let timing = await waitForFrames();
     if (revision !== current) return;
     const initialScrollVersion = scrollVersion;
-    post({ type: 'displayed', revision, phase: 'body', milliseconds: performance.now() - start, headings: result.headings });
+    post({ type: 'displayed', revision, phase: 'body', milliseconds: performance.now() - start, timing, headings: result.headings });
     scheduleOutline();
     if (result.math.length) {
       const { default: katex } = await import('katex');
@@ -106,8 +106,8 @@ window.Leaflit = {
     }
     if (revision !== current) return;
     if (scrollVersion === initialScrollVersion) restore(saved);
-    await frame();
-    if (revision === current) { post({ type: 'displayed', revision, phase: 'complete', milliseconds: performance.now() - start }); scheduleOutline(); }
+    if (await waitForFrames() === 'timerFallback') timing = 'timerFallback';
+    if (revision === current) { post({ type: 'displayed', revision, phase: 'complete', milliseconds: performance.now() - start, timing }); scheduleOutline(); }
   }
 };
 document.addEventListener('click', event => {

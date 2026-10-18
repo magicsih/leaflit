@@ -21,6 +21,8 @@ extension ReaderTests {
         reader.open(url)
         try await wait({ self.reader.completedRevision > previous && self.reader.sidebar.headings.first?.id == "paused" }, seconds: 5)
         guard reader.completedRevision > previous else { return }
+        XCTAssertEqual(reader.displayTimings["body"], "timerFallback")
+        XCTAssertEqual(reader.displayTimings["complete"], "timerFallback")
         try await assertJS("return document.querySelectorAll('.katex').length", 1)
         try await assertJS("return document.querySelectorAll('.diagram svg').length", 1)
         _ = try await js("document.getElementById('target').scrollIntoView(); return true")

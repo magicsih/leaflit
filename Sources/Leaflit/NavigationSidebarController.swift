@@ -54,7 +54,6 @@ final class NavigationSidebarController: NSViewController, NSOutlineViewDataSour
         modeControl.target = self; modeControl.action = #selector(sidebarModeChanged)
         modeControl.identifier = .init("sidebarMode"); modeControl.setAccessibilityLabel("Sidebar mode")
         modeControl.setToolTip("Browse files", forSegment: 0); modeControl.setToolTip("Navigate document headings", forSegment: 1)
-        modeControl.segmentDistribution = .fillEqually
         [modeControl, filesPanel, outlinePanel].forEach { $0.translatesAutoresizingMaskIntoConstraints = false; view.addSubview($0) }
         NSLayoutConstraint.activate([
             modeControl.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
@@ -71,6 +70,15 @@ final class NavigationSidebarController: NSViewController, NSOutlineViewDataSour
         buildPanel(filesPanel, name: folderName, list: filesView, status: fileStatus, actions: [choose, retryButton])
         buildPanel(outlinePanel, name: documentName, list: outlineView, status: outlineStatus, actions: [])
         displayMode()
+    }
+    override func viewDidLayout() {
+        super.viewDidLayout()
+        guard modeControl.bounds.width > 4 else { return }
+        // Explicit widths invalidate AppKit's cached segment geometry on shrink.
+        let width = (modeControl.bounds.width - 2) / CGFloat(modeControl.segmentCount)
+        for segment in 0..<modeControl.segmentCount where abs(modeControl.width(forSegment: segment) - width) > 0.5 {
+            modeControl.setWidth(width, forSegment: segment)
+        }
     }
     private func configure(_ list: NSOutlineView, label: String) {
         let column = NSTableColumn(identifier: .init("title")); column.resizingMask = .autoresizingMask

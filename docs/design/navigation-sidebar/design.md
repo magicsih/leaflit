@@ -43,6 +43,8 @@ Start with a sidebar around 230pt wide, adjustable between approximately 180–3
 - Reconcile entries after saves and replacement saves. Preserve expanded groups by stable heading identity when possible. Show `No headings in this document` when appropriate.
 - Pause unnecessary outline observation when hidden; avoid a second Markdown parse, another WebView or per-frame native messages.
 
+Rendering and coalesced outline updates must keep progressing if WebKit stops animation callbacks. Normally retain the existing animation-frame waits. A one-shot 250ms timer can release the wait, canceling the losing callback; it is not a paint guarantee or a strict wall-clock deadline. Record `animationFrames` or `timerFallback` for body and complete events, and classify complete as fallback if either render wait used the timer. Keep the two timing groups separate in measurements. This follows the distinction between work progress and rendering opportunities in the [HTML event-loop model](https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model); the exact OS trigger observed in UI round 2 remains unproven.
+
 ## Verification and delivery
 
 The adjacent [test plan](test-plan.json) proposes L3 complete regression on the macOS development and Release apps, with three independent rendered UI review rounds. Measure additional memory and latency with the sidebar hidden, Files active and Outline active on the same fixed documents. Compare against a fresh measurement of the baseline, rather than treating historical numbers as a guarantee.

@@ -236,10 +236,16 @@ def summarize(runs):
             for phase in ['body', 'complete']:
                 summary['initialLaunchLatency'][phase] = None if case == 'empty' else {}
                 if case != 'empty':
-                    for metric in ['fromLaunchMs', 'fromOpenRequestMs']:
-                        values = [run['initialLaunchLatency'][phase][metric] for run in group]
-                        summary['initialLaunchLatency'][phase][metric] = {
-                            'median': statistics.median(values), 'min': min(values), 'max': max(values)}
+                    by_timing = {}
+                    for timing in sorted({run['initialLaunchLatency'][phase]['timing'] for run in group}):
+                        timed = [run['initialLaunchLatency'][phase] for run in group
+                                 if run['initialLaunchLatency'][phase]['timing'] == timing]
+                        by_timing[timing] = {'samples': len(timed)}
+                        for metric in ['fromLaunchMs', 'fromOpenRequestMs']:
+                            values = [sample[metric] for sample in timed]
+                            by_timing[timing][metric] = {
+                                'median': statistics.median(values), 'min': min(values), 'max': max(values)}
+                    summary['initialLaunchLatency'][phase] = {'byTiming': by_timing}
             result[cohort][case] = summary
     return result
 
@@ -389,8 +395,10 @@ def measure(args):
                             match = re.search(r'phase=(body|complete) ms=([\d.]+)', event['eventMessage'])
                             if match:
                                 phase, native_ms = match.groups()
+                                timing = re.search(r'timing=(animationFrames|timerFallback)', event['eventMessage'])
                                 latency[phase] = {'fromLaunchMs': (event_wall - launched_wall) * 1000,
-                                                  'fromOpenRequestMs': float(native_ms)}
+                                                  'fromOpenRequestMs': float(native_ms),
+                                                  'timing': timing.group(1) if timing else 'unreported'}
                                 raw_events.append(event)
                             if all(latency.values()):
                                 break

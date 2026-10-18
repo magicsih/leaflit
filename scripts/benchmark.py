@@ -69,6 +69,8 @@ try:
             phase, render_ms = match.groups()
             sample[phase] = (stamp - started) * 1000
             sample[phase + 'FromOpen'] = float(render_ms)
+            timing = re.search(r'timing=(animationFrames|timerFallback)', event['eventMessage'])
+            sample[phase + 'Timing'] = timing.group(1) if timing else 'unreported'
             if phase == 'complete':
                 break
         if 'complete' not in sample:

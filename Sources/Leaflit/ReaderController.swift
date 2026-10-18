@@ -13,6 +13,7 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
     private(set) var displayedRevision = 0
     private(set) var completedRevision = 0
     private(set) var measurements: [String: Double] = [:]
+    private(set) var displayTimings: [String: String] = [:]
     private var requestedAt = Date()
     private let performanceLog = Logger(subsystem: "io.github.magicsih.leaflit", category: "performance")
     private var ready = false
@@ -125,8 +126,10 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         findBar.orientation = .horizontal; findBar.spacing = 8
         [search, resultLabel, button("Previous", #selector(findPrevious)), button("Next", #selector(findNext)), button("Done", #selector(hideFind))].forEach(findBar.addArrangedSubview)
         search.widthAnchor.constraint(greaterThanOrEqualToConstant: 120).isActive = true
+        search.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         errorBar.orientation = .horizontal; errorBar.spacing = 8
         status.lineBreakMode = .byWordWrapping; status.maximumNumberOfLines = 3
+        status.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         status.setAccessibilityRole(.staticText)
         [status, button("Retry", #selector(retry)), button("Open…", #selector(openPanel))].forEach(errorBar.addArrangedSubview)
         let stack = NSStackView(views: [findBar, errorBar, webView]); stack.orientation = .vertical; stack.spacing = 0; stack.alignment = .width
@@ -203,7 +206,9 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         case "displayed":
             guard documentURL?.path == renderedURL?.path, let number = body["revision"] as? Int, revision.accepts(number), let phase = body["phase"] as? String else { return }
             measurements[phase] = Date().timeIntervalSince(requestedAt) * 1000
-            performanceLog.info("display phase=\(phase, privacy: .public) ms=\(self.measurements[phase] ?? 0, privacy: .public)")
+            let timing = body["timing"] as? String ?? "unknown"
+            displayTimings[phase] = ["animationFrames", "timerFallback"].contains(timing) ? timing : "unknown"
+            performanceLog.info("display phase=\(phase, privacy: .public) ms=\(self.measurements[phase] ?? 0, privacy: .public) timing=\(self.displayTimings[phase] ?? "unknown", privacy: .public)")
             if phase == "body" {
                 displayedRevision = number
                 let messages = body["headings"] as? [[String: Any]] ?? []
