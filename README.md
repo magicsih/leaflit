@@ -46,6 +46,9 @@ Finder의 Open With, File의 Open 메뉴, 파일 드롭이나 `leaflit` 실행 �
 
 ```sh
 ./scripts/verify.sh
+# 첫 표시 20회 측정과 자원 측정은 다른 앱 검수와 분리해 실행
+python3 scripts/benchmark.py
+python3 scripts/measure-resources.py
 # Foundation 문서 처리 모듈만 확인
 swift test
 # 웹 문법 처리만 확인

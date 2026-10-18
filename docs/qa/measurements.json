@@ -1,0 +1,302 @@
+{
+  "sourceSHA": "dffa027d7aa566b915ea0a0fe59a80af73922e01",
+  "environment": {
+    "cpu": "Apple M3",
+    "os": "macOS 26.6.2",
+    "xcode": "27.0"
+  },
+  "fixture": {
+    "path": "Fixtures/Benchmark100KiB.md",
+    "bytes": 102400,
+    "sha256": "55464dacf92db737fbec845a17723c38da683d0fcef0b52d994a0040edff7f61"
+  },
+  "coldOpen": {
+    "body": {
+      "medianMs": 1169.8850393295288,
+      "p95Ms": 1288.8689041137695,
+      "count": 20
+    },
+    "complete": {
+      "medianMs": 1508.2054138183594,
+      "p95Ms": 1622.7262020111084,
+      "count": 20
+    },
+    "samples": [
+      {
+        "iteration": 1,
+        "body": 2033.6127281188965,
+        "bodyFromOpen": 741.537929,
+        "complete": 2400.233745574951,
+        "completeFromOpen": 1108.209968
+      },
+      {
+        "iteration": 2,
+        "body": 1140.1050090789795,
+        "bodyFromOpen": 580.051064,
+        "complete": 1499.9639987945557,
+        "completeFromOpen": 939.940095
+      },
+      {
+        "iteration": 3,
+        "body": 1229.7492027282715,
+        "bodyFromOpen": 585.676074,
+        "complete": 1547.7321147918701,
+        "completeFromOpen": 903.702021
+      },
+      {
+        "iteration": 4,
+        "body": 1081.1161994934082,
+        "bodyFromOpen": 481.487036,
+        "complete": 1396.1882591247559,
+        "completeFromOpen": 796.58103
+      },
+      {
+        "iteration": 5,
+        "body": 1043.4911251068115,
+        "bodyFromOpen": 560.65011,
+        "complete": 1375.0791549682617,
+        "completeFromOpen": 892.271996
+      },
+      {
+        "iteration": 6,
+        "body": 963.1879329681396,
+        "bodyFromOpen": 501.237988,
+        "complete": 1293.497085571289,
+        "completeFromOpen": 831.579924
+      },
+      {
+        "iteration": 7,
+        "body": 1202.868938446045,
+        "bodyFromOpen": 704.197049,
+        "complete": 1517.1771049499512,
+        "completeFromOpen": 1018.557072
+      },
+      {
+        "iteration": 8,
+        "body": 1053.581953048706,
+        "bodyFromOpen": 567.771912,
+        "complete": 1390.458106994629,
+        "completeFromOpen": 904.679894
+      },
+      {
+        "iteration": 9,
+        "body": 1146.7750072479248,
+        "bodyFromOpen": 578.269005,
+        "complete": 1473.3688831329346,
+        "completeFromOpen": 904.885054
+      },
+      {
+        "iteration": 10,
+        "body": 1151.473045349121,
+        "bodyFromOpen": 657.554984,
+        "complete": 1484.956979751587,
+        "completeFromOpen": 991.094947
+      },
+      {
+        "iteration": 11,
+        "body": 1105.3569316864014,
+        "bodyFromOpen": 526.857018,
+        "complete": 1456.528902053833,
+        "completeFromOpen": 878.096938
+      },
+      {
+        "iteration": 12,
+        "body": 1189.2588138580322,
+        "bodyFromOpen": 599.51508,
+        "complete": 1516.446828842163,
+        "completeFromOpen": 926.756024
+      },
+      {
+        "iteration": 13,
+        "body": 1134.6001625061035,
+        "bodyFromOpen": 582.244992,
+        "complete": 1469.6762561798096,
+        "completeFromOpen": 917.341948
+      },
+      {
+        "iteration": 14,
+        "body": 1288.8689041137695,
+        "bodyFromOpen": 717.840075,
+        "complete": 1611.3989353179932,
+        "completeFromOpen": 1040.410995
+      },
+      {
+        "iteration": 15,
+        "body": 1245.5089092254639,
+        "bodyFromOpen": 580.604076,
+        "complete": 1605.1990985870361,
+        "completeFromOpen": 940.328002
+      },
+      {
+        "iteration": 16,
+        "body": 1276.6871452331543,
+        "bodyFromOpen": 677.600026,
+        "complete": 1616.1890029907227,
+        "completeFromOpen": 1017.12501
+      },
+      {
+        "iteration": 17,
+        "body": 1266.3509845733643,
+        "bodyFromOpen": 742.143989,
+        "complete": 1594.4421291351318,
+        "completeFromOpen": 1070.243955
+      },
+      {
+        "iteration": 18,
+        "body": 1104.8471927642822,
+        "bodyFromOpen": 572.422028,
+        "complete": 1469.832181930542,
+        "completeFromOpen": 937.443018
+      },
+      {
+        "iteration": 19,
+        "body": 1188.2970333099365,
+        "bodyFromOpen": 652.933002,
+        "complete": 1608.4930896759033,
+        "completeFromOpen": 1073.160052
+      },
+      {
+        "iteration": 20,
+        "body": 1280.8010578155518,
+        "bodyFromOpen": 631.390929,
+        "complete": 1622.7262020111084,
+        "completeFromOpen": 973.359942
+      }
+    ]
+  },
+  "transitions": {
+    "body": {
+      "medianMs": 115.01795053482056,
+      "p95Ms": 121.49596214294434,
+      "count": 20
+    },
+    "complete": {
+      "medianMs": 172.263503074646,
+      "p95Ms": 192.70598888397217,
+      "count": 20
+    },
+    "samples": [
+      {
+        "body": 114.56799507141113,
+        "complete": 180.9929609298706
+      },
+      {
+        "body": 115.7369613647461,
+        "complete": 173.0329990386963
+      },
+      {
+        "body": 118.22700500488281,
+        "complete": 168.04707050323486
+      },
+      {
+        "body": 109.44998264312744,
+        "complete": 159.25097465515137
+      },
+      {
+        "body": 108.58500003814697,
+        "complete": 175.25804042816162
+      },
+      {
+        "body": 118.50106716156006,
+        "complete": 169.16406154632568
+      },
+      {
+        "body": 110.9989881515503,
+        "complete": 160.22098064422607
+      },
+      {
+        "body": 108.89697074890137,
+        "complete": 158.42902660369873
+      },
+      {
+        "body": 103.01101207733154,
+        "complete": 153.3750295639038
+      },
+      {
+        "body": 103.86788845062256,
+        "complete": 160.18593311309814
+      },
+      {
+        "body": 102.64110565185547,
+        "complete": 152.4111032485962
+      },
+      {
+        "body": 115.46790599822998,
+        "complete": 178.13193798065186
+      },
+      {
+        "body": 108.12795162200928,
+        "complete": 177.86502838134766
+      },
+      {
+        "body": 119.88699436187744,
+        "complete": 186.66589260101318
+      },
+      {
+        "body": 108.31809043884277,
+        "complete": 161.48006916046143
+      },
+      {
+        "body": 121.49596214294434,
+        "complete": 171.4940071105957
+      },
+      {
+        "body": 116.91200733184814,
+        "complete": 183.52091312408447
+      },
+      {
+        "body": 120.58591842651367,
+        "complete": 176.65791511535645
+      },
+      {
+        "body": 120.55504322052002,
+        "complete": 192.70598888397217
+      },
+      {
+        "body": 152.0390510559082,
+        "complete": 253.90708446502686
+      }
+    ]
+  },
+  "reload": {
+    "bodyMs": 252.32303142547607,
+    "count": 1
+  },
+  "largeDocuments": [
+    {
+      "bytes": 1048573,
+      "bodyMs": 880.695104598999,
+      "completeMs": 909.5920324325562
+    },
+    {
+      "bytes": 5242873,
+      "bodyMs": 3074.3110179901123,
+      "completeMs": 3107.362985610962
+    }
+  ],
+  "resources": {
+    "rssSumMiB": 142.375,
+    "footprintMiB": 148.53445434570312,
+    "idleCPUPercent": 0.14216033062734482,
+    "idleSeconds": 70.34311158303171,
+    "processes": [
+      {
+        "name": "com.apple.WebKit.WebContent",
+        "footprintMiB": 98.81348419189453
+      },
+      {
+        "name": "Leaflit",
+        "footprintMiB": 32.98535919189453
+      },
+      {
+        "name": "com.apple.WebKit.GPU",
+        "footprintMiB": 12.547653198242188
+      },
+      {
+        "name": "com.apple.WebKit.Networking",
+        "footprintMiB": 4.453582763671875
+      }
+    ],
+    "bundleLogicalMiB": 5.019067764282227
+  }
+}

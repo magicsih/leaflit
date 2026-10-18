@@ -197,4 +197,36 @@ final class ReaderTests: XCTestCase {
         XCTAssertGreaterThan(y, 500)
     }
 
+    func testMenuValidationAndDispatch() async throws {
+        let first = try write("# First\n\n[Next](next.md)", name: "first.md")
+        _ = try write("# Next", name: "next.md")
+        reader.open(first); try await wait { self.reader.completedRevision > 0 }
+        let menu = try XCTUnwrap(NSApp.mainMenu?.item(withTitle: "View")?.submenu)
+        menu.update()
+        let zoom = try XCTUnwrap(menu.item(withTitle: "Zoom In"))
+        let target = try XCTUnwrap(zoom.target as? NSObject)
+        print("LEAFLIT_MENU action=\(String(describing: zoom.action)) target=\(type(of: target)) responds=\(target.responds(to: zoom.action!)) enabled=\(zoom.isEnabled)")
+        XCTAssertTrue(target is AppDelegate)
+        XCTAssertTrue(target.responds(to: zoom.action!))
+        XCTAssertTrue(zoom.isEnabled)
+        menu.performActionForItem(at: menu.index(of: zoom))
+        XCTAssertEqual(reader.webView.pageZoom, 1.1, accuracy: 0.001)
+        func descendants(_ view: NSView) -> [NSView] { [view] + view.subviews.flatMap(descendants) }
+        let field = try XCTUnwrap(descendants(reader.window!.contentView!).compactMap { $0 as? NSSearchField }.first)
+        XCTAssertTrue(field.isHiddenOrHasHiddenAncestor)
+        let key = try XCTUnwrap(NSEvent.keyEvent(with: .keyDown, location: .zero, modifierFlags: .command, timestamp: 0, windowNumber: reader.window!.windowNumber, context: nil, characters: "f", charactersIgnoringModifiers: "f", isARepeat: false, keyCode: 3))
+        XCTAssertTrue(NSApp.mainMenu!.performKeyEquivalent(with: key))
+        XCTAssertFalse(field.isHiddenOrHasHiddenAncestor)
+        let old = reader.completedRevision
+        reader.navigate("next.md")
+        try await wait { self.reader.documentURL?.lastPathComponent == "next.md" && self.reader.completedRevision > old }
+        menu.update()
+        let back = try XCTUnwrap(menu.item(withTitle: "Back"))
+        XCTAssertTrue(back.isEnabled)
+        let second = reader.completedRevision
+        menu.performActionForItem(at: menu.index(of: back))
+        try await wait { self.reader.documentURL == DocumentPath.canonical(first) && self.reader.completedRevision > second }
+        try await assertJS("return document.querySelector('h1').textContent", "First")
+    }
+
 }
