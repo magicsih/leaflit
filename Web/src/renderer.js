@@ -66,8 +66,10 @@ window.Leaflit = {
       img.addEventListener('error', () => { const fallback = document.createElement('span'); fallback.className = 'image-fallback'; fallback.textContent = `${img.alt || 'Image'} — image unavailable`; img.replaceWith(fallback); });
     });
     restore(saved);
+    const restoredY = scrollY;
     let timing = await waitForFrames();
     if (revision !== current) return;
+    const movedBeforeBody = Math.abs(scrollY - restoredY) > 0.5;
     const initialScrollVersion = scrollVersion;
     post({ type: 'displayed', revision, phase: 'body', milliseconds: performance.now() - start, timing, headings: result.headings });
     scheduleOutline();
@@ -105,7 +107,7 @@ window.Leaflit = {
       }
     }
     if (revision !== current) return;
-    if (scrollVersion === initialScrollVersion) restore(saved);
+    if (!movedBeforeBody && scrollVersion === initialScrollVersion) restore(saved);
     if (await waitForFrames() === 'timerFallback') timing = 'timerFallback';
     if (revision === current) { post({ type: 'displayed', revision, phase: 'complete', milliseconds: performance.now() - start, timing }); scheduleOutline(); }
   }

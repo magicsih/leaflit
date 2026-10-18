@@ -10,6 +10,13 @@ private final class FileNode: NSObject {
     init(url: URL, name: String, isDirectory: Bool) { self.url = url; self.name = name; self.isDirectory = isDirectory }
 }
 
+private final class SidebarModeControl: NSSegmentedControl {
+    override var intrinsicContentSize: NSSize {
+        // The split view owns width; segment geometry must not set its minimum.
+        NSSize(width: NSView.noIntrinsicMetric, height: super.intrinsicContentSize.height)
+    }
+}
+
 @MainActor
 final class NavigationSidebarController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDelegate {
     enum Mode: String { case files = "Files", outline = "Outline" }
@@ -17,7 +24,7 @@ final class NavigationSidebarController: NSViewController, NSOutlineViewDataSour
     private(set) var folder: FolderTree?
     private(set) var headings: [DocumentHeading] = []
     private(set) var activeHeadingID: String?
-    let modeControl = NSSegmentedControl(labels: ["Files", "Outline"], trackingMode: .selectOne, target: nil, action: nil)
+    let modeControl: NSSegmentedControl = SidebarModeControl(labels: ["Files", "Outline"], trackingMode: .selectOne, target: nil, action: nil)
     let filesView = NSOutlineView()
     let outlineView = NSOutlineView()
     private let filesPanel = NSView(), outlinePanel = NSView()
