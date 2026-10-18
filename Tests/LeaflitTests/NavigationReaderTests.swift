@@ -11,6 +11,64 @@ extension ReaderTests {
     }
     private func sidebarViews(_ view: NSView) -> [NSView] { [view] + view.subviews.flatMap(sidebarViews) }
 
+    func testRenderingAndOutlineProgressWhenAnimationFramesPause() async throws {
+        try await loaded("# Initial")
+        let previous = reader.completedRevision
+        _ = try await js("window.requestAnimationFrame = () => 0; window.cancelAnimationFrame = () => {}; return true")
+        reader.sidebar.setMode(.outline)
+        let text = "# Paused\n\n$x^2$\n\n```mermaid\nflowchart LR\n A[Open] --> B[Read]\n```\n\n" + String(repeating: "A paragraph.\n\n", count: 40) + "## Target\n\n" + String(repeating: "More reading.\n\n", count: 40)
+        let url = try write(text, name: "paused.md")
+        reader.open(url)
+        try await wait({ self.reader.completedRevision > previous && self.reader.sidebar.headings.first?.id == "paused" }, seconds: 5)
+        guard reader.completedRevision > previous else { return }
+        try await assertJS("return document.querySelectorAll('.katex').length", 1)
+        try await assertJS("return document.querySelectorAll('.diagram svg').length", 1)
+        _ = try await js("document.getElementById('target').scrollIntoView(); return true")
+        try await wait({ self.reader.sidebar.activeHeadingID == "target" }, seconds: 2)
+        XCTAssertEqual(try String(contentsOf: url, encoding: .utf8), text)
+    }
+
+    func testModeSegmentsRemainVisibleAfterDividerShrinks() async throws {
+        try await loaded("# Sidebar")
+        let sidebar = reader.sidebar, control = sidebar.modeControl
+        for width in [320.0, 188.0] {
+            reader.splitController.splitView.setPosition(width, ofDividerAt: 0)
+            reader.window?.contentView?.layoutSubtreeIfNeeded()
+            try await Task.sleep(nanoseconds: 100_000_000)
+            let frames = (control.accessibilityChildren() ?? []).compactMap { ($0 as? NSAccessibilityProtocol)?.accessibilityFrame() }
+            print("LEAFLIT_SEGMENTS pane=\(sidebar.view.bounds.width) frame=\(control.frame) bounds=\(control.bounds) widths=\(control.width(forSegment: 0)),\(control.width(forSegment: 1)) AX=\(frames)")
+            XCTAssertLessThanOrEqual(control.frame.maxX, sidebar.view.bounds.width)
+            XCTAssertEqual(frames.count, 2)
+            guard frames.count == 2 else { continue }
+            XCTAssertEqual(frames[0].width, frames[1].width, accuracy: 2)
+            for frame in frames {
+                XCTAssertGreaterThanOrEqual(frame.width, 60)
+                XCTAssertLessThanOrEqual(frame.maxX, control.accessibilityFrame().maxX + 1)
+            }
+        }
+    }
+
+    func testFindAndRecoveryActionsFitMinimumWindowWidth() async throws {
+        let url = try write("# Recovery\n\nA paragraph.")
+        reader.open(url); try await wait { self.reader.completedRevision > 0 }
+        reader.showFind()
+        let root = try XCTUnwrap(reader.window?.contentView)
+        let search = try XCTUnwrap(sidebarViews(root).compactMap { $0 as? NSSearchField }.first)
+        search.stringValue = String(repeating: "Find a paragraph ", count: 20)
+        try FileManager.default.removeItem(at: url); reader.reload(preserve: true)
+        try await wait { self.sidebarViews(root).compactMap { $0 as? NSTextField }.contains { $0.stringValue.contains("could not be refreshed") } }
+        reader.window?.setContentSize(NSSize(width: 480, height: 500)); root.layoutSubtreeIfNeeded()
+        try await Task.sleep(nanoseconds: 100_000_000)
+        print("LEAFLIT_RECOVERY_LAYOUT frame=\(root.frame) fitting=\(root.fittingSize) search=\(search.frame)")
+        XCTAssertEqual(root.bounds.width, 480, accuracy: 1)
+        XCTAssertLessThanOrEqual(root.fittingSize.width, 480)
+        for button in sidebarViews(root).compactMap({ $0 as? NSButton }) where !button.isHiddenOrHasHiddenAncestor {
+            let frame = root.convert(button.bounds, from: button)
+            XCTAssertGreaterThanOrEqual(frame.minX, 0)
+            XCTAssertLessThanOrEqual(frame.maxX, root.bounds.width + 1)
+        }
+    }
+
     func testExpandedFolderSettlesWithoutRepeatedExpansionAndAllowsNavigation() async throws {
         let nested = dir.appendingPathComponent("Guides")
         try FileManager.default.createDirectory(at: nested, withIntermediateDirectories: true)
