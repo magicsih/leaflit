@@ -59,7 +59,7 @@ window.Leaflit = {
     if (result.diagrams.length) {
       const [{ default: mermaid }, { default: DOMPurify }] = await Promise.all([import('mermaid'), import('dompurify')]);
       if (revision !== current) return;
-      mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default', suppressErrorRendering: true,
+      mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', htmlLabels: false, theme: matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default', suppressErrorRendering: true,
         maxTextSize: 100000, flowchart: { htmlLabels: false }, fontFamily: '-apple-system, sans-serif' });
       for (const item of result.diagrams) {
         if (revision !== current) return;

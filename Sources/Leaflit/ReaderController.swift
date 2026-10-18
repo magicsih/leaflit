@@ -1,6 +1,7 @@
 import AppKit
 import WebKit
 import LeaflitCore
+import os
 
 final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavigationDelegate, NSSearchFieldDelegate, NSToolbarDelegate, NSWindowDelegate {
     let webView: ReaderWebView
@@ -11,6 +12,7 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
     private(set) var completedRevision = 0
     private(set) var measurements: [String: Double] = [:]
     private var requestedAt = Date()
+    private let performanceLog = Logger(subsystem: "io.github.magicsih.leaflit", category: "performance")
     private var ready = false
     private var watcher: FileWatcher?
     private var reading: Task<Void, Never>?
@@ -38,6 +40,7 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         webView = ReaderWebView(frame: .zero, configuration: config)
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 900, height: 700), styleMask: [.titled, .closable, .miniaturizable, .resizable], backing: .buffered, defer: false)
         super.init(window: window)
+        window.windowController = self
         window.title = "Leaflit"; window.minSize = NSSize(width: 480, height: 340); window.center(); window.delegate = self
         window.isReleasedWhenClosed = false
         setupLayout(); setupToolbar()
@@ -102,6 +105,7 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
     }
     func open(_ url: URL, location: [String: Any]? = nil) {
         documentURL = DocumentPath.canonical(url); pendingLocation = location
+        requestedAt = Date()
         lastText = nil; watcher = nil
         window?.title = url.lastPathComponent; window?.representedURL = documentURL
         watcher = FileWatcher(url: documentURL!) { [weak self] in self?.reload(preserve: true) }
@@ -110,7 +114,7 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
     func reload(preserve: Bool) {
         guard ready, let url = documentURL else { return }
         reading?.cancel()
-        let number = revision.next(); requestedAt = Date(); let location = pendingLocation; pendingLocation = nil
+        let number = revision.next(); if preserve { requestedAt = Date() }; let location = pendingLocation; pendingLocation = nil
         reading = Task { [weak self] in
             let result = await Task.detached(priority: .userInitiated) { Result { try DocumentSnapshot.read(url) } }.value
             guard let self, !Task.isCancelled, self.revision.accepts(number) else { return }
@@ -138,6 +142,7 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         case "displayed":
             guard let number = body["revision"] as? Int, revision.accepts(number), let phase = body["phase"] as? String else { return }
             measurements[phase] = Date().timeIntervalSince(requestedAt) * 1000
+            performanceLog.info("display phase=\(phase, privacy: .public) ms=\(self.measurements[phase] ?? 0, privacy: .public)")
             if phase == "body" { displayedRevision = number } else if phase == "complete" { completedRevision = number }
         case "navigate": if let href = body["href"] as? String { navigate(href) }
         case "appearance": lastText = nil; reload(preserve: true)
@@ -177,6 +182,7 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         back.isEnabled = !history.isEmpty; open(url, location: location)
     }
     @objc func showFind() { findBar.isHidden = false; window?.makeFirstResponder(search) }
+    override func cancelOperation(_ sender: Any?) { hideFind() }
     @objc func hideFind() { findBar.isHidden = true; window?.makeFirstResponder(webView) }
     func controlTextDidChange(_ obj: Notification) { find(backwards: false) }
     @objc func findNext() { find(backwards: false) }

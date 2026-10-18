@@ -8,7 +8,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     static func main() {
         let app = NSApplication.shared
         let delegate = AppDelegate(); app.delegate = delegate
-        app.setActivationPolicy(.regular); app.run()
+        app.setActivationPolicy(.regular)
+        withExtendedLifetime(delegate) { app.run() }
     }
     func applicationWillFinishLaunching(_ notification: Notification) { buildMenus() }
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -49,6 +50,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         panel.message = "Choose a Markdown file to read."
         if panel.runModal() == .OK { open(panel.urls) }
     }
+    private var activeReader: ReaderController? {
+        for window in [NSApp.keyWindow, NSApp.mainWindow] {
+            if let reader = window?.delegate as? ReaderController { return reader }
+        }
+        return nil
+    }
+    @objc func find(_ sender: Any?) { activeReader?.showFind() }
+    @objc func findNext(_ sender: Any?) { activeReader?.findNext() }
+    @objc func findPrevious(_ sender: Any?) { activeReader?.findPrevious() }
+    @objc func back(_ sender: Any?) { activeReader?.goBack() }
+    @objc func zoomIn(_ sender: Any?) { activeReader?.zoomIn() }
+    @objc func zoomOut(_ sender: Any?) { activeReader?.zoomOut() }
+    @objc func actualSize(_ sender: Any?) { activeReader?.actualSize() }
     private func buildMenus() {
         let main = NSMenu(); NSApp.mainMenu = main
         func menu(_ title: String) -> NSMenu {
@@ -66,15 +80,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         add(file, "Open…", #selector(openPanel(_:)), "o", target: self)
         file.addItem(.separator()); add(file, "Close Window", #selector(NSWindow.performClose(_:)), "w")
         let edit = menu("Edit")
-        add(edit, "Copy", #selector(NSText.copy(_:)), "c"); add(edit, "Select All", #selector(NSText.selectAll(_:)), "a")
-        edit.addItem(.separator()); add(edit, "Find…", #selector(ReaderController.showFind), "f")
-        add(edit, "Find Next", #selector(ReaderController.findNext), "g")
-        add(edit, "Find Previous", #selector(ReaderController.findPrevious), "g", modifiers: [.command, .shift])
+        add(edit, "Cut", #selector(NSText.cut(_:)), "x")
+        add(edit, "Copy", #selector(NSText.copy(_:)), "c")
+        add(edit, "Paste", #selector(NSText.paste(_:)), "v")
+        add(edit, "Select All", #selector(NSText.selectAll(_:)), "a")
+        edit.addItem(.separator()); add(edit, "Find…", #selector(find(_:)), "f", target: self)
+        add(edit, "Find Next", #selector(findNext(_:)), "g", target: self)
+        add(edit, "Find Previous", #selector(findPrevious(_:)), "g", target: self, modifiers: [.command, .shift])
         let view = menu("View")
-        add(view, "Back", #selector(ReaderController.goBack), "[")
-        view.addItem(.separator()); add(view, "Zoom In", #selector(ReaderController.zoomIn), "+")
-        add(view, "Zoom Out", #selector(ReaderController.zoomOut), "-")
-        add(view, "Actual Size", #selector(ReaderController.actualSize), "0")
+        add(view, "Back", #selector(back(_:)), "[", target: self)
+        view.addItem(.separator()); add(view, "Zoom In", #selector(zoomIn(_:)), "+", target: self)
+        add(view, "Zoom Out", #selector(zoomOut(_:)), "-", target: self)
+        add(view, "Actual Size", #selector(actualSize(_:)), "0", target: self)
         let windows = menu("Window"); NSApp.windowsMenu = windows
         add(windows, "Minimize", #selector(NSWindow.performMiniaturize(_:)), "m")
         add(windows, "Zoom", #selector(NSWindow.performZoom(_:)))

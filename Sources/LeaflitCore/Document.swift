@@ -50,7 +50,8 @@ public struct RevisionGate {
 public enum LocalImages {
     // Conservative allow-list. Web content cannot request arbitrary files from the disk.
     public static func references(in text: String, document: URL) -> [String: URL] {
-        let patterns = [#"!\[[^\]\n]*\]\(\s*(?:<([^>\n]+)>|([^\s)]+))"#,
+        let destination = #"(?:\\.|[^\s()\\]|\((?:\\.|[^()\\])*\))+"#
+        let patterns = [#"!\[(?:\\.|[^\]\n])*\]\(\s*(?:<([^>\n]+)>|("# + destination + "))",
                         #"(?m)^ {0,3}\[[^\]\n]+\]:\s*(?:<([^>\n]+)>|([^\s]+))"#]
         var result: [String: URL] = [:]
         for pattern in patterns {
@@ -58,7 +59,7 @@ public enum LocalImages {
             for match in regex.matches(in: text, range: NSRange(text.startIndex..., in: text)) {
                 for group in 1..<match.numberOfRanges {
                     guard let range = Range(match.range(at: group), in: text) else { continue }
-                    let raw = String(text[range]).replacingOccurrences(of: "\\ ", with: " ")
+                    let raw = String(text[range]).replacingOccurrences(of: ##"\\([!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~ ])"##, with: "$1", options: .regularExpression)
                     guard let parts = URLComponents(string: raw), parts.scheme == nil, parts.host == nil,
                           parts.query == nil, parts.fragment == nil, !parts.path.hasPrefix("/"), !parts.path.isEmpty else { continue }
                     let path = parts.path

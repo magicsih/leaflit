@@ -37,4 +37,12 @@ final class DocumentTests: XCTestCase {
         XCTAssertNotNil(images["images/c.jpeg"])
         XCTAssertNil(images["secret.txt"])
     }
+    func testParenthesesAndEscapedImageDestinations() {
+        let text = #"![a](images/a(b).png) ![b](images/c\(d\).jpg) ![c](<images/with space.png>)"#
+        let images = LocalImages.references(in: text, document: URL(fileURLWithPath: "/tmp/docs/read.md"))
+        XCTAssertNotNil(images["images/a(b).png"])
+        XCTAssertNotNil(images["images/c(d).jpg"])
+        XCTAssertNotNil(images["images/with space.png"])
+    }
+
 }

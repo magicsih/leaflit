@@ -39,6 +39,7 @@ final class ReaderTests: XCTestCase {
         try await loaded("# 안녕 😀\n\n~~old~~\n\n- [x] done\n\n|a|b|\n|-|-|\n|1|2|\n\n$x^2$ and \\(y\\)\n\n$$z$$\n\n\\[w\\]\n\n```mermaid\nflowchart LR\n A[Open] --> B[Read]\n```\n")
         try await assertJS("return document.querySelectorAll('.katex').length", 4)
         try await assertJS("return document.querySelectorAll('.diagram svg').length", 1)
+        try await assertJS("return document.querySelector('.diagram svg').textContent.includes('Open')", true)
         try await assertJS("return document.querySelector('input').disabled", true)
         try await assertJS("return document.querySelectorAll('table').length", 1)
     }
@@ -110,7 +111,27 @@ final class ReaderTests: XCTestCase {
             let old = reader.completedRevision; reader.open(url)
             try await wait({ self.reader.completedRevision > old }, seconds: 60)
             XCTAssertEqual(try Data(contentsOf: url), before)
+            print("LEAFLIT_LARGE bytes=\(before.count) bodyMs=\(reader.measurements["body"] ?? -1) completeMs=\(reader.measurements["complete"] ?? -1)")
             try await assertJS("return document.querySelector('h1').textContent", "Large")
         }
     }
+    func testPerformanceTransitions() async throws {
+        let fixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent("Fixtures/Benchmark100KiB.md")
+        let text = try String(contentsOf: fixture, encoding: .utf8)
+        XCTAssertEqual(text.utf8.count, 102400)
+        let a = try write(text, name: "a.md"), b = try write(text, name: "b.md")
+        reader.open(a); try await wait { self.reader.completedRevision > 0 }
+        var samples: [[String: Double]] = []
+        for n in 0..<20 {
+            let old = reader.completedRevision
+            reader.open(n % 2 == 0 ? b : a)
+            try await wait { self.reader.completedRevision > old }
+            samples.append(reader.measurements)
+        }
+        let data = try JSONSerialization.data(withJSONObject: samples, options: [.sortedKeys])
+        print("LEAFLIT_TRANSITIONS " + String(data: data, encoding: .utf8)!)
+        let attachment = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+        attachment.name = "100KiB-transitions-20"; attachment.lifetime = .keepAlways; add(attachment)
+    }
+
 }
