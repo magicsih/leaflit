@@ -1,0 +1,22 @@
+:root { color-scheme: light dark; font: 16px/1.65 -apple-system, BlinkMacSystemFont, sans-serif; --muted: #646b73; --line: #d9dce0; --panel: #f4f5f7; --link: #075ec8; }
+@media (prefers-color-scheme: dark) { :root { --muted: #a3abb5; --line: #3e4249; --panel: #23262c; --link: #78b4ff; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: Canvas; color: CanvasText; }
+article { max-width: 824px; padding: 32px; margin: 0 auto; overflow-wrap: anywhere; }
+h1,h2,h3,h4,h5,h6 { line-height: 1.25; margin: 1.6em 0 .6em; scroll-margin-top: 24px; }
+h1 { font-size: 2em; } h1:first-child { margin-top: 0; } h2 { font-size: 1.5em; padding-bottom: .25em; border-bottom: 1px solid var(--line); }
+a { color: var(--link); text-underline-offset: 3px; } a:focus-visible { outline: 3px solid var(--link); border-radius: 2px; }
+p, ul, ol, blockquote, pre, table, figure { margin: 0 0 1em; }
+blockquote { margin-left: 0; padding: 0 1em; border-left: 3px solid var(--line); color: var(--muted); }
+code { font: .88em/1.55 ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--panel); border-radius: 4px; padding: .15em .3em; }
+pre { overflow-x: auto; padding: 16px; background: var(--panel); border-radius: 6px; white-space: pre; overflow-wrap: normal; }
+pre code { padding: 0; background: transparent; }
+table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; white-space: nowrap; }
+th,td { border: 1px solid var(--line); padding: .4em .8em; } th { background: var(--panel); text-align: left; }
+img { max-width: 100%; height: auto; } .image-fallback, small { color: var(--muted); }
+hr { border: 0; border-top: 1px solid var(--line); margin: 2em 0; }
+.task-list-item { list-style: none; } .task-list-item input { margin-right: .5em; }
+.diagram { overflow-x: auto; margin-left: 0; margin-right: 0; } .diagram svg { max-width: 100%; height: auto; }
+.math { overflow-x: auto; } span.math { display: inline; } .render-error { padding: 12px; border: 1px solid var(--line); border-radius: 6px; }
+.render-error pre { margin: .5em 0 0; } ::selection { background: Highlight; color: HighlightText; }
+@media (max-width: 640px) { article { padding: 20px; } }

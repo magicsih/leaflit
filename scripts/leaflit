@@ -1,0 +1,16 @@
+#!/bin/zsh
+set -euo pipefail
+app="${0:A:h}/Leaflit.app"
+if [[ ! -d "$app" ]]; then
+  app="${0:A:h:h}/build/Leaflit-0.1.0/Leaflit.app"
+fi
+if [[ ! -d "$app" ]]; then
+  print -u2 'Leaflit.app was not found. Keep this tool beside Leaflit.app or run scripts/build.sh.'
+  exit 1
+fi
+files=()
+for file in "$@"; do
+  if [[ ! -f "$file" ]]; then print -u2 "File not found: $file"; exit 1; fi
+  files+=("${file:A}")
+done
+exec /usr/bin/open -a "$app" "${files[@]}"

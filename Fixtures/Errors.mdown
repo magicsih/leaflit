@@ -1,0 +1,25 @@
+# Content stays readable
+
+Broken formulas and diagrams keep their source beside a short error.
+
+$\definitelyUnknown{x}$
+
+```mermaid
+this is not a valid diagram
+```
+
+![A missing local picture](missing.png)
+
+![Remote picture](https://example.com/tracker.png)
+
+<script>window.compromised = true; alert('unexpected');</script>
+
+[Unsafe link](javascript:alert(1))
+
+[Custom app link](leaflit://app/index.html)
+
+```mermaid
+%%{init: {'securityLevel': 'loose'}}%%
+flowchart LR
+A --> B
+```
