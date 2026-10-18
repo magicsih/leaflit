@@ -11,12 +11,15 @@ final class ReaderTests: XCTestCase {
     override func setUp() async throws {
         dir = FileManager.default.temporaryDirectory.appendingPathComponent("Leaflit Tests \(UUID().uuidString)")
         try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        reader = ReaderController(); reader.showWindow(nil)
+        let preferences = UserDefaults(suiteName: dir.lastPathComponent)!
+        preferences.removePersistentDomain(forName: dir.lastPathComponent)
+        reader = ReaderController(preferences: preferences); reader.showWindow(nil)
         reader.window?.level = .floating
         reader.window?.orderFrontRegardless()
     }
     override func tearDown() async throws {
         reader.close(); reader = nil
+        UserDefaults(suiteName: dir.lastPathComponent)?.removePersistentDomain(forName: dir.lastPathComponent)
         try? FileManager.default.removeItem(at: dir)
     }
     func write(_ text: String, name: String = "한글 😀 file.md") throws -> URL {

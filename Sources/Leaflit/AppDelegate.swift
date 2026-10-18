@@ -63,6 +63,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func zoomIn(_ sender: Any?) { activeReader?.zoomIn() }
     @objc func zoomOut(_ sender: Any?) { activeReader?.zoomOut() }
     @objc func actualSize(_ sender: Any?) { activeReader?.actualSize() }
+    @objc func toggleSidebar(_ sender: Any?) { activeReader?.toggleSidebar() }
+    @objc func openFolder(_ sender: Any?) { activeReader?.sidebar.openFolder() }
     private func buildMenus() {
         let main = NSMenu(); NSApp.mainMenu = main
         func menu(_ title: String) -> NSMenu {
@@ -78,6 +80,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let file = menu("File")
         add(file, "New Window", #selector(newWindow(_:)), "n", target: self)
         add(file, "Open…", #selector(openPanel(_:)), "o", target: self)
+        add(file, "Open Folder…", #selector(openFolder(_:)), "o", target: self, modifiers: [.command, .shift])
         file.addItem(.separator()); add(file, "Close Window", #selector(NSWindow.performClose(_:)), "w")
         let edit = menu("Edit")
         add(edit, "Cut", #selector(NSText.cut(_:)), "x")
@@ -88,6 +91,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         add(edit, "Find Next", #selector(findNext(_:)), "g", target: self)
         add(edit, "Find Previous", #selector(findPrevious(_:)), "g", target: self, modifiers: [.command, .shift])
         let view = menu("View")
+        add(view, "Toggle Sidebar", #selector(toggleSidebar(_:)), "s", target: self, modifiers: [.command, .control])
         add(view, "Back", #selector(back(_:)), "[", target: self)
         view.addItem(.separator()); add(view, "Zoom In", #selector(zoomIn(_:)), "+", target: self)
         add(view, "Zoom Out", #selector(zoomOut(_:)), "-", target: self)

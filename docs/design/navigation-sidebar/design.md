@@ -2,7 +2,7 @@
 
 ## Decision and approval status
 
-On 2026-10-19 the owner selected both folder/file navigation and the current document outline, with tabs or a toggle at the top or bottom of the sidebar. Both modes are confirmed requirements. The layout and test plan below are proposed for approval before implementation. The application icon remains a separate design task in [issue #9](https://github.com/magicsih/leaflit/issues/9).
+On 2026-10-19 the owner selected both folder/file navigation and the current document outline, then approved this layout and the adjacent L3 test plan with an explicit instruction to proceed. The endpoint is a verified local Release candidate. The application icon remains a separate design task in [issue #9](https://github.com/magicsih/leaflit/issues/9).
 
 ## Layout
 

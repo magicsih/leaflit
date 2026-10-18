@@ -39,13 +39,15 @@ Raw HTML is shown as text. Remote resources, document scripts, unsafe URL scheme
 
 ## Build locally
 
+The development branch adds a collapsible native sidebar with `Files` and `Outline` modes. Use `Open Folder…` to browse a folder, or switch to `Outline` to navigate the current document's headings. Toggle the sidebar with Control-Command-S. The local candidate is 0.2.0; the published GitHub and Homebrew release remains the 0.1.0 preview until a new release is authorized.
+
 Verified with Xcode 27, Node.js 24 and npm 11. Dependencies are pinned in `package-lock.json`. Ruby is needed only when regenerating the Xcode project, not for a normal build.
 
 ```sh
 ./scripts/build.sh
-open build/Leaflit-0.1.0/Leaflit.app
-./build/Leaflit-0.1.0/leaflit Fixtures/Welcome.md
-open -a "$PWD/build/Leaflit-0.1.0/Leaflit.app" "Fixtures/Next Page.markdown"
+open build/Leaflit-0.2.0/Leaflit.app
+./build/Leaflit-0.2.0/leaflit Fixtures/Welcome.md
+open -a "$PWD/build/Leaflit-0.2.0/Leaflit.app" "Fixtures/Next Page.markdown"
 ```
 
 For Xcode, build the web assets first, then run the Leaflit scheme:

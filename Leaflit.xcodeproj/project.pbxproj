@@ -10,11 +10,15 @@
 		091AA57D217019FA0C28363F /* ReaderController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00842C4C4E7C1D4E1ACF631 /* ReaderController.swift */; };
 		18B32C714C17784D73E7CB40 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77858E108B337EA21475D0EA /* Document.swift */; };
 		57BD49407D5DD983B9D42684 /* DocumentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51A30ADE2C5001FF6A308E9 /* DocumentTests.swift */; };
+		59D6862D9C3ADA6FDFA1432C /* NavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F797B263194FD26B501B5808 /* NavigationTests.swift */; };
 		6243CD6AFC638FBCC21354EE /* LeaflitCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 378074704FBC1BBB958B45A8 /* LeaflitCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6D3558D9A7047447161473F5 /* LeaflitCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 378074704FBC1BBB958B45A8 /* LeaflitCore.framework */; };
+		77E512704BFE001322BC4AC6 /* NavigationSidebarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A7A78224172DAD2B5F17392 /* NavigationSidebarController.swift */; };
 		794FD8B1E111D4F9AFDF465F /* LeaflitCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 378074704FBC1BBB958B45A8 /* LeaflitCore.framework */; };
 		85392425B386FCFD916394CB /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = B1D559A141BCBB137BFFE6EE /* LICENSE */; };
 		8FA56AAA790EDD8E5AFC3A38 /* Web in Resources */ = {isa = PBXBuildFile; fileRef = AF5AE429B40446DA7CF2A7ED /* Web */; };
+		98AAB114C3CAD59053383AF2 /* NavigationReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05598A237E8EA4CCC5566E51 /* NavigationReaderTests.swift */; };
+		9B2B7A6A4E2F4329D126017C /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70384A216A4CD524D5CD082B /* Navigation.swift */; };
 		AEDF80F44589CDF99D878943 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61AFC362906DFD61D8E734C /* AppDelegate.swift */; };
 		B05DA3C8B8B696E3B8E57F0D /* ReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A841A7572AA8133E88CDC089 /* ReaderTests.swift */; };
 		CC28CBE226C4E498B230B017 /* FileWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A14133D1C05B932DCBF1D /* FileWatcher.swift */; };
@@ -63,12 +67,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		05598A237E8EA4CCC5566E51 /* NavigationReaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NavigationReaderTests.swift; path = Tests/LeaflitTests/NavigationReaderTests.swift; sourceTree = "<group>"; };
 		378074704FBC1BBB958B45A8 /* LeaflitCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LeaflitCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B29C19C8F67F2EB27FE6841 /* LeaflitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeaflitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B7A14133D1C05B932DCBF1D /* FileWatcher.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileWatcher.swift; path = Sources/Leaflit/FileWatcher.swift; sourceTree = "<group>"; };
 		6DB4EB10BE84AFCEC691F529 /* ResourceHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ResourceHandler.swift; path = Sources/Leaflit/ResourceHandler.swift; sourceTree = "<group>"; };
+		70384A216A4CD524D5CD082B /* Navigation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Navigation.swift; path = Sources/LeaflitCore/Navigation.swift; sourceTree = "<group>"; };
 		706E9A48CCE7D46E373FF70F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		77858E108B337EA21475D0EA /* Document.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Document.swift; path = Sources/LeaflitCore/Document.swift; sourceTree = "<group>"; };
+		7A7A78224172DAD2B5F17392 /* NavigationSidebarController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NavigationSidebarController.swift; path = Sources/Leaflit/NavigationSidebarController.swift; sourceTree = "<group>"; };
 		A841A7572AA8133E88CDC089 /* ReaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReaderTests.swift; path = Tests/LeaflitTests/ReaderTests.swift; sourceTree = "<group>"; };
 		AF5AE429B40446DA7CF2A7ED /* Web */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder; name = Web; path = Sources/Leaflit/Web; sourceTree = "<group>"; };
 		B1D559A141BCBB137BFFE6EE /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
@@ -76,6 +83,7 @@
 		D06BEBBDD29F4CBD7E650D02 /* Leaflit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Leaflit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F51A30ADE2C5001FF6A308E9 /* DocumentTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DocumentTests.swift; path = Tests/LeaflitCoreTests/DocumentTests.swift; sourceTree = "<group>"; };
 		F61AFC362906DFD61D8E734C /* AppDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Sources/Leaflit/AppDelegate.swift; sourceTree = "<group>"; };
+		F797B263194FD26B501B5808 /* NavigationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NavigationTests.swift; path = Tests/LeaflitCoreTests/NavigationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +140,10 @@
 				F51A30ADE2C5001FF6A308E9 /* DocumentTests.swift */,
 				AF5AE429B40446DA7CF2A7ED /* Web */,
 				B1D559A141BCBB137BFFE6EE /* LICENSE */,
+				70384A216A4CD524D5CD082B /* Navigation.swift */,
+				7A7A78224172DAD2B5F17392 /* NavigationSidebarController.swift */,
+				F797B263194FD26B501B5808 /* NavigationTests.swift */,
+				05598A237E8EA4CCC5566E51 /* NavigationReaderTests.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -283,6 +295,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				18B32C714C17784D73E7CB40 /* Document.swift in Sources */,
+				9B2B7A6A4E2F4329D126017C /* Navigation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -294,6 +307,7 @@
 				CC28CBE226C4E498B230B017 /* FileWatcher.swift in Sources */,
 				091AA57D217019FA0C28363F /* ReaderController.swift in Sources */,
 				D7140BB89A06BE56DCD400BB /* ResourceHandler.swift in Sources */,
+				77E512704BFE001322BC4AC6 /* NavigationSidebarController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,6 +317,8 @@
 			files = (
 				B05DA3C8B8B696E3B8E57F0D /* ReaderTests.swift in Sources */,
 				57BD49407D5DD983B9D42684 /* DocumentTests.swift in Sources */,
+				59D6862D9C3ADA6FDFA1432C /* NavigationTests.swift in Sources */,
+				98AAB114C3CAD59053383AF2 /* NavigationReaderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

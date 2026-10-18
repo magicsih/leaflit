@@ -5,7 +5,11 @@ if [[ ! -d "$app" && "${0:A}" == */Leaflit.app/Contents/Resources/leaflit ]]; th
   app="${0:A:h:h:h}"
 fi
 if [[ ! -d "$app" ]]; then
-  app="${0:A:h:h}/build/Leaflit-0.1.0/Leaflit.app"
+  repo="${0:A:h:h}"
+  if [[ -f "$repo/Sources/Leaflit/Info.plist" ]]; then
+    version=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$repo/Sources/Leaflit/Info.plist")
+    app="$repo/build/Leaflit-$version/Leaflit.app"
+  fi
 fi
 if [[ ! -d "$app" ]]; then
   print -u2 'Leaflit.app was not found. Keep this tool beside Leaflit.app, use the bundled launcher, or run scripts/build.sh.'

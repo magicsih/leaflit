@@ -4,7 +4,7 @@
   "baselineSHA": "af15d5d01d0f11e3c4558c793fad43da3c7fc082",
   "approval": {
     "requirements": "2026-10-19 owner selected both Files and Outline with a top or bottom mode control",
-    "designAndTestPlan": "pending"
+    "designAndTestPlan": "Approved by the owner on 2026-10-19: proceed with the proposed design, complete regression and three independent rendered review rounds through a local Release candidate."
   },
   "policyScope": "Personal magicsih repository; follow repository and global development rules, without Seorilabs organization contracts.",
   "level": "L3",

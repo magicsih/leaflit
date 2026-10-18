@@ -5,7 +5,7 @@ import { tex } from '@mdit/plugin-tex';
 export const escape = text => text.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
 export function markdown(source, revision) {
   const md = new MarkdownIt({ html: false, linkify: false, typographer: false }).use(taskLists);
-  const math = [], diagrams = [], headings = new Map();
+  const math = [], diagrams = [], headings = new Map(), outline = [];
   md.use(tex, { delimiters: 'all', render(content, display) {
     const id = `math-${revision}-${math.length}`;
     math.push({ id, content, display });
@@ -39,7 +39,9 @@ export function markdown(source, revision) {
       let slug = base, n = 0;
       while (headings.has(slug)) slug = `${base}-${++n}`;
       headings.set(slug, true); token.attrSet('id', slug);
+      const title = md.renderer.renderInlineAsText(tokens[i + 1]?.children || [], md.options, {});
+      outline.push({ id: slug, title, level: Number(token.tag.slice(1)) });
     }
   }
-  return { html: md.renderer.render(tokens, md.options, {}), math, diagrams };
+  return { html: md.renderer.render(tokens, md.options, {}), math, diagrams, headings: outline };
 }
