@@ -13,7 +13,7 @@ brew install --cask magicsih/tap/leaflit
 leaflit "path/to/document.md"
 ```
 
-The launcher does not change Finder's default application. See the [release procedure](docs/releasing.md) for signing, publication and artifact verification.
+The launcher does not change Finder's default application. The [public distribution checks](docs/releases/0.1.0-verification.md) cover the downloaded app and Homebrew installation. See the [release procedure](docs/releasing.md) for signing, publication and artifact verification.
 
 ## Read
 
