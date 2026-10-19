@@ -36,9 +36,10 @@ export function markdown(source, revision) {
     if (token.type === 'heading_open') {
       const label = (tokens[i + 1]?.children || []).map(t => t.content).join('');
       const base = label.toLowerCase().trim().replace(/[^\p{L}\p{N}\p{Extended_Pictographic}\s_-]/gu, '').replace(/\s+/g, '-') || 'section';
-      let slug = base, n = 0;
-      while (headings.has(slug)) slug = `${base}-${++n}`;
-      headings.set(slug, true); token.attrSet('id', slug);
+      let slug = base, n = headings.get(base) ?? 1;
+      while (headings.has(slug)) slug = `${base}-${n++}`;
+      // Used IDs also retain the next suffix for that base, including literal suffixes.
+      headings.set(base, n); headings.set(slug, 1); token.attrSet('id', slug);
       const title = md.renderer.renderInlineAsText(tokens[i + 1]?.children || [], md.options, {});
       outline.push({ id: slug, title, level: Number(token.tag.slice(1)) });
     }

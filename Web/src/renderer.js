@@ -1,9 +1,11 @@
 import { markdown } from './markdown.js';
 import { waitForFrames } from './frames.js';
+import { createStylesheetLoader } from './stylesheet.js';
 let current = 0;
 let scrollVersion = 0;
 addEventListener('scroll', () => { scrollVersion++; scheduleOutline(); }, { passive: true });
 const article = document.querySelector('article');
+const loadKatexStylesheet = createStylesheetLoader(document, 'katex-css', 'katex.min.css');
 const post = payload => window.webkit?.messageHandlers?.leaflit?.postMessage(payload);
 let outlineEnabled = false, outlinePending = false, headingIDs = [], headingNodes = [], activeHeading = null;
 function scheduleOutline() {
@@ -75,10 +77,7 @@ window.Leaflit = {
     scheduleOutline();
     if (result.math.length) {
       const { default: katex } = await import('katex');
-      if (!document.querySelector('#katex-css')) {
-        const css = document.createElement('link'); css.id = 'katex-css'; css.rel = 'stylesheet'; css.href = 'katex.min.css'; document.head.append(css);
-        await new Promise(resolve => { css.onload = resolve; css.onerror = resolve; });
-      }
+      await loadKatexStylesheet();
       if (revision !== current) return;
       for (const item of result.math) {
         const node = document.getElementById(item.id); if (!node) continue;

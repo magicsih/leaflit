@@ -32,3 +32,37 @@ test('outline labels share rendered anchors, preserve hierarchy and contain plai
   ]);
   for (const heading of result.headings) assert.ok(result.html.includes(`id="${heading.id}"`));
 });
+
+test('duplicate suffixes preserve mixed literal suffixes, Unicode and per-document state', () => {
+  const source = '# A\n# A\n# A-1\n# A-2\n# A\n# 한글 😀\n# 한글 😀\n# 한글 😀-1\n# 한글 😀';
+  const expected = ['a', 'a-1', 'a-1-1', 'a-2', 'a-3', '한글-😀', '한글-😀-1', '한글-😀-1-1', '한글-😀-2'];
+  for (const revision of [21, 22]) {
+    const result = markdown(source, revision);
+    assert.deepEqual(result.headings.map(heading => heading.id), expected);
+    for (const id of expected) assert.ok(result.html.includes(`id="${id}"`));
+  }
+});
+
+test('many identical headings do not rescan all previously used suffixes', () => {
+  const count = 2000;
+  const originals = new Map([[Map.prototype, Map.prototype.has], [Set.prototype, Set.prototype.has]]);
+  let probes = 0;
+  let result;
+  try {
+    for (const [prototype, original] of originals) {
+      prototype.has = function (key) {
+        if (typeof key === 'string' && /^probe-repeat(?:-\d+)*$/.test(key)) probes++;
+        return original.call(this, key);
+      };
+    }
+    result = markdown('# Probe repeat\n'.repeat(count), 23);
+  } finally {
+    for (const [prototype, original] of originals) prototype.has = original;
+  }
+  assert.equal(result.headings.length, count);
+  assert.equal(result.headings[0].id, 'probe-repeat');
+  assert.equal(result.headings.at(-1).id, `probe-repeat-${count - 1}`);
+  assert.equal(new Set(result.headings.map(heading => heading.id)).size, count);
+  // Count identity lookups instead of asserting a machine-dependent time budget.
+  assert.ok(probes <= count * 4, `Expected a linear lookup budget, observed ${probes} probes`);
+});
