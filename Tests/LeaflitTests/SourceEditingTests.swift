@@ -31,7 +31,10 @@ extension ReaderTests {
         XCTAssertFalse(reader.editing.isDirty)
         XCTAssertEqual(try Data(contentsOf: url), Data([0xef, 0xbb, 0xbf]) + Data("# Draft 한글 😀\r\n".utf8))
         XCTAssertTrue(reader.editing.textView?.undoManager?.canUndo == true)
-        reader.showSource(); reader.editing.textView?.undoManager?.undo()
+        reader.showSource()
+        print("LEAFLIT_SOURCE_UNDO before=\(reader.editing.textView?.undoManager?.undoActionName ?? "nil") editable=\(reader.editing.textView?.isEditable == true)")
+        reader.editing.textView?.undoManager?.undo()
+        XCTAssertEqual(reader.editing.textView?.string, "# Original 한글 😀\r\n")
         try await wait { self.reader.editing.isDirty }
         XCTAssertTrue(reader.editing.isDirty)
         XCTAssertEqual(reader.editing.draft?.text, "# Original 한글 😀\r\n")

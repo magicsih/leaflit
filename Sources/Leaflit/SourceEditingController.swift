@@ -91,11 +91,15 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
         self.mode = mode
         if mode == .source {
             createEditorIfNeeded()
+            updateState(); window?.contentView?.layoutSubtreeIfNeeded()
             if let line { pendingLine = line }
             if !hasRequestedSource {
                 hasRequestedSource = true; onRequestSource?()
             } else if let line, draft != nil { pendingLine = nil; revealLine(line) }
-        } else if let draft { onPreview?(draft.text, anchor) }
+        } else {
+            updateState(); window?.contentView?.layoutSubtreeIfNeeded()
+            if let draft { onPreview?(draft.text, anchor) }
+        }
         updateState()
         if mode == .source { window?.makeFirstResponder(textView) }
         else { onReadSelected?() }
@@ -124,7 +128,9 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
     }
     private func replaceEditorText(_ text: String, clearUndo: Bool) {
         guard let editor = textView else { return }
-        if !editor.string.utf8.elementsEqual(text.utf8) { editor.string = text }
+        if !editor.string.utf8.elementsEqual(text.utf8) {
+            undoHistory.disableUndoRegistration(); editor.string = text; undoHistory.enableUndoRegistration()
+        }
         if clearUndo { editor.undoManager?.removeAllActions() }
     }
     func textDidChange(_ notification: Notification) {
@@ -157,7 +163,14 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
         window?.makeFirstResponder(textView)
         let item = NSMenuItem(); item.tag = action.rawValue; textView.performFindPanelAction(item)
     }
-    func zoom(_ scale: Double) { self.scale = scale; textView?.font = .monospacedSystemFont(ofSize: 14 * scale, weight: .regular) }
+    func zoom(_ scale: Double) {
+        self.scale = scale
+        guard let editor = textView, editor.font?.pointSize != 14 * scale else { return }
+        // Presentation changes must not become Source content undo operations.
+        undoHistory.disableUndoRegistration()
+        editor.font = .monospacedSystemFont(ofSize: 14 * scale, weight: .regular)
+        undoHistory.enableUndoRegistration()
+    }
     func save(completion: @escaping (Bool) -> Void = { _ in }) {
         guard !isSaving, unsavedAlert == nil, let baseline, let draft else { completion(false); return }
         guard !draft.hasExternalChanges else { showMessage(SourceFileError.changed.localizedDescription); completion(false); return }
