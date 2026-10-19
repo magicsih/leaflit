@@ -106,18 +106,18 @@ extension ReaderTests {
 
     private func renderAndCloseReader(_ url: URL, preferences: UserDefaults) async throws -> (ClosedReaderProbe, Int) {
         // End the owner's async scope and drain Objective-C temporaries before checking weak references.
-        let closing = autoreleasepool {
+        var closing: ReaderController? = autoreleasepool {
             let controller = ReaderController(preferences: preferences)
             controller.open(url); controller.showWindow(nil)
             return controller
         }
         var closeCalls = 0
-        closing.onClose = { closeCalls += 1 }
-        defer { if closeCalls == 0 { autoreleasepool { closing.close() } } }
-        try await wait { closing.completedRevision > 0 }
+        closing?.onClose = { closeCalls += 1 }
+        defer { if closeCalls == 0 { autoreleasepool { closing?.close() } } }
+        try await wait { [weak closing] in (closing?.completedRevision ?? 0) > 0 }
         let probe = autoreleasepool {
-            let probe = ClosedReaderProbe(closing)
-            closing.close()
+            let probe = ClosedReaderProbe(closing!)
+            closing?.close(); closing = nil
             return probe
         }
         return (probe, closeCalls)
