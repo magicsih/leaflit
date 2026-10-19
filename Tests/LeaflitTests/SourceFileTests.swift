@@ -50,6 +50,36 @@ final class SourceFileTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: original.url), changed)
         XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: directory.path), [original.url.lastPathComponent])
     }
+    func testDescriptorPathsMatchCanonicalDocumentPaths() throws {
+        let original = try fixture()
+        XCTAssertEqual(original.url, DocumentPath.canonical(original.url))
+        let alias = directory.appendingPathComponent("alias")
+        try FileManager.default.createSymbolicLink(at: alias, withDestinationURL: directory)
+        let same = try SourceFileSnapshot.read(alias.appendingPathComponent(original.url.lastPathComponent), within: nil)
+        XCTAssertEqual(same.url, original.url); XCTAssertEqual(same.identity, original.identity)
+    }
+    func testStagingStartsPrivateAndFailedWriteCleansOnlyItsTemporaryFile() throws {
+        let original = try fixture()
+        try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: original.url.path)
+        XCTAssertThrowsError(try SourceFileWriter.save(Data("# Draft".utf8), replacing: original, within: nil, beforeStageWrite: { temporary in
+            XCTAssertEqual((try FileManager.default.attributesOfItem(atPath: temporary.path)[.posixPermissions] as? NSNumber)?.intValue, 0o600)
+            try Data("partial".utf8).write(to: temporary)
+            throw CocoaError(.fileWriteOutOfSpace)
+        }))
+        XCTAssertEqual(try Data(contentsOf: original.url), original.data)
+        XCTAssertEqual(try SourceFileSnapshot.read(original.url, within: nil).identity, original.identity)
+        XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: directory.path), [original.url.lastPathComponent])
+    }
+    func testCopyCannotRecreateDeletedOriginalThroughParentAliasOrCaseVariant() throws {
+        let original = try fixture(), alias = directory.appendingPathComponent("alias")
+        try FileManager.default.createSymbolicLink(at: alias, withDestinationURL: directory)
+        try FileManager.default.removeItem(at: original.url)
+        XCTAssertThrowsError(try SourceFileWriter.copy(original.data, to: alias.appendingPathComponent(original.url.lastPathComponent), excluding: original.url))
+        if (try directory.resourceValues(forKeys: [.volumeSupportsCaseSensitiveNamesKey])).volumeSupportsCaseSensitiveNames != true {
+            XCTAssertThrowsError(try SourceFileWriter.copy(original.data, to: directory.appendingPathComponent(original.url.lastPathComponent.uppercased()), excluding: original.url))
+        }
+        XCTAssertFalse(FileManager.default.fileExists(atPath: original.url.path))
+    }
     func testCopyRefusesSymlinksDirectoriesAndConcurrentCreation() throws {
         let original = try fixture(), link = directory.appendingPathComponent("link.md")
         try FileManager.default.createSymbolicLink(at: link, withDestinationURL: directory.appendingPathComponent("missing.md"))

@@ -356,7 +356,10 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         else { findBar.isHidden = false; window?.makeFirstResponder(search) }
     }
     override func cancelOperation(_ sender: Any?) { hideFind() }
-    @objc func hideFind() { findBar.isHidden = true; window?.makeFirstResponder(webView) }
+    @objc func hideFind() {
+        if editing.mode == .source { editing.find(.hideFindInterface) }
+        else { findBar.isHidden = true; window?.makeFirstResponder(webView) }
+    }
     func controlTextDidChange(_ obj: Notification) { find(backwards: false) }
     @objc func findNext() { if editing.mode == .source { editing.find(.nextMatch) } else { find(backwards: false) } }
     @objc func findPrevious() { if editing.mode == .source { editing.find(.previousMatch) } else { find(backwards: true) } }

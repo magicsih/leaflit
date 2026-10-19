@@ -29,7 +29,7 @@ struct SourceFileSnapshot: Sendable {
         var info = stat(), path = [CChar](repeating: 0, count: Int(MAXPATHLEN))
         guard fstat(descriptor, &info) == 0, info.st_mode & S_IFMT == S_IFREG,
               fcntl(descriptor, F_GETPATH, &path) == 0 else { throw SourceFileError.unavailable }
-        let actual = URL(fileURLWithPath: String(cString: path))
+        let actual = DocumentPath.canonical(URL(fileURLWithPath: String(cString: path)))
         guard actual == DocumentPath.canonical(url), folder?.canOpen(url) != false else { throw SourceFileError.unavailable }
         let data = try handle.readToEnd() ?? Data()
         let identity = Identity(device: info.st_dev, inode: info.st_ino)
@@ -45,7 +45,7 @@ struct SourceFileSnapshot: Sendable {
 
 enum SourceFileWriter {
     // The final validation hook permits deterministic tests of a writer changing the file during staging.
-    static func save(_ data: Data, replacing original: SourceFileSnapshot, within folder: FolderTree?, beforeReplace: (() throws -> Void)? = nil) throws -> SourceFileSnapshot {
+    static func save(_ data: Data, replacing original: SourceFileSnapshot, within folder: FolderTree?, beforeReplace: (() throws -> Void)? = nil, beforeStageWrite: ((URL) throws -> Void)? = nil) throws -> SourceFileSnapshot {
         var coordinationError: NSError?, outcome: Result<SourceFileSnapshot, Error>?
         NSFileCoordinator().coordinate(writingItemAt: original.url, options: .forReplacing, error: &coordinationError) { url in
             outcome = Result {
@@ -65,8 +65,8 @@ enum SourceFileWriter {
                 let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
                 try validateWritable()
                 let temporary = url.deletingLastPathComponent().appendingPathComponent(".leaflit-\(UUID().uuidString).tmp")
-                try data.write(to: temporary, options: .withoutOverwriting)
-                defer { try? FileManager.default.removeItem(at: temporary) }
+                let temporaryIdentity = try create(data, at: temporary, beforeWrite: beforeStageWrite)
+                defer { remove(temporary, ifMatching: temporaryIdentity) }
                 try FileManager.default.setAttributes([.posixPermissions: attributes[.posixPermissions]!], ofItemAtPath: temporary.path)
                 try beforeReplace?()
                 _ = try validate()
@@ -81,17 +81,33 @@ enum SourceFileWriter {
         guard let outcome else { throw SourceFileError.coordination }
         return try outcome.get()
     }
-    static func copy(_ data: Data, to url: URL) throws {
+    static func copy(_ data: Data, to url: URL, excluding original: URL? = nil) throws {
+        if let original, sameLocation(url, original) { throw SourceFileError.changed }
+        _ = try create(data, at: url)
+    }
+    private static func sameLocation(_ first: URL, _ second: URL) -> Bool {
+        var a = stat(), b = stat()
+        let parent = first.deletingLastPathComponent(), other = second.deletingLastPathComponent()
+        guard Darwin.stat(parent.path, &a) == 0, Darwin.stat(other.path, &b) == 0,
+              a.st_dev == b.st_dev, a.st_ino == b.st_ino else { return false }
+        let sensitive = (try? parent.resourceValues(forKeys: [.volumeSupportsCaseSensitiveNamesKey]))?.volumeSupportsCaseSensitiveNames == true
+        return sensitive ? first.lastPathComponent == second.lastPathComponent : first.lastPathComponent.caseInsensitiveCompare(second.lastPathComponent) == .orderedSame
+    }
+    private static func remove(_ url: URL, ifMatching identity: SourceFileSnapshot.Identity) {
+        if (try? SourceFileSnapshot.identityAt(url)) == identity { try? FileManager.default.removeItem(at: url) }
+    }
+    private static func create(_ data: Data, at url: URL, beforeWrite: ((URL) throws -> Void)? = nil) throws -> SourceFileSnapshot.Identity {
         let descriptor = Darwin.open(url.path, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC, 0o600)
-        guard descriptor >= 0 else { throw CocoaError(.fileWriteFileExists) }
+        guard descriptor >= 0 else { throw NSError(domain: NSPOSIXErrorDomain, code: Int(errno)) }
         let handle = FileHandle(fileDescriptor: descriptor, closeOnDealloc: true)
         defer { try? handle.close() }
         var info = stat(); guard fstat(descriptor, &info) == 0 else { throw SourceFileError.unavailable }
         let identity = SourceFileSnapshot.Identity(device: info.st_dev, inode: info.st_ino)
-        do { try handle.write(contentsOf: data); try handle.synchronize() }
+        do { try beforeWrite?(url); try handle.write(contentsOf: data); try handle.synchronize() }
         catch {
-            if (try? SourceFileSnapshot.identityAt(url)) == identity { try? FileManager.default.removeItem(at: url) }
+            remove(url, ifMatching: identity)
             throw error
         }
+        return identity
     }
 }

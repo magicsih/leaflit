@@ -23,6 +23,7 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
     private var pendingLine: Int?
     private var documentURL: URL?
     private var scope: FolderTree?
+    private var scale = 1.0
     weak var window: NSWindow?
     var onRequestSource: (() -> Void)?
     var onPreview: ((String) -> Void)?
@@ -104,7 +105,7 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
         editor.isAutomaticLinkDetectionEnabled = false; editor.isAutomaticTextCompletionEnabled = false
         editor.isContinuousSpellCheckingEnabled = false; editor.isGrammarCheckingEnabled = false
         editor.usesFindBar = true; editor.isIncrementalSearchingEnabled = true
-        editor.font = .monospacedSystemFont(ofSize: 14, weight: .regular)
+        editor.font = .monospacedSystemFont(ofSize: 14 * scale, weight: .regular)
         editor.textColor = .textColor; editor.backgroundColor = .textBackgroundColor
         editor.textContainerInset = NSSize(width: 16, height: 16)
         editor.isVerticallyResizable = true; editor.isHorizontallyResizable = false
@@ -128,9 +129,16 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
         guard line >= 0, let editor = textView, draft != nil else { return }
         let text = editor.string as NSString
         var position = 0, current = 0
-        while current < line && position < text.length { position = NSMaxRange(text.lineRange(for: NSRange(location: position, length: 0))); current += 1 }
+        func lineRange(at start: Int) -> NSRange {
+            let boundary = text.rangeOfCharacter(from: CharacterSet(charactersIn: "\r\n"), range: NSRange(location: start, length: text.length - start))
+            guard boundary.location != NSNotFound else { return NSRange(location: start, length: text.length - start) }
+            var end = NSMaxRange(boundary)
+            if text.character(at: boundary.location) == 13 && end < text.length && text.character(at: end) == 10 { end += 1 }
+            return NSRange(location: start, length: end - start)
+        }
+        while current < line && position < text.length { position = NSMaxRange(lineRange(at: position)); current += 1 }
         guard current == line else { return }
-        let range = text.lineRange(for: NSRange(location: position, length: 0))
+        let range = lineRange(at: position)
         editor.setSelectedRange(range); editor.scrollRangeToVisible(range); window?.makeFirstResponder(editor)
     }
     func find(_ action: NSTextFinder.Action) {
@@ -138,7 +146,7 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
         window?.makeFirstResponder(textView)
         let item = NSMenuItem(); item.tag = action.rawValue; textView.performFindPanelAction(item)
     }
-    func zoom(_ scale: Double) { textView?.font = .monospacedSystemFont(ofSize: 14 * scale, weight: .regular) }
+    func zoom(_ scale: Double) { self.scale = scale; textView?.font = .monospacedSystemFont(ofSize: 14 * scale, weight: .regular) }
     func save(completion: @escaping (Bool) -> Void = { _ in }) {
         guard !isSaving, unsavedAlert == nil, let baseline, let draft else { completion(false); return }
         guard !draft.hasExternalChanges else { showMessage(SourceFileError.changed.localizedDescription); completion(false); return }
@@ -206,8 +214,7 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
         panel.beginSheetModal(for: window) { [weak self] response in
             guard let self else { return }; self.copyPanel = nil
             guard response == .OK, let url = panel.url else { return }
-            guard url.standardizedFileURL != self.documentURL?.standardizedFileURL else { self.showMessage("Choose a new path for the copy. The original draft stays open."); return }
-            do { try SourceFileWriter.copy(data, to: url) }
+            do { try SourceFileWriter.copy(data, to: url, excluding: self.documentURL) }
             catch { self.showMessage("Could not save a new copy. Choose a path that does not already exist. " + error.localizedDescription) }
         }
     }

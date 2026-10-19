@@ -8,6 +8,7 @@ extension ReaderTests {
     func source(_ text: String) async throws {
         reader.showSource()
         try await wait { self.reader.editing.draft != nil }
+        _ = try XCTUnwrap(reader.editing.draft, "Source must load before editing a test draft")
         let editor = try XCTUnwrap(reader.editing.textView)
         editor.insertText(text, replacementRange: NSRange(location: 0, length: (editor.string as NSString).length))
         XCTAssertTrue(reader.editing.isDirty)
@@ -79,7 +80,8 @@ extension ReaderTests {
         reader.reload(preserve: true)
         await fulfillment(of: [started], timeout: 5)
         reader.editing.textView?.insertText("# Keep new edits", replacementRange: NSRange(location: 0, length: 10))
-        gate.signal(); try await Task.sleep(nanoseconds: 150_000_000)
+        gate.signal(); reader.sourceReader = SourceFileSnapshot.read
+        try await Task.sleep(nanoseconds: 150_000_000)
         XCTAssertEqual(reader.editing.draft?.text, "# Keep new edits")
         let next = try write("# Next", name: "next.md")
         reader.open(next); try await wait { self.reader.editing.unsavedAlert != nil }
@@ -88,6 +90,35 @@ extension ReaderTests {
         XCTAssertEqual(reader.documentURL, DocumentPath.canonical(url))
         XCTAssertTrue(reader.editing.isDirty)
         reader.sourceReader = SourceFileSnapshot.read
+    }
+    func testLateSourceReadCannotAdoptContentAfterDocumentSwitch() async throws {
+        let url = try write("# Original"), next = try write("# Next", name: "next.md")
+        reader.open(url); try await wait { self.reader.completedRevision > 0 }
+        reader.showSource(); try await wait { self.reader.editing.draft != nil }
+        _ = try XCTUnwrap(reader.editing.draft)
+        let started = expectation(description: "held source read"), gate = DispatchSemaphore(value: 0)
+        reader.sourceReader = { url, folder in
+            let snapshot = try SourceFileSnapshot.read(url, within: folder)
+            started.fulfill(); _ = gate.wait(timeout: .now() + 10); return snapshot
+        }
+        reader.reload(preserve: true); await fulfillment(of: [started], timeout: 5)
+        let previous = reader.completedRevision; reader.open(next)
+        gate.signal(); reader.sourceReader = SourceFileSnapshot.read
+        try await wait { self.reader.completedRevision > previous && self.reader.documentURL == DocumentPath.canonical(next) }
+        try await Task.sleep(nanoseconds: 150_000_000)
+        try await assertJS("return document.querySelector('h1').textContent", "Next")
+        XCTAssertNil(reader.editing.draft)
+    }
+    func testSourceLineMappingAndLazyZoomUseParserLineBoundaries() async throws {
+        let raw = "# One\u{85}Two\u{2028}Three\u{2029}Four\r\n\r\n```mermaid\r\ninvalid!\r\n```\r\n"
+        try await loaded(raw)
+        for _ in 0..<10 { reader.zoomIn() }
+        reader.editing.select(.source, line: 2)
+        try await wait { self.reader.editing.draft != nil }
+        let editor = try XCTUnwrap(reader.editing.textView)
+        XCTAssertEqual(editor.font?.pointSize ?? 0, 28, accuracy: 0.01)
+        XCTAssertEqual((editor.string as NSString).substring(to: editor.selectedRange().location), "# One\u{85}Two\u{2028}Three\u{2029}Four\r\n\r\n")
+        reader.hideFind(); XCTAssertTrue(reader.window?.firstResponder === editor)
     }
     func testDiscardSynchronizesEditorEvenWhenFinalNavigationIsRejected() async throws {
         let url = try write("# Original"), next = try write("# Next", name: "next.md")
