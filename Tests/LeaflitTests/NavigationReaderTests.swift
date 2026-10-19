@@ -33,10 +33,12 @@ extension ReaderTests {
                 reader.toggleSidebar(); reader.toggleSidebar()
                 reader.window?.setContentSize(NSSize(width: 480, height: 500))
                 reader.window?.contentView?.layoutSubtreeIfNeeded()
+                print("LEAFLIT_WIDTH_NARROW cycle=\(cycle) actual=\(reader.sidebar.view.bounds.width) visible=\(reader.isSidebarVisible) saved=\(preferences.double(forKey: "sidebar.width"))")
                 XCTAssertFalse(reader.isSidebarVisible)
                 reader.window?.setContentSize(NSSize(width: 900, height: 700))
                 reader.window?.contentView?.layoutSubtreeIfNeeded()
                 try await Task.sleep(nanoseconds: 100_000_000)
+                print("LEAFLIT_WIDTH_RESTORED cycle=\(cycle) expected=\(expected) actual=\(reader.sidebar.view.bounds.width) saved=\(preferences.double(forKey: "sidebar.width")) dividerPane=\(reader.splitController.splitView.arrangedSubviews.first?.frame ?? .zero)")
                 XCTAssertTrue(reader.isSidebarVisible)
                 XCTAssertEqual(reader.sidebar.view.bounds.width, expected, accuracy: 1)
             }
