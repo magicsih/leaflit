@@ -8,9 +8,12 @@ To regenerate on macOS with Python, Playwright and an installed supported browse
 
 ```sh
 python3 scripts/prepare-icon.py --browser-channel msedge
+python3 scripts/prepare-social-preview.py --browser-channel msedge
 # Or omit --browser-channel when Playwright Chromium is installed.
 ```
 
 The script uses software rendering, waits for the SVG to paint, renders each physical size once and reuses it for equivalent 1× and 2× slots, then uses the system `iconutil`. It never resizes an existing raster master. Two fresh export processes on the current host produced identical PNG and ICNS hashes. Normal app builds use the committed exports and need neither Playwright nor a browser. Different browser versions or hosts may change antialiasing; retain source and export identity when comparing builds.
 
 The [comparison page](../../docs/design/app-icon/index.html) retains alternatives B and C as design history. Read the [icon decision and verification scope](../../docs/design/app-icon/design.md) before changing the selected master. MIT License, as with the repository.
+
+The owner identified a leftward alignment after the first implementation. The document and leaf now move together 39 units to the right in the 1024-unit SVG. The document's horizontal bounds are 273–751, centered at 512, leaving equal 193-unit gaps inside the tile. `social-preview.html` is the editable share-card composition; regenerate its PNG after changing the mark.

@@ -5,8 +5,8 @@
 Executed on 2026-10-19 on Apple M3/macOS 26.6.2. The owner selected A / Leaf Page after comparing three editable SVG concepts. The [decision and test scope](../design/app-icon/design.md) cover the icon resource and public introduction. No reader implementation or web-renderer source changed. The earlier [sidebar report](sidebar-report.md) remains historical evidence for its identified artifact, including failed review rounds and unverified conditions; it is not a new memory measurement of the icon-updated app.
 
 - Editable master: `assets/branding/leaflit.svg`.
-- Final exported ICNS SHA-256: `cd3bedb71f743827cbcfef2f0c8c7bbd57204f6b6ad307e996c09d1c81784fb3`.
-- Final 1024px PNG SHA-256: `071a671f1ee84aed438492e90e93c83c6af8ab9d25c04360d09147b1222188b6`.
+- Initial selected ICNS SHA-256, before the alignment correction below: `cd3bedb71f743827cbcfef2f0c8c7bbd57204f6b6ad307e996c09d1c81784fb3`.
+- Initial 1024px PNG SHA-256, before the alignment correction: `071a671f1ee84aed438492e90e93c83c6af8ab9d25c04360d09147b1222188b6`.
 - Public screenshot: `site/assets/leaflit-0.1.0.jpg`, SHA-256 `261153494de6aa2e0d2d9e1541ad0f39ff3b6553cdfbccc8e5a33ddb12ace8bb`.
 - Sidebar screenshot: byte-identical to the preserved actual 0.2.0 round 3 Files capture, explicitly labeled as a local candidate.
 
@@ -36,7 +36,17 @@ Initial harness attempts did not complete: the bundled Playwright Chromium execu
 
 The site stages only public HTML, CSS, JavaScript, image assets, sitemap and robots, plus the canonical brand SVG. It excludes the maintainer README and internal design/QA folders. The 1200×630 share card combines the real public-app screen with website text and artwork; it does not fabricate app UI. Website assets use system fonts and no analytics integration.
 
-## Final checks and publication records
+## Owner-reported horizontal alignment
+
+After the first site/icon implementation the owner observed that the app artwork looked left of center. The SVG confirmed that the document's horizontal bounds were 234–712, centered at x=473, while the tile was centered at x=512. Earlier Finder observations established that the selected icon displayed; they did not establish correct optical alignment.
+
+The document and leaf now move together 39 units to the right. The new document bounds are 273–751 with center x=512, leaving equal 193-unit gaps inside the 80–944 tile. The chosen shapes, colors and background remain the same. An actual browser-rendered before/after comparison at large and 64/32/16px sizes is retained in `build/icon-centering/comparison.png`; it is artwork-preview evidence, not a new app UI review.
+
+The SVG, PNG, ICNS and site share card were regenerated together. Corrected ICNS SHA-256 is `a79b15e973b8086f1c5c617a2c0064c345674fb707e165b25ee2b43a289f8804`; corrected 1024px PNG is `020db40eb3516b21a5ec0a8c9abe3cd709df2066529eb83d52ddd169bbee8c60`. Share-card HTML and its preparation script are now maintained with the artwork, so later mark changes can regenerate the presentation without a retained local server or hidden source.
+
+The corrected candidate requires its own independent full verification, ordinary Release build and exact packaged Finder icon readback under `build/icon-centering/`. The earlier results below remain historical; do not relabel their uncentered icon or app hashes as verification of the corrected resource. Reader source and renderer logic are unchanged. No fourth sidebar review or new public app release is part of this correction.
+
+## Initial checks and publication records
 
 Independent verification and a separate ordinary Release build passed at merged source `55592d64eef7f1c96f0caeee351e195e8b75a1c2`, both exit 0. JavaScript 8, standalone core 8, packaging 7 and Xcode 34 passed, with zero failures and no reported production dependency vulnerabilities. The Xcode total contains 26 Reader tests and the same 8 core tests; do not count the repeated core tests as unique additional coverage. Complete logs, actual xcresult and artifact manifest are retained under ignored `build/branding-site-verification/`.
 
