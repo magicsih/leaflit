@@ -4,7 +4,7 @@ cask "leaflit" do
 
   url "https://github.com/magicsih/leaflit/releases/download/v#{version}/Leaflit-#{version}-macos-arm64.zip"
   name "Leaflit"
-  desc "Read-only Markdown viewer with offline diagrams and math"
+  desc "Read-first Markdown viewer with explicit source editing"
   homepage "https://github.com/magicsih/leaflit"
 
   depends_on arch: :arm64
