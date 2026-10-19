@@ -274,8 +274,10 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         let frame = sidebar.view.convert(sidebar.view.bounds, to: split)
         split.setPosition(pane.frame.maxX + width - frame.width, ofDividerAt: 0)
     }
-    @objc private func splitResized() {
-        guard !settingSidebar, isSidebarVisible, (window?.contentView?.bounds.width ?? 0) >= 620 else { return }
+    @objc private func splitResized(_ notification: Notification) {
+        // Automatic layout compression must not replace the user's chosen width.
+        guard (notification.userInfo?["NSSplitViewUserResizeKey"] as? NSNumber)?.boolValue == true,
+              !settingSidebar, isSidebarVisible, (window?.contentView?.bounds.width ?? 0) >= 620 else { return }
         let width = sidebar.view.bounds.width
         if (180...320).contains(width) { preferences.set(Double(width), forKey: "sidebar.width") }
     }

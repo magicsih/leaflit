@@ -118,6 +118,9 @@ extension ReaderTests {
             reader.splitController.splitView.setPosition(278, ofDividerAt: 0)
             reader.window?.contentView?.layoutSubtreeIfNeeded()
             try await Task.sleep(nanoseconds: 100_000_000)
+            // Mark this simulated divider move as user initiated, unlike layout resizing.
+            NotificationCenter.default.post(name: NSSplitView.didResizeSubviewsNotification, object: reader.splitController.splitView,
+                                            userInfo: ["NSSplitViewDividerIndex": 0, "NSSplitViewUserResizeKey": true])
             let expected = reader.sidebar.view.bounds.width
             XCTAssertGreaterThan(expected, 240)
             XCTAssertLessThan(expected, 300)
