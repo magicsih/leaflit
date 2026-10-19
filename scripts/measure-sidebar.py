@@ -173,11 +173,13 @@ def acknowledge(args):
             'Readiness requests must come from an owned run under build/')
     request = json.loads(request_path.read_text())
     require(args.pid == request['appPID'], 'The observed PID does not match the waiting run')
-    expected_visible = request['cohort'] != 'hidden'
+    expected_visible = request['cohort'] not in ['hidden', 'observedControl']
     require(args.visible == expected_visible and args.mode == request['requestedMode'],
             'Observed sidebar state differs from the requested cohort')
     require(args.window_size_unchanged and args.zoom == 1,
             'Keep this fresh window at its native initial size and 100% body zoom')
+    require(request['case'] == 'empty' or args.content_ready,
+            'Confirm the actual body and any required optional renderers before sampling')
     require(args.outer_width > 0 and args.outer_height > 0, 'Record observed outer window bounds')
     content = [args.content_x, args.content_y, args.content_width, args.content_height]
     require(all(value is None for value in content) or all(value is not None for value in content),
@@ -212,7 +214,8 @@ def acknowledge(args):
                       'expanded_folder': str(args.expanded_folder.resolve()) if args.expanded_folder else None,
                       'evidenceSHA256': digest(evidence), 'observationKind': 'human/CUA actual UI observation',
                       'observedOuterBounds': {'x': args.outer_x, 'y': args.outer_y,
-                                              'width': args.outer_width, 'height': args.outer_height},
+                                              'width': args.outer_width, 'height': args.outer_height,
+                                              'coordinateSpace': args.bounds_coordinate_space},
                       'observedContentBounds': None if args.content_width is None else {
                           'x': args.content_x, 'y': args.content_y,
                           'width': args.content_width, 'height': args.content_height},
@@ -222,7 +225,7 @@ def acknowledge(args):
 
 def summarize(runs):
     result = {}
-    for cohort in COHORTS:
+    for cohort in dict.fromkeys([*COHORTS, *(run['cohort'] for run in runs)]):
         result[cohort] = {}
         for case in CASES:
             group = [run for run in runs if run['case'] == case and run['cohort'] == cohort]
@@ -237,17 +240,55 @@ def summarize(runs):
                 summary['initialLaunchLatency'][phase] = None if case == 'empty' else {}
                 if case != 'empty':
                     by_timing = {}
-                    for timing in sorted({run['initialLaunchLatency'][phase]['timing'] for run in group}):
+                    available = [run for run in group if run['initialLaunchLatency'][phase] is not None]
+                    for timing in sorted({run['initialLaunchLatency'][phase]['timing'] for run in available}):
                         timed = [run['initialLaunchLatency'][phase] for run in group
-                                 if run['initialLaunchLatency'][phase]['timing'] == timing]
+                                 if run['initialLaunchLatency'][phase] is not None
+                                 and run['initialLaunchLatency'][phase]['timing'] == timing]
                         by_timing[timing] = {'samples': len(timed)}
                         for metric in ['fromLaunchMs', 'fromOpenRequestMs']:
                             values = [sample[metric] for sample in timed]
                             by_timing[timing][metric] = {
                                 'median': statistics.median(values), 'min': min(values), 'max': max(values)}
-                    summary['initialLaunchLatency'][phase] = {'byTiming': by_timing}
+                    summary['initialLaunchLatency'][phase] = {'byTiming': by_timing,
+                                                              'missingSamples': len(group) - len(available)}
             result[cohort][case] = summary
     return result
+
+
+def coverage(runs, cohorts, control=False):
+    expected = {(repeat, cohort, case) for repeat in range(1, 4)
+                for cohort in (['observedControl'] if control else COHORTS) for case in CASES}
+    actual = {(run['repeat'], run['cohort'], run['case']) for run in runs}
+    full = len(runs) == len(expected) and actual == expected
+    attributed = bool(runs) and all(run['attribution']['unambiguous'] for run in runs)
+    return {'status': ('passed' if full else 'partial-cohort-coverage')
+                      if attributed else 'partial-helper-attribution',
+            'completePlanned36RunCoverage': full and not control,
+            'completePlanned12ControlRunCoverage': full and control,
+            'comparableAsAppPlusWebKit': attributed}
+
+
+def collect_events(events, app_pid, launched_wall, latency, raw_events):
+    """Drain available events without delaying the independent actual UI gate."""
+    while True:
+        try:
+            event = events.get_nowait()
+        except queue.Empty:
+            return
+        if event.get('processID') != app_pid:
+            continue
+        event_wall = dt.datetime.fromisoformat(event['timestamp']).timestamp()
+        if event_wall < launched_wall:
+            continue
+        match = re.search(r'phase=(body|complete) ms=([\d.]+)', event['eventMessage'])
+        if match:
+            phase, native_ms = match.groups()
+            timing = re.search(r'timing=(animationFrames|timerFallback)', event['eventMessage'])
+            latency[phase] = {'fromLaunchMs': (event_wall - launched_wall) * 1000,
+                              'fromOpenRequestMs': float(native_ms),
+                              'timing': timing.group(1) if timing else 'unreported'}
+            raw_events.append(event)
 
 
 def measure(args):
@@ -257,9 +298,16 @@ def measure(args):
             and bundle['CFBundleExecutable'] == 'Leaflit', 'Use the exact Leaflit app bundle')
     binary = app / 'Contents/MacOS' / bundle['CFBundleExecutable']
     app_hash = digest(binary)
-    build_info = json.loads((app.parent / 'build-info.json').read_text())
+    provenance = args.control_manifest.resolve(strict=True) if args.control_manifest else app.parent / 'build-info.json'
+    build_info = json.loads(provenance.read_text())
     require(build_info['binarySHA256'] == app_hash, 'Executable does not match build-info.json')
     require(build_info['version'] == bundle['CFBundleShortVersionString'], 'Bundle version differs from build-info.json')
+    control = args.control_manifest is not None
+    if control:
+        require(bundle['CFBundleShortVersionString'] == '0.1.0'
+                and build_info['bundleId'] == bundle['CFBundleIdentifier'],
+                'The observation-matched public control must be the provenanced 0.1.0 app')
+        args.cohorts = ['observedControl']
     fixture_info = fixture_metadata(args.fixtures.resolve(strict=True))
     fixture_dir = args.fixtures.resolve()
     baseline_protocol = None
@@ -290,6 +338,12 @@ def measure(args):
     protocol = {
         'startedUTC': now(), 'app': str(app), 'appVersion': build_info['version'],
         'sourceSHA': build_info['sourceSHA'], 'binarySHA256': app_hash,
+        'provenanceFile': str(provenance), 'provenanceSHA256': digest(provenance),
+        'observerCondition': 'One initial CUA AX observation via exact-app binding or the retained exact-path target, '
+                             'plus one full AX/screenshot readiness capture; '
+                             'Files additionally requires native chooser observations. No further app observations during settling/sampling.',
+        'protocolRevision': 'observation-first-v2',
+        'control': control,
         'baselineResults': str(args.baseline.resolve()) if args.baseline else None,
         'baselineResultsSHA256': digest(args.baseline) if args.baseline else None,
         'fixturePathsMatchBaseline': paths_match,
@@ -301,14 +355,18 @@ def measure(args):
         'ownership': 'Establish the exact new app PID first; include only new WebKit helper PIDs whose '
                      'Darwin responsiblePID equals that app PID. Recheck ownership at every sample. '
                      'Exclude unknown/unrelated helpers and mark incomplete attribution separately.',
-        'initialLaunchState': 'NSArgumentDomain requests the cohort mode/visibility and 230pt width. '
-                              'No selected folder exists at launch. The ready gate confirms actual UI afterward.',
+        'sidebarLaunchPositionArgument': None if control else args.sidebar_position,
+        'initialLaunchState': ('Public 0.1.0 has no sidebar and receives no sidebar launch arguments.' if control else
+                              'NSArgumentDomain requests the cohort mode/visibility and explicit divider position. '
+                              'No selected folder exists at launch. The ready gate confirms actual UI afterward.'),
         'geometry': 'Keep the fresh native window size unchanged. Record actual observed outer bounds '
                     'separately from optional observed content bounds. Initial 900x700 content size is '
                     'derived from source, not an observation; never enter it as measured CUA bounds.',
-        'latency': 'Body/complete are the original fixture-launch events, before native folder choice and '
-                   'the ready gate. Both wall-clock launch ms and native document-open ms are retained. '
-                   'Do not label them Files-with-selected-root latency. Empty is N/A.',
+        'latency': 'Body/complete events retain the original fixture-launch timestamps. '
+                   'Both wall-clock launch ms and native document-open ms are retained. '
+                   'The log stream is asynchronous and never blocks the UI gate; a phase can arrive during '
+                   'or after observation. Retain its original timestamp. Missing events remain missing '
+                   'with cause unconfirmed, independently of memory coverage. Empty is N/A.',
         'memory': 'After actual UI verification (and native folder choice for Files), wait 15 seconds, '
                   'take three footprint captures 0.5 seconds apart, and report app, owned helpers and RSS separately.',
         'ordering': 'For each fresh repeat rotate cohort order and case order by one; no cache flush.',
@@ -353,12 +411,13 @@ def measure(args):
                     before = processes(responsible)
                     run_dir = out / f'{repeat + 1}-{cohort}-{case}'
                     run_dir.mkdir()
-                    mode = 'Outline' if cohort == 'Outline' else 'Files'
+                    mode = 'none' if control else ('Outline' if cohort == 'Outline' else 'Files')
                     command = ['/usr/bin/open', '-n', '-a', str(app)]
                     if case != 'empty':
                         command.append(fixture_info[case]['path'])
-                    command += ['--args', '-sidebar.mode', mode, '-sidebar.visible',
-                                'NO' if cohort == 'hidden' else 'YES', '-sidebar.width', '230']
+                    if not control:
+                        command += ['--args', '-sidebar.mode', mode, '-sidebar.visible',
+                                    'NO' if cohort == 'hidden' else 'YES', '-sidebar.width', str(args.sidebar_position)]
                     launched_wall, launched_mono = time.time(), time.monotonic()
                     result['pendingRun'] = {'repeat': repeat + 1, 'cohort': cohort, 'case': case,
                                             'launchUTC': now(), 'launchCommand': command}
@@ -380,29 +439,7 @@ def measure(args):
                     write(out / 'results.json', result)
                     latency = {'body': None, 'complete': None}
                     raw_events = []
-                    if case != 'empty':
-                        deadline = time.monotonic() + 30
-                        while time.monotonic() < deadline:
-                            try:
-                                event = events.get(timeout=min(1, max(.1, deadline - time.monotonic())))
-                            except queue.Empty:
-                                continue
-                            if event.get('processID') != active_pid:
-                                continue
-                            event_wall = dt.datetime.fromisoformat(event['timestamp']).timestamp()
-                            if event_wall < launched_wall:
-                                continue
-                            match = re.search(r'phase=(body|complete) ms=([\d.]+)', event['eventMessage'])
-                            if match:
-                                phase, native_ms = match.groups()
-                                timing = re.search(r'timing=(animationFrames|timerFallback)', event['eventMessage'])
-                                latency[phase] = {'fromLaunchMs': (event_wall - launched_wall) * 1000,
-                                                  'fromOpenRequestMs': float(native_ms),
-                                                  'timing': timing.group(1) if timing else 'unreported'}
-                                raw_events.append(event)
-                            if all(latency.values()):
-                                break
-                        require(all(latency.values()), 'Expected both original fixture display events')
+                    collect_events(events, active_pid, launched_wall, latency, raw_events)
                     write(run_dir / 'display-events.json', raw_events)
                     request = {'createdUTC': now(), 'appPID': active_pid, 'appPath': str(app),
                                'cohort': cohort, 'requestedMode': mode, 'case': case,
@@ -410,8 +447,10 @@ def measure(args):
                                'fixtureDirectory': str(fixture_dir),
                                'sourceDerivedInitialContentSize': {'width': 900, 'height': 700,
                                    'basis': 'ReaderController NSWindow(contentRect:); not UI-measured'},
-                               'keepNativeInitialWindowSize': True, 'sidebarWidth': 230, 'zoom': 1,
-                               'readyInstruction': 'Observe only this new PID with CUA/human input. Files: '
+                               'keepNativeInitialWindowSize': True, 'sidebarWidth': 0 if control else 230, 'zoom': 1,
+                               'readyInstruction': 'Observe only this new PID with CUA/human input immediately, '
+                                                   'without waiting for display-log events. Confirm actual body '
+                                                   'and optional renderers (empty is N/A). Files: '
                                                    'choose the exact fixture directory through the native '
                                                    'Open Folder panel. Verify actual UI, save evidence, then '
                                                    'use the ready subcommand. Do not change the document.'}
@@ -422,11 +461,12 @@ def measure(args):
                     ready_path = run_dir / 'ready.json'
                     while not ready_path.exists() and time.monotonic() < deadline:
                         require(active_pid in processes(responsible), 'The waiting owned app exited')
+                        collect_events(events, active_pid, launched_wall, latency, raw_events)
                         time.sleep(.2)
                     require(ready_path.exists(), 'Readiness gate timed out; no memory pass recorded')
                     ready = json.loads(ready_path.read_text())
                     require(ready['pid'] == active_pid and ready['mode'] == mode
-                            and ready['visible'] == (cohort != 'hidden'), 'Readiness evidence does not match this run')
+                            and ready['visible'] == (cohort not in ['hidden', 'observedControl']), 'Readiness evidence does not match this run')
                     if result['runs']:
                         first = result['runs'][0]['readyEvidence']['observedOuterBounds']
                         current = ready['observedOuterBounds']
@@ -452,7 +492,8 @@ def measure(args):
                            'launchUTC': dt.datetime.fromtimestamp(launched_wall, dt.timezone.utc).isoformat(),
                            'processEstablishedMs': established_ms,
                            'launchCommand': command, 'initialLaunchLatency': latency,
-                           'latencyLimit': 'Before native folder choice and UI readiness; no selected root at launch.',
+                           'latencyLimit': 'No selected root at launch. Events can arrive before, during or after '
+                                           'native folder choice and actual UI readiness; retain original timestamps.',
                            'readyEvidence': ready, 'secondsFromLaunchToReady': ready_mono - launched_mono,
                            'attribution': attribution, 'samples': []}
                     for number in range(1, 4):
@@ -466,6 +507,10 @@ def measure(args):
                                           ('medianHelperFootprintMiB', 'helperFootprintMiB'),
                                           ('medianRSSMiB', 'rssSumMiB')]:
                         run[label] = statistics.median(sample[metric] for sample in run['samples'])
+                    collect_events(events, active_pid, launched_wall, latency, raw_events)
+                    write(run_dir / 'display-events.json', raw_events)
+                    run['latencyCompleteness'] = 'not-applicable' if case == 'empty' else (
+                        'complete' if all(latency.values()) else 'missing-events-cause-unconfirmed')
                     write(run_dir / 'run.json', run)
                     result['runs'].append(run)
                     result.pop('pendingRun', None)
@@ -480,13 +525,12 @@ def measure(args):
                     require(preserved_present(preserved, responsible), 'A pre-existing user app process disappeared')
                     require(digest(binary) == app_hash, 'The candidate executable changed')
                     fixture_metadata(fixture_dir)
-        comparable = all(run['attribution']['unambiguous'] for run in result['runs'])
-        full = len(result['runs']) == 36 and set(args.cohorts) == set(COHORTS)
-        result.update(status=('passed' if full else 'partial-cohort-coverage')
-                      if comparable else 'partial-helper-attribution',
-                      completePlanned36RunCoverage=full, baselineComparisonAvailable=args.baseline is not None,
-                      comparableAsAppPlusWebKit=comparable, summary=summarize(result['runs']),
+        result.update(**coverage(result['runs'], args.cohorts, control),
+                      baselineComparisonAvailable=args.baseline is not None,
+                      summary=summarize(result['runs']),
                       completedUTC=now(), preExistingAppProcessesStillPresent=list(preserved))
+        result['latencyCompleteness'] = {status: sum(run['latencyCompleteness'] == status for run in result['runs'])
+                                       for status in ['complete', 'not-applicable', 'missing-events-cause-unconfirmed']}
     except BaseException as error:
         result.update(status='failed', error=f'{type(error).__name__}: {error}', failedUTC=now())
         raise
@@ -567,7 +611,7 @@ def idle_cpu(args):
     active_pid, token, selected = None, None, set()
     try:
         command = ['/usr/bin/open', '-n', '-a', str(app), str(document), '--args',
-                   '-sidebar.mode', 'Files', '-sidebar.visible', 'YES', '-sidebar.width', '230']
+                   '-sidebar.mode', 'Files', '-sidebar.visible', 'YES', '-sidebar.width', str(args.sidebar_position)]
         result['launchCommand'] = command
         subprocess.run(command, check=True, timeout=15)
         deadline = time.monotonic() + 15
@@ -691,12 +735,16 @@ def main():
     prepare.add_argument('--output', type=Path, required=True)
     run = commands.add_parser('run', help='Launch fresh apps, waiting for actual human/CUA observations')
     run.add_argument('--app', type=Path, required=True)
+    run.add_argument('--control-manifest', type=Path,
+                     help='Use a verified public 0.1.0 release manifest and a separate 12-run observation-matched control')
     run.add_argument('--baseline', type=Path, help='Complete baseline results.json, when available on this host')
     run.add_argument('--fixtures', type=Path, required=True, help='Hash-verified retained or reproduced fixture directory')
     run.add_argument('--require-original-fixture-paths', action='store_true',
                      help='Local matched comparison: require exact original paths as well as bytes')
     run.add_argument('--output', type=Path, required=True, help='New evidence directory under build/')
     run.add_argument('--cohorts', nargs='+', choices=COHORTS, default=COHORTS)
+    run.add_argument('--sidebar-position', type=float, default=230,
+                     help='Native divider-position preference; calibrate actual visible pane to 230pt before sampling')
     run.add_argument('--gate-timeout', type=float, default=600, help='Seconds to await each explicit UI readiness gate')
     cpu = commands.add_parser('idle-cpu', help='One fresh Files-expanded process, actual UI gate, then 60 idle seconds')
     cpu.add_argument('--app', type=Path, required=True)
@@ -704,10 +752,11 @@ def main():
     cpu.add_argument('--document', type=Path, required=True, help='Stable document within that owned folder')
     cpu.add_argument('--output', type=Path, required=True)
     cpu.add_argument('--gate-timeout', type=float, default=600)
+    cpu.add_argument('--sidebar-position', type=float, default=230)
     ready = commands.add_parser('ready', help='Record actual UI observations for one waiting process')
     ready.add_argument('--request', type=Path, required=True)
     ready.add_argument('--pid', type=int, required=True)
-    ready.add_argument('--mode', choices=['Files', 'Outline'], required=True)
+    ready.add_argument('--mode', choices=['Files', 'Outline', 'none'], required=True)
     ready.add_argument('--visible', action=argparse.BooleanOptionalAction, required=True)
     ready.add_argument('--window-size-unchanged', action='store_true',
                        help='Attest this fresh native window has not been resized')
@@ -717,7 +766,11 @@ def main():
         ready.add_argument(f'--content-{key}', type=float,
                            help=f'Optional actually observed content {key}; never infer from source')
     ready.add_argument('--sidebar-width', type=float, default=0)
+    ready.add_argument('--bounds-coordinate-space', choices=['window-capture-relative', 'screen'],
+                       default='window-capture-relative', help='Coordinate system of the actual observed outer bounds')
     ready.add_argument('--zoom', type=float, required=True)
+    ready.add_argument('--content-ready', action='store_true',
+                       help='Attest actual body and necessary optional renderers were observed; empty is N/A')
     ready.add_argument('--folder', type=Path)
     ready.add_argument('--native-folder-choice', action='store_true')
     ready.add_argument('--expanded-folder', type=Path, help='Actual expanded child folder, for the separate idle CPU gate only')
@@ -731,10 +784,11 @@ def main():
     elif args.command == 'ready':
         acknowledge(args)
     elif args.command == 'idle-cpu':
-        require(args.gate_timeout > 0, 'Invalid CPU gate timeout')
+        require(args.gate_timeout > 0 and 180 <= args.sidebar_position <= 320, 'Invalid CPU gate options')
         idle_cpu(args)
     else:
-        require(args.gate_timeout > 0 and len(set(args.cohorts)) == len(args.cohorts), 'Invalid run options')
+        require(args.gate_timeout > 0 and 180 <= args.sidebar_position <= 320
+                and len(set(args.cohorts)) == len(args.cohorts), 'Invalid run options')
         measure(args)
 
 

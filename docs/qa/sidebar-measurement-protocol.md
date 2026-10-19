@@ -33,10 +33,11 @@ python3 -u scripts/measure-sidebar.py run \
   --baseline build/sidebar-baseline/20261019-065043/results.json \
   --fixtures build/sidebar-baseline/20261019-065043/fixtures \
   --require-original-fixture-paths \
+  --sidebar-position 238 \
   --output build/sidebar-measurements/REPLACE_WITH_CANDIDATE_AND_TIMESTAMP
 ```
 
-The output directory must be new and under ignored `build/`. The runner uses `/usr/bin/open -n -a` with the exact app path and optional fixture. Standard Foundation argument-domain values request `sidebar.mode`, `sidebar.visible` and a 230pt width. These are existing application preferences, not product test hooks. They do not select or restore a folder. Each run starts with no selected root.
+The output directory must be new and under ignored `build/`. The runner uses `/usr/bin/open -n -a` with the exact app path and optional fixture. Standard Foundation argument-domain values request `sidebar.mode`, `sidebar.visible` and a divider position. The command above uses this host's calibrated position 238 for a measured 230pt pane; calibrate other hosts before choosing that argument. These are existing application preferences, not product test hooks. They do not select or restore a folder. Each run starts with no selected root.
 
 For every `WAITING` line, read its `gate-request.json` and establish the exact new app PID in CUA. Observe only that owned window. Keep the fresh window at its native initial size, 100% document zoom, its initial document and default reading position. Do not run UI regression, search, scroll, resize experiments or source mutations during the memory cohort. For visible cohorts record the actual pane width and keep it at 230pt, within 2pt. If that observed width differs from the requested preference, resolve the cause and correct the protocol before capturing memory.
 
@@ -55,7 +56,7 @@ python3 scripts/measure-sidebar.py ready \
   --window-size-unchanged \
   --outer-x OBSERVED_X --outer-y OBSERVED_Y \
   --outer-width OBSERVED_WIDTH --outer-height OBSERVED_HEIGHT \
-  --sidebar-width OBSERVED_PANE_WIDTH --zoom 1 \
+  --sidebar-width OBSERVED_PANE_WIDTH --zoom 1 --content-ready \
   --folder build/sidebar-baseline/20261019-065043/fixtures \
   --native-folder-choice --observer independent-reviewer \
   --evidence build/sidebar-measurements/RUN/1-Files-plain1KiB/observed-ui.json
@@ -65,7 +66,7 @@ For hidden use `--mode Files --no-visible`, omitting folder options and using `-
 
 ## Timing, attribution and preservation
 
-The runner retains the original body and complete unified-log events for its exact new PID. These occur before native folder choice and readiness. Record both wall-clock time from the launch request and the app's native time from its document-open request. Empty is N/A. Describe this as **initial launch latency with the requested mode**, never as Files latency with an already-selected folder. The earlier baseline launched without these sidebar preferences; this difference remains part of the comparison limits.
+The runner retains the original body and complete unified-log events for its exact new PID. They retain the original launch timestamp but may arrive before, during or after actual UI readiness. The asynchronous log stream does not delay the UI gate. Record both wall-clock time from the launch request and the app's native time from its document-open request. Empty is N/A. Describe this as **initial launch latency with the requested mode**, never as Files latency with an already-selected folder. The earlier baseline launched without these sidebar preferences; this difference remains part of the comparison limits.
 
 The corrected renderer records `timing=animationFrames` or `timing=timerFallback` in each event. A one-shot timer keeps rendering and outline work progressing when animation callbacks pause. The body timing is a paint approximation only for the animation-frame group; timer completion establishes progress, not painted pixels. Complete is classified as fallback if either render wait used the timer. Preserve all samples and summarize timing groups separately. Compare the original baseline's animation-frame method only with the new animation-frame group. Memory after the actual UI readiness gate remains a separate measurement. Missing timing provenance is `unreported`, never silently treated as a frame sample.
 
@@ -86,6 +87,7 @@ python3 -u scripts/measure-sidebar.py idle-cpu \
   --app build/Leaflit-0.2.0/Leaflit.app \
   --root build/qa/sidebar-round3-CANDIDATE/Root \
   --document build/qa/sidebar-round3-CANDIDATE/Root/Reading.md \
+  --sidebar-position 238 \
   --output build/sidebar-measurements/CANDIDATE-idle-cpu
 ```
 
@@ -100,3 +102,33 @@ This is a small matched comparison, not a population performance claim or proof 
 The primary comparison is the same fixture before and after the sidebar change, with hidden, Files and Outline separated. The 100KiB benchmark contains 1,484 heading lines; it has a different document/DOM structure from the 100KiB prose fixture as well as Mermaid and math. Do not attribute the baseline's approximately 83.4MiB prose versus 154.2MiB benchmark difference solely to optional renderers. This matched set cannot separate heading/DOM costs from Mermaid/math costs. Earlier experiments that separately removed math or Mermaid are different evidence and must remain attributed to their own protocol.
 
 The integrated third review separately covers large folder and heading lists, refresh, stale events, native navigation and source immutability. Do not add those files to the retained memory fixture root or count their UI review as one of the 36 measurements. Publication, signing and installation remain outside this local Release endpoint.
+
+## Observation-matched public control
+
+The original 12-run public baseline performed no CUA or accessibility inspection. New actual UI readiness gates inspect the WebKit accessibility tree. Accessibility observation can build additional WebKit state, so the different observer condition is a potential confound; its magnitude or existence on this host has not been established in advance. Preserve the original unobserved baseline as contextual evidence, and add a separately retained public 0.1.0 control with the same observation operation as the new cohorts before comparing memory.
+
+```sh
+python3 -u scripts/measure-sidebar.py run \
+  --app /Applications/Leaflit.app \
+  --control-manifest build/releases/0.1.0/release-manifest.json \
+  --baseline build/sidebar-baseline/20261019-065043/results.json \
+  --fixtures build/sidebar-baseline/20261019-065043/fixtures \
+  --require-original-fixture-paths \
+  --output build/sidebar-measurements/observed-control-REPLACE_WITH_TIMESTAMP
+```
+
+The public control verifies its bundle version, identifier and binary hash against the retained release manifest. It launches no sidebar preferences, uses cohort `observedControl`, and requires `ready --mode none --no-visible` with no folder options. It retains four cases and three fresh repeats (12 total), the 15-second wait and three footprint captures. Complete 12-run control coverage and complete 36-run sidebar coverage have separate result fields. Partial coverage, duplicated cases and ambiguous helper ownership cannot produce a full pass.
+
+For each control and new-cohort process, after its exact new PID is established, immediately bind the exact app with CUA (whose automatic initial AX observation is retained), then confirm the actual body and required optional renderers and save one full AX state and screenshot for the actual ready state. For a nonempty document include `--content-ready`; empty is N/A. Do not inspect the app again after readiness until capture and cleanup finish. Files requires additional native folder-chooser observations; retain their count and timing as a remaining difference, rather than claiming every observer allocation is isolated. Record actual screenshot dimensions in point coordinates, with origin `(0, 0)` explicitly labeled `window-capture-relative`; these are not global screen coordinates or measured content bounds. Preserve evidence of each new actual gate. Existing user processes at different paths remain untouched.
+
+Compare observation-matched public control versus new hidden/Files/Outline cohorts for each identical fixture. Keep the original unobserved control separately. The small sample, launch arguments, folder setup delays, observer counts, host state and version changes remain limitations; the result is an observed whole-app comparison, not an allocation-level proof of sidebar cost. Keep every original timing sample. Public 0.1.0 does not emit timing labels, so its samples are `unreported` in machine summaries; the known original two-frame source method can be described separately, with no invented per-event labels. New `timerFallback` and `unreported` samples must not enter a numerical animation-frame-method comparison.
+
+For both new executions, `--baseline` continues to reference the original unobserved dataset. That option validates retained fixture bytes/paths and the original sampling protocol; it does not ingest the newly observed control as the comparison group. The final report reads the separately retained observed-control results and sidebar results together. The observed control must not be passed to this option because its protocol uses different field names. Native title-bar activation is attempted uniformly before the readiness capture; the visible active/inactive appearance remains part of the retained screenshot. The first empty control also retains an extra pre-activation observation, explicitly counted rather than hidden.
+
+The first observation-before-change control attempt, `build/sidebar-measurements/observed-control-eebc948-20261019-0822`, completed one empty run but stopped on the next plain1KiB run because the old harness required both phase events within 30 seconds before exposing the UI gate. Preserve both the completed sample and missing-events failure, exclude this entire attempt from the new full set, and do not diagnose the cause as paused frames without evidence. The corrected `observation-first-v2` protocol applies to a completely new 12-run public control and all 36 new-candidate runs. Logs remain asynchronous; missing phases are retained as `missing-events-cause-unconfirmed`, separately from memory coverage/status. Every memory gate still requires actual visible content before the 15-second settle. No missing latency is inferred or substituted. Non-app preflight verifies nonblocking empty queues, original event timestamps, missing-phase summaries and full/partial coverage.
+
+On this host the readiness geometry calibration found that a native divider position of 230 produces a visible pane from x=8 to x=230 (222pt), whereas dragging the divider to 238 produces a visible 230pt pane and the app persists width 230. Calibration evidence is `build/sidebar-measurement-tool-check/geometry-eebc948/`. For the complete new candidate set and expanded CPU sample use `--sidebar-position 238`; this supplies an existing standard launch preference and does not configure a folder. Keep the actual pane check at 230±2, verify the fresh observed geometry on every visible gate, and record the requested divider position separately. The 900×784 outer window stays unchanged. Other hosts must calibrate instead of assuming the same inset. This calibration process has no memory sample and is not an extra rendered regression round.
+
+The first observation is either the documented exact-path `getApp` binding's automatic AX read or an explicit initial AX read on the retained exact-path target; it resolves the newly launched window. Both paths retain one initial AX read plus one full AX/screenshot readiness read. CUA does not return a PID: combine the documented exact-path binding with a readback proving that exact executable path has only the gate's new PID. Save this mapping with each ready observation. Earlier records retain their original observation-field names; the fourth control's initial read used the retained binding even though its old metadata label says automatic. The observation count remains two. Screenshots retain actual active/inactive appearance, which is not controlled as an allocation-level variable.
+
+The immutable v2 control harness copy still contains two earlier phrases describing latency as before readiness. Those phrases are superseded by this protocol and the final report: events may arrive before, during or after actual UI setup and retain their original launch timestamps. The underlying asynchronous collection and sampling are unchanged; no control raw file is rewritten or re-collected for this wording correction.

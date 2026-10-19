@@ -39,7 +39,7 @@ Raw HTML is shown as text. Remote resources, document scripts, unsafe URL scheme
 
 ## Build locally
 
-The development branch adds a collapsible native sidebar with `Files` and `Outline` modes. Use `Open Folder…` (Shift-Command-O) to browse a folder, or switch to `Outline` to navigate the current document's headings. Toggle the sidebar with Control-Command-S. The local candidate is 0.2.0; the published GitHub and Homebrew release remains the 0.1.0 preview until a new release is authorized. See the [sidebar design](docs/design/navigation-sidebar/design.md) and [verification status](docs/qa/sidebar-report.md).
+Local 0.2.0 builds add a collapsible native sidebar with `Files` and `Outline` modes. Use `Open Folder…` (Shift-Command-O) to browse a folder, or switch to `Outline` to navigate the current document's headings. Toggle the sidebar with Control-Command-S. The published GitHub and Homebrew release remains the 0.1.0 preview until a new release is authorized. See the [sidebar design](docs/design/navigation-sidebar/design.md) and [verification status](docs/qa/sidebar-report.md).
 
 Verified with Xcode 27, Node.js 24 and npm 11. Dependencies are pinned in `package-lock.json`. Ruby is needed only when regenerating the Xcode project, not for a normal build.
 
@@ -73,7 +73,7 @@ swift test
 npm test
 ```
 
-See the [implementation design](docs/design/0.1.0/design.md), [test plan](docs/design/0.1.0/test-plan.json), [QA report](docs/qa/report.md) and [memory measurements](docs/qa/memory-analysis.md). Measurements include the app and WebKit helpers. On the measured candidate, median footprint was 69.7MiB for a 1KiB document and 85.6–131.1MiB across the measured 100KiB document structures. Some runs used more memory; the reports preserve the full ranges. The initial 60MiB comparison target was not met.
+See the original 0.1.0 [implementation design](docs/design/0.1.0/design.md), [test plan](docs/design/0.1.0/test-plan.json), [QA report](docs/qa/report.md) and [memory measurements](docs/qa/memory-analysis.md). Those historical measurements include the app and WebKit helpers: median footprint was 69.7MiB for a 1KiB document and 85.6–131.1MiB across the measured 100KiB document structures. Some runs used more memory; the reports preserve the full ranges. The initial 60MiB comparison target was not met. Current 0.2.0 verification and its separate matched comparison are tracked in the [sidebar report](docs/qa/sidebar-report.md).
 
 Editing, a table of contents, printing, PDF export, syntax highlighting, Obsidian-specific syntax and automatic updates are outside version 0.1.0. Spoken VoiceOver navigation and earlier macOS runtime coverage remain incomplete. Follow-up work is tracked in [GitHub issues](https://github.com/magicsih/leaflit/issues).
 
