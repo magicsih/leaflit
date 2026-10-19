@@ -42,14 +42,21 @@ extension ReaderTests {
     }
     func testSaveSeparatesTypingGroupsAndSameByteReplacementKeepsUndo() async throws {
         let url = try write("# Original"); reader.open(url); try await wait { self.reader.completedRevision > 0 }
-        try await source("# Saved")
-        let editor = try XCTUnwrap(reader.editing.textView), done = expectation(description: "save typing boundary")
+        reader.showSource(); try await wait { self.reader.editing.draft != nil }
+        let editor = try XCTUnwrap(reader.editing.textView), manager = try XCTUnwrap(editor.undoManager)
+        // Direct XCTest insertText calls share a run-loop turn. Model two distinct native input events.
+        manager.groupsByEvent = false
+        func typeEvent(_ value: String, range: NSRange) {
+            manager.beginUndoGrouping(); editor.insertText(value, replacementRange: range); manager.endUndoGrouping()
+        }
+        typeEvent("# Saved", range: NSRange(location: 0, length: (editor.string as NSString).length))
+        let done = expectation(description: "save typing boundary")
         reader.editing.save { saved in XCTAssertTrue(saved); done.fulfill() }
         await fulfillment(of: [done], timeout: 10)
         try Data("# Saved".utf8).write(to: url, options: .atomic)
         let identity = try SourceFileSnapshot.read(url, within: nil).identity
         try await wait { self.reader.editing.baseline?.identity == identity }
-        editor.insertText(" after save", replacementRange: NSRange(location: (editor.string as NSString).length, length: 0))
+        typeEvent(" after save", range: NSRange(location: (editor.string as NSString).length, length: 0))
         editor.breakUndoCoalescing(); editor.undoManager?.undo()
         XCTAssertEqual(editor.string, "# Saved"); XCTAssertFalse(reader.editing.isDirty)
         editor.undoManager?.undo()
