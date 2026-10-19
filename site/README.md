@@ -1,6 +1,6 @@
 # Public website
 
-This directory is the public English introduction at <https://magicsih.github.io/leaflit/>. It explains the terminal-to-Markdown use case and links the current public 0.1.0 preview. Main's local 0.2.0 sidebar and new icon are explicitly distinguished from that download.
+This directory is the public English introduction at <https://magicsih.github.io/leaflit/>. It explains the terminal-to-Markdown use case and links the public 0.2.0 preview, including Files, Outline and the Leaf Page icon.
 
 ## Local preview
 
@@ -21,9 +21,10 @@ After changes, check desktop/narrow rendering, all images, anchors, keyboard foc
 
 ## Actual screens and share image
 
+- `assets/leaflit-0.2.0.jpg` is an unedited 900×784 native capture of the signed 0.2.0 distribution, showing Files and `plan.md`. It was extracted from the exact final ZIP with SHA-256 `2289bb755734ea82bc10e41def7c6f11675f835a60fc8244d8af007e4c50a812`; the signed executable was `16dfc0d18a0fa7a4e59fd1e128c77dc543f387408499e488aaec88ac4c2430ca`. Raw screenshot, AX and signed smoke results remain in ignored `build/release-0.2.0/signed-smoke/`.
 - `assets/leaflit-0.1.0.jpg` is an unedited native capture of an isolated copy of the installed signed public 0.1.0 app, rendering a reviewer-owned `plan.md`. Its binary matched the published executable `20f04c5661b030955ee4e22b041062fbf9ffa244c82ecd16a1efcbf59e45a933`. Raw fixture/capture records are in ignored `build/website-capture-20261019/`. The capture copy was closed and its Markdown hash remained unchanged.
-- `assets/sidebar-files-0.2.0.jpg` is byte-identical to the [actual round 3 capture](../docs/qa/screenshots/sidebar-files-0.2.0.jpg). It shows the local sidebar candidate before the icon update and is labeled as local 0.2.0.
-- `assets/social-preview.png` is a 1200×630 presentation card composed from [`social-preview.html`](../assets/branding/social-preview.html), the canonical SVG, text and actual public app capture. It does not replace or fabricate the app screenshot. Regenerate it with `python3 scripts/prepare-social-preview.py --browser-channel msedge` when its text or imagery changes.
+- `assets/sidebar-files-0.2.0.jpg` is byte-identical to the [actual round 3 capture](../docs/qa/screenshots/sidebar-files-0.2.0.jpg). It preserves the local sidebar review candidate before the icon update. The site labels it as a 0.2.0 review capture; its main screen comes from the signed distribution.
+- `assets/social-preview.png` is a 1200×630 presentation card composed from [`social-preview.html`](../assets/branding/social-preview.html), the canonical SVG, text and actual signed 0.2.0 app capture. It does not replace or fabricate the app screenshot. Regenerate it with `python3 scripts/prepare-social-preview.py --browser-channel msedge` when its text or imagery changes.
 
 Use the repository [branding source](../assets/branding/README.md) to change the icon. Keep download version, captions, structured data and public distribution status consistent.
 
