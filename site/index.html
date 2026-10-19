@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Leaflit — A macOS Markdown viewer for your terminal workflow</title>
+  <meta name="description" content="Read Markdown from your LLM terminal workflow in a dedicated macOS window. Preview plans, Mermaid diagrams and LaTeX math without opening an IDE. Free and open source.">
+  <meta name="theme-color" content="#f5f3eb">
+  <link rel="canonical" href="https://magicsih.github.io/leaflit/">
+  <link rel="icon" type="image/svg+xml" href="assets/leaflit.svg">
+  <link rel="stylesheet" href="style.css">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Leaflit — Markdown from your terminal. Room to read.">
+  <meta property="og:description" content="A dedicated Markdown reading window for macOS. Open plans and specs from your terminal, with Mermaid diagrams and LaTeX math.">
+  <meta property="og:url" content="https://magicsih.github.io/leaflit/">
+  <meta property="og:image" content="https://magicsih.github.io/leaflit/assets/social-preview.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Leaflit, a Markdown reader for your terminal workflow, with its actual macOS reading window">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Leaflit — Markdown from your terminal. Room to read.">
+  <meta name="twitter:description" content="Open a Markdown plan, read the page, return to your terminal. A read-only macOS viewer with Mermaid and math.">
+  <meta name="twitter:image" content="https://magicsih.github.io/leaflit/assets/social-preview.png">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Leaflit","applicationCategory":"DeveloperApplication","operatingSystem":"macOS 14 or later, Apple Silicon","url":"https://magicsih.github.io/leaflit/","downloadUrl":"https://github.com/magicsih/leaflit/releases/tag/v0.1.0","softwareVersion":"0.1.0","license":"https://github.com/magicsih/leaflit/blob/main/LICENSE","description":"A read-only Markdown viewer for macOS, built for plans and notes from LLM terminal workflows, with bundled Mermaid diagrams and LaTeX math.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="masthead wrap">
+    <a class="brand" href="./" aria-label="Leaflit home"><img src="assets/leaflit.svg" width="44" height="44" alt=""><span>Leaflit</span></a>
+    <nav aria-label="Main navigation"><a href="#why">Why Leaflit</a><a href="#preview">The app</a><a href="https://github.com/magicsih/leaflit">GitHub <span aria-hidden="true">↗</span></a></nav>
+  </header>
+  <main id="main">
+    <section class="hero wrap">
+      <div class="hero-heading"><p class="eyebrow">A READING WINDOW FOR YOUR TERMINAL WORKFLOW</p><h1>Your terminal wrote it.<br>Give it room to <em>read.</em></h1></div>
+      <div class="hero-intro"><p>Plans, specs and notes deserve a readable page. Open Markdown in a dedicated macOS window, without bringing an IDE workspace along.</p><a class="button" href="#install">Get Leaflit <span aria-hidden="true">↓</span></a><p class="fine">Free &amp; open source · Apple Silicon · macOS 14+</p></div>
+      <div class="hero-stage">
+        <div class="terminal" aria-label="Example terminal command"><div class="terminal-label"><span class="terminal-dot"></span> BACK AT YOUR TERMINAL</div><p><span class="muted">~/project</span> <span class="prompt">$</span></p><code>leaflit ./plan.md</code><p class="terminal-note">A file to read.<br>A window to read it in.</p><div class="terminal-footer">NO WORKSPACE TO CONFIGURE</div></div>
+        <figure class="app-shot"><img src="assets/leaflit-0.1.0.jpg" width="900" height="784" alt="Actual Leaflit 0.1.0 window rendering a plan with a Draft, Review, Ship Mermaid flowchart, a table, an equation and read-only checkboxes" fetchpriority="high"><figcaption><span class="live-dot"></span> Actual app · public 0.1.0 preview</figcaption></figure>
+        <span class="stage-note" aria-hidden="true">.md → a little room to read</span>
+      </div>
+      <div class="feature-strip"><span>Native macOS window</span><span>Mermaid &amp; LaTeX</span><span>Follows saved changes</span><span>Read-only by design</span></div>
+    </section>
+
+    <section class="story wrap section" id="why">
+      <p class="eyebrow">01 / THE REASON</p>
+      <div class="story-grid"><h2>Reading a plan<br>shouldn’t open<br>another workspace.</h2><div class="story-copy"><p class="lead">“I wanted to open Markdown from my LLM terminal workflow without loading an IDE just to read it.”</p><p>That’s why I built Leaflit. The terminal is where the work happens. A rendered page is where a long plan, a table or a diagram becomes easier to review.</p><p>Leaflit gives that step its own window. Open the file, read the page, and return to the terminal when you’re ready.</p><span class="byline">— magicsih, creator of Leaflit</span></div></div>
+    </section>
+
+    <section class="reading section" id="preview">
+      <div class="wrap"><p class="eyebrow">02 / THE READING PART</p><div class="section-heading"><h2>The details come through.</h2><p>One reader for the Markdown you already have.</p></div>
+      <div class="reading-list">
+        <article><span class="number">01</span><div><h3>A page, not an editing session.</h3><p>Headings, tables, code blocks and task lists, with Find, Copy and text zoom. Your Markdown stays untouched.</p></div><span class="detail">⌘F &nbsp; ⌘C &nbsp; ⌘+</span></article>
+        <article><span class="number">02</span><div><h3>Diagrams and equations stay with the thought.</h3><p>Mermaid, KaTeX and fonts are bundled with the app. Rendering does not depend on a CDN. Local PNG and JPEG images stay local.</p></div><span class="detail">Mermaid + KaTeX</span></article>
+        <article><span class="number">03</span><div><h3>Keep writing. The reader follows.</h3><p>Saved changes refresh the page, including replacement saves. Follow relative document links, then use Back to return.</p></div><span class="detail">Save → refresh</span></article>
+      </div>
+      <aside class="development"><div><span class="badge">ON MAIN / LOCAL 0.2.0</span><h3>Files and Outline, in one sidebar.</h3><p>Browse an explicitly chosen folder or jump between headings. This is available in local builds; the public download is still 0.1.0.</p><a class="text-link" href="https://github.com/magicsih/leaflit#build-locally">Explore local builds <span aria-hidden="true">↗</span></a></div><a href="assets/sidebar-files-0.2.0.jpg" aria-label="View the full local 0.2.0 Files screenshot"><img src="assets/sidebar-files-0.2.0.jpg" width="900" height="784" loading="lazy" alt="Actual local 0.2.0 candidate with Files and Outline buttons above a native folder tree"></a></aside>
+      </div>
+    </section>
+
+    <section class="install wrap section" id="install"><p class="eyebrow">03 / BACK TO YOUR WORK</p><div class="install-grid"><div><h2>One command<br>away from the page.</h2><p>Install the app and its command with the personal Homebrew tap. Then open any local Markdown file.</p><p class="fine">0.1.0 preview · Developer ID signed and notarized<br>Apple Silicon · macOS 14 or later</p><p class="fine">Verified on Apple M3 with macOS 26.6.2. Earlier supported macOS versions remain unverified.</p></div><div><div class="install-code"><div><span class="code-label">INSTALL WITH HOMEBREW</span><button type="button" class="copy" data-copy="brew install --cask magicsih/tap/leaflit" aria-label="Copy Homebrew install command">Copy</button></div><pre><code>brew install --cask magicsih/tap/leaflit</code></pre><hr><span class="code-label">OPEN A DOCUMENT</span><pre><code>leaflit ./plan.md</code></pre></div><div class="download-links"><a class="text-link" href="https://github.com/magicsih/leaflit/releases/tag/v0.1.0">Download the ZIP <span aria-hidden="true">↗</span></a><a href="https://github.com/magicsih/leaflit#build-locally">Build from source</a></div><p class="fine">No account. No analytics SDK in the app. No changes to your default file association.</p><p id="copy-status" role="status" aria-live="polite"></p></div></div></section>
+
+    <section class="notes wrap"><details><summary>What does “a small reading workflow” mean?</summary><p>It means a dedicated reader with no editing workspace to configure. It is a product goal, not a promise that Leaflit uses less memory than every editor. The app uses WKWebView and its helper processes. The local 0.2.0 sidebar candidate, measured before the icon update, used about 70–72MiB for 1KiB prose and 151–162MiB for a heading-heavy 100KiB benchmark, depending on sidebar state. The original 60MiB target was not met.</p><p>See the <a href="https://github.com/magicsih/leaflit/blob/main/docs/qa/sidebar-resources.md">measured ranges, methods and limits</a>. Spoken VoiceOver, earlier macOS, actual Finder drops and network-isolated host execution have remaining verification work in <a href="https://github.com/magicsih/leaflit/issues">GitHub issues</a>.</p></details></section>
+  </main>
+  <footer class="wrap"><a class="brand" href="./"><img src="assets/leaflit.svg" width="34" height="34" alt=""><span>Leaflit</span></a><p>Made for a little room to read.</p><div><a href="https://github.com/magicsih/leaflit">Source</a><a href="https://github.com/magicsih/leaflit/issues">Feedback</a><a href="https://github.com/magicsih/leaflit/blob/main/LICENSE">MIT License</a></div><p class="footer-note">New icon selected for local 0.2.0. Public 0.1.0 keeps its original icon. This site uses no analytics or tracking cookies.</p></footer>
+  <script src="site.js" defer></script>
+</body>
+</html>
