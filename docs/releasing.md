@@ -1,6 +1,6 @@
 # Releasing Leaflit
 
-Public distribution uses GitHub Releases and `magicsih/homebrew-tap`. The first release is 0.1.0 for Apple Silicon. Publishing a source commit, signing, notarization, release visibility and Homebrew availability are separate states.
+Public distribution uses GitHub Releases and `magicsih/homebrew-tap`. The current public preview is 0.2.0 for Apple Silicon. Publishing a source commit, signing, notarization, release visibility and Homebrew availability are separate states.
 
 ## Prepare the candidate
 
@@ -13,7 +13,7 @@ An independent reviewer runs the approved complete checks and normal Release bui
 ./scripts/build.sh Release
 ```
 
-`build/verification.json` and `build/Leaflit-0.1.0/build-info.json` must match the candidate. Packaging rejects failed, incomplete, future-dated or older-than-168-hour evidence. The three original UI review rounds remain historical evidence where product paths are unchanged; a signed-artifact smoke check is a separate distribution check.
+`build/verification.json` and `build/Leaflit-0.2.0/build-info.json` must match the candidate. Packaging rejects failed, incomplete, future-dated or older-than-168-hour evidence. The three original UI review rounds remain historical evidence where product paths are unchanged; a signed-artifact smoke check is a separate distribution check.
 
 ## Sign and notarize
 
@@ -24,14 +24,14 @@ python3 scripts/package-release.py prepare \
   --identity "$LEAFLIT_SIGN_IDENTITY" --team-id "$LEAFLIT_TEAM_ID"
 ```
 
-Preparation creates a new output directory, copies the verified app, bundles the launcher under `Contents/Resources`, signs nested code before the outer app with hardened runtime, verifies the signature, and creates `build/releases/0.1.0/notarization-upload.zip`. It refuses an existing output directory rather than overwrite a previous candidate.
+Preparation creates a new output directory, copies the verified app, bundles the launcher under `Contents/Resources`, signs nested code before the outer app with hardened runtime, verifies the signature, and creates `build/releases/0.2.0/notarization-upload.zip`. It refuses an existing output directory rather than overwrite a previous candidate.
 
 The shell launcher belongs in Resources so its signature is sealed as a resource and survives archive transfer. See [Apple's code signing guidance](https://developer.apple.com/library/archive/technotes/tn2206/). The packaging integration test signs and extracts a temporary app to verify this boundary without a private signing identity.
 
 Submit that upload with the existing Apple API authorization. The following variables refer to the registered key file and its public identifiers; do not put their private contents in commands or logs.
 
 ```sh
-xcrun notarytool submit build/releases/0.1.0/notarization-upload.zip \
+xcrun notarytool submit build/releases/0.2.0/notarization-upload.zip \
   --key "$APPLE_API_KEY_P8" --key-id "$APPLE_API_KEY_ID" \
   --issuer "$APPLE_API_ISSUER_ID" --output-format json
 ```
@@ -40,7 +40,7 @@ Record the returned submission ID, poll `notarytool info` with the same authoriz
 
 ```sh
 python3 scripts/package-release.py finalize \
-  --receipt build/releases/0.1.0/notarization-receipt.json
+  --receipt build/releases/0.2.0/notarization-receipt.json
 ```
 
 Finalization requires Accepted status, verifies the unchanged upload/executable, staples and validates the ticket, runs strict signature verification and Gatekeeper, and creates a separate final ZIP, `SHA256SUMS` and `release-manifest.json`. Do not replace the uploaded archive or mutate the final ZIP. The final archive differs from the pre-stapling upload by design.
@@ -49,7 +49,7 @@ Finalization requires Accepted status, verifies the unchanged upload/executable,
 
 Extract the final ZIP into an isolated folder and launch that actual signed app. Check rendering, opening a document, the bundled launcher and remaining release-specific file routes. Keep inaccessible or unexecuted behavior explicit.
 
-Create the owner-approved `v0.1.0` tag on the fixed candidate and push it. Create a draft GitHub release with the English notes in `docs/releases/0.1.0.md`, the final ZIP, `SHA256SUMS` and manifest. Confirm the remote tag SHA and uploaded asset hashes, then publish the same draft. Mark this first release as a preview/prerelease.
+Create the owner-approved `v0.2.0` tag on the fixed candidate and push it. Create a draft GitHub release with the English notes in `docs/releases/0.2.0.md`, the final ZIP, `SHA256SUMS` and manifest. Confirm the remote tag SHA and uploaded asset hashes, then publish the same draft. Keep this release marked as a preview/prerelease.
 
 Download the public assets without authentication and compare their hashes with the verified local artifact. Extract the downloaded app, validate its signature, stapled ticket and Gatekeeper result, then launch it. Release visibility alone does not establish these checks.
 
@@ -65,3 +65,9 @@ leaflit "path/to/document.md"
 ```
 
 Before installation, check for an existing Leaflit app or command and preserve unrelated user installations. Keep Gatekeeper/quarantine enabled. Disable unrelated automatic dependency cleanup during a verification install. Confirm the installed app, command symlink, signed executable identity and document-opening behavior. A personal tap is separate from official `homebrew/cask` acceptance; the latter is tracked in issue #6.
+
+## Preserve an existing installation
+
+A release verification must not replace a user's active installation just to test an archive. The 0.2.0 execution used Homebrew's actual Ruby installer with the unchanged registered tap recipe, a process-local isolated Caskroom and an owned app directory. Global binary linking was disabled. The installed app's bundled launcher was executed directly; the existing `/Applications/Leaflit.app`, global launcher and 0.1.0 Homebrew receipt were preserved. This verifies the published recipe's download, checksum, app installation, quarantine and bundled command, while leaving a normal global CLI upgrade unexecuted. Record that distinction explicitly. The local isolated harness and results remain under ignored build evidence.
+
+If Homebrew's online audit reports bad GitHub credentials while the operator's GitHub CLI session is valid, verify that session's account and provide its token only in the audit process environment. Do not print it, persist it, rotate keys or log in again merely for the audit. Keep the initial failed audit separate from the authenticated result. A prerelease policy failure still means the full online audit has not passed.
