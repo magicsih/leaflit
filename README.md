@@ -1,6 +1,28 @@
+<img src="assets/branding/leaflit.svg" width="88" height="88" alt="Leaflit: a page with a leaf">
+
 # Leaflit
 
-A read-only Markdown viewer for macOS, with offline Mermaid diagrams and LaTeX math. Open a file, read it in a native window, and see saved changes appear automatically.
+**Markdown from your terminal. Room to read.**
+
+A read-only Markdown viewer for macOS, built for the plans, specs and notes that come out of LLM terminal workflows. Open a file in a dedicated native window, read rendered tables, Mermaid diagrams and LaTeX math, then return to your terminal. Saved changes appear automatically.
+
+[Website](https://magicsih.github.io/leaflit/) · [Download the 0.1.0 preview](https://github.com/magicsih/leaflit/releases/tag/v0.1.0) · [Issues](https://github.com/magicsih/leaflit/issues)
+
+## Why Leaflit exists
+
+I built Leaflit because I wanted to open Markdown from an LLM terminal workflow without bringing an IDE and its workspace along just to read a file. Raw terminal output is useful while working, but plans and technical notes are easier to review with rendered headings, tables, diagrams and math.
+
+Leaflit gives that reading step its own window and a command: `leaflit ./plan.md`. It stays read-only, follows saves and leaves the source file untouched. The aim is a small, direct reading workflow; measured resource use and its limits are documented below.
+
+## See it in use
+
+```sh
+leaflit ./plan.md
+```
+
+![Leaflit 0.1.0 rendering a release plan with a Mermaid diagram, table, math and task list](site/assets/leaflit-0.1.0.jpg)
+
+Actual public 0.1.0 app on macOS. The terminal command opens a normal window like this; there is no editor setup or workspace to configure. The icon at the top of this README is the selected new artwork for local 0.2.0 builds; the published 0.1.0 app retains its original icon.
 
 Built with Swift, AppKit and WKWebView for Apple Silicon. The deployment target is macOS 14 or later; runtime verification so far covers Apple M3 on macOS 26.6.2. Earlier macOS releases and Intel Macs have not been verified.
 
@@ -40,6 +62,10 @@ Raw HTML is shown as text. Remote resources, document scripts, unsafe URL scheme
 ## Build locally
 
 Local 0.2.0 builds add a collapsible native sidebar with `Files` and `Outline` modes. Use `Open Folder…` (Shift-Command-O) to browse a folder, or switch to `Outline` to navigate the current document's headings. Toggle the sidebar with Control-Command-S. The published GitHub and Homebrew release remains the 0.1.0 preview until a new release is authorized. See the [sidebar design](docs/design/navigation-sidebar/design.md) and [verification status](docs/qa/sidebar-report.md).
+
+![Local 0.2.0 candidate showing its Files sidebar beside a rendered Markdown document](docs/qa/screenshots/sidebar-files-0.2.0.jpg)
+
+The Files/Outline screenshot shows the local 0.2.0 candidate, not the current public download. The selected icon is documented in the [branding source](assets/branding/README.md). Website source and publishing instructions are in [site/README.md](site/README.md).
 
 Verified with Xcode 27, Node.js 24 and npm 11. Dependencies are pinned in `package-lock.json`. Ruby is needed only when regenerating the Xcode project, not for a normal build.
 
