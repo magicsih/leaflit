@@ -72,11 +72,13 @@ The additional Files/Outline screenshot is the preserved actual local 0.2.0 revi
 
 Verified with Xcode 27, Node.js 24 and npm 11. Dependencies are pinned in `package-lock.json`. Ruby is needed only when regenerating the Xcode project, not for a normal build.
 
+Source builds now produce the local 0.2.1 product follow-up candidate. The public preview remains 0.2.0.
+
 ```sh
 ./scripts/build.sh
-open build/Leaflit-0.2.0/Leaflit.app
-./build/Leaflit-0.2.0/leaflit Fixtures/Welcome.md
-open -a "$PWD/build/Leaflit-0.2.0/Leaflit.app" "Fixtures/Next Page.markdown"
+open build/Leaflit-0.2.1/Leaflit.app
+./build/Leaflit-0.2.1/leaflit Fixtures/Welcome.md
+open -a "$PWD/build/Leaflit-0.2.1/Leaflit.app" "Fixtures/Next Page.markdown"
 ```
 
 For Xcode, build the web assets first, then run the Leaflit scheme:

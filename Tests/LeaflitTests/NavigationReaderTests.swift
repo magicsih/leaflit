@@ -11,6 +11,70 @@ extension ReaderTests {
     }
     private func sidebarViews(_ view: NSView) -> [NSView] { [view] + view.subviews.flatMap(sidebarViews) }
 
+    private func holdMathStylesheetCompletion() async throws {
+        try await loaded("# Initial")
+        reader.sidebar.setMode(.outline)
+        _ = try await js("""
+        window.holdMathLoad = event => {
+          if (event.target.id === 'katex-css') {
+            event.stopImmediatePropagation(); window.heldMathStyle = event.target;
+          }
+        };
+        document.addEventListener('load', window.holdMathLoad, true);
+        return true;
+        """)
+        reader.open(try write("# Math A\n\n$x^2$", name: "math A.md"))
+        try await assertJS("for(let n=0;n<200 && !window.heldMathStyle;n++) await new Promise(resolve=>setTimeout(resolve,10)); return !!window.heldMathStyle", true)
+    }
+
+    private func releaseMathStylesheetCompletion() async throws {
+        _ = try await js("document.removeEventListener('load', window.holdMathLoad, true); window.heldMathStyle.dispatchEvent(new Event('load')); return true")
+    }
+
+    func testPendingMathStylesheetOnlyCompletesLatestMathRevision() async throws {
+        try await holdMathStylesheetCompletion()
+        let first = reader.displayedRevision
+        reader.open(try write("# Math B\n\n$y^2$", name: "math B.md"))
+        try await wait { self.reader.displayedRevision > first }
+        try await Task.sleep(nanoseconds: 250_000_000)
+        XCTAssertLessThan(reader.completedRevision, reader.revision.current, "The newest math render must still await CSS readiness")
+        try await assertJS("return document.querySelectorAll('.katex').length", 0)
+        try await releaseMathStylesheetCompletion()
+        try await wait { self.reader.completedRevision == self.reader.revision.current }
+        try await assertJS("return document.querySelector('h1').textContent", "Math B")
+        try await assertJS("return document.querySelectorAll('.katex').length", 1)
+        XCTAssertEqual(reader.sidebar.headings.map(\.id), ["math-b"])
+    }
+
+    func testPlainRevisionCompletesWhileOlderMathStylesheetIsPending() async throws {
+        try await holdMathStylesheetCompletion()
+        let first = reader.displayedRevision
+        reader.open(try write("# Plain B", name: "plain B.md"))
+        try await wait { self.reader.completedRevision > first && self.reader.completedRevision == self.reader.revision.current }
+        try await releaseMathStylesheetCompletion()
+        try await Task.sleep(nanoseconds: 250_000_000)
+        try await assertJS("return document.querySelector('h1').textContent", "Plain B")
+        try await assertJS("return document.querySelectorAll('.katex').length", 0)
+        XCTAssertEqual(reader.sidebar.headings.map(\.id), ["plain-b"])
+    }
+
+    func testWideSidebarSurvivesNarrowVisibleWindowBoundary() async throws {
+        reader.splitController.splitView.setPosition(320, ofDividerAt: 0)
+        reader.window?.contentView?.layoutSubtreeIfNeeded()
+        try await Task.sleep(nanoseconds: 100_000_000)
+        let expected = reader.sidebar.view.bounds.width
+        reader.window?.setContentSize(NSSize(width: 620, height: 500))
+        reader.window?.contentView?.layoutSubtreeIfNeeded()
+        try await Task.sleep(nanoseconds: 100_000_000)
+        print("LEAFLIT_WIDTH_BOUNDARY narrow=\(reader.sidebar.view.bounds.width) visible=\(reader.isSidebarVisible)")
+        reader.window?.setContentSize(NSSize(width: 900, height: 700))
+        reader.window?.contentView?.layoutSubtreeIfNeeded()
+        try await Task.sleep(nanoseconds: 100_000_000)
+        print("LEAFLIT_WIDTH_BOUNDARY expected=\(expected) restored=\(reader.sidebar.view.bounds.width)")
+        XCTAssertTrue(reader.isSidebarVisible)
+        XCTAssertEqual(reader.sidebar.view.bounds.width, expected, accuracy: 1)
+    }
+
     func testSidebarVisibleWidthSurvivesRepeatedReopenAndCollapse() async throws {
         let preferences = try XCTUnwrap(UserDefaults(suiteName: dir.lastPathComponent))
         for appearance in [NSAppearance.Name.aqua, .darkAqua] {
