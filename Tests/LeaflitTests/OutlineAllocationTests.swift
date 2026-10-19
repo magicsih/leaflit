@@ -104,55 +104,70 @@ extension ReaderTests {
         var released: Bool { reader == nil && window == nil && webView == nil && sidebar == nil }
     }
 
-    private func renderAndCloseReader(_ url: URL, preferences: UserDefaults) async throws -> (ClosedReaderProbe, Int) {
-        // End the owner's async scope and drain Objective-C temporaries before checking weak references.
-        var closing: ReaderController? = autoreleasepool {
-            let controller = ReaderController(preferences: preferences)
-            controller.open(url); controller.showWindow(nil)
-            return controller
+    func testClosingOneReaderReleasesItsViewsWithoutStoppingAnotherReader() throws {
+        // XCTest's outer async autorelease pool can retain weak delegate loads until the test ends.
+        // Pump native callbacks within a draining pool so the probe observes application ownership.
+        func pump(_ condition: () -> Bool, seconds: Double = 20, file: StaticString = #filePath, line: UInt = #line) {
+            let deadline = Date().addingTimeInterval(seconds)
+            while !autoreleasepool(invoking: condition), Date() < deadline {
+                autoreleasepool { _ = RunLoop.main.run(mode: .default, before: Date().addingTimeInterval(0.03)) }
+            }
+            XCTAssertTrue(autoreleasepool(invoking: condition), "Timed out", file: file, line: line)
         }
-        var closeCalls = 0
-        closing?.onClose = { closeCalls += 1 }
-        defer { if closeCalls == 0 { autoreleasepool { closing?.close() } } }
-        try await wait { [weak closing] in (closing?.completedRevision ?? 0) > 0 }
-        let probe = autoreleasepool {
-            let probe = ClosedReaderProbe(closing!)
-            closing?.close(); closing = nil
-            return probe
-        }
-        return (probe, closeCalls)
-    }
-
-    func testClosingOneReaderReleasesItsViewsWithoutStoppingAnotherReader() async throws {
-        try await loaded("# Survivor\n\nA stable searchable paragraph.")
+        let survivor = try write("# Survivor\n\nA stable searchable paragraph.", name: "survivor.md")
+        autoreleasepool { reader.open(survivor) }
+        pump { self.reader.completedRevision > 0 }
         let url = try write("# Closed document\n\nA read-only lifetime fixture.", name: "closed document.md")
         let original = try Data(contentsOf: url)
         let suite = "Leaflit Lifetime \(UUID().uuidString)"
         let preferences = try XCTUnwrap(UserDefaults(suiteName: suite))
         preferences.removePersistentDomain(forName: suite)
+        var closing: ReaderController? = autoreleasepool {
+            let controller = ReaderController(preferences: preferences)
+            controller.open(url); controller.showWindow(nil)
+            return controller
+        }
         var reopened: ReaderController?
         defer {
-            reopened?.close()
+            autoreleasepool { closing?.close(); reopened?.close() }
             preferences.removePersistentDomain(forName: suite)
         }
-        let (probe, closeCalls) = try await renderAndCloseReader(url, preferences: preferences)
+        var closeCalls = 0
+        closing?.onClose = { closeCalls += 1 }
+        pump { [weak closing] in (closing?.completedRevision ?? 0) > 0 }
+        let probe = autoreleasepool {
+            let probe = ClosedReaderProbe(closing!)
+            closing?.close(); closing = nil
+            return probe
+        }
         XCTAssertEqual(closeCalls, 1)
-        try await wait({ probe.released }, seconds: 5)
+        pump({ probe.released }, seconds: 5)
         print("LEAFLIT_CLOSED_LIFETIME reader=\(probe.reader != nil) window=\(probe.window != nil) webView=\(probe.webView != nil) sidebar=\(probe.sidebar != nil)")
 
-        try await assertJS("return document.querySelector('h1').textContent", "Survivor")
-        let found: Bool = await withCheckedContinuation { continuation in
-            self.reader.webView.find("searchable", configuration: WKFindConfiguration()) {
-                continuation.resume(returning: $0.matchFound)
+        func title(_ view: WKWebView) -> String? {
+            var finished = false, result: String?
+            autoreleasepool {
+                view.evaluateJavaScript("document.querySelector('h1').textContent") { value, error in
+                    XCTAssertNil(error); result = value as? String; finished = true
+                }
             }
+            pump { finished }
+            return result
         }
-        XCTAssertTrue(found)
-        reopened = ReaderController(preferences: preferences)
-        reopened?.open(url); reopened?.showWindow(nil)
-        try await wait { (reopened?.completedRevision ?? 0) > 0 }
-        let reopenedView = try XCTUnwrap(reopened?.webView)
-        let title = try await reopenedView.callAsyncJavaScript("return document.querySelector('h1').textContent", arguments: [:], in: nil, contentWorld: .page) as? String
-        XCTAssertEqual(title, "Closed document")
+        XCTAssertEqual(title(reader.webView), "Survivor")
+        var found: Bool?
+        autoreleasepool {
+            reader.webView.find("searchable", configuration: WKFindConfiguration()) { found = $0.matchFound }
+        }
+        pump { found != nil }
+        XCTAssertEqual(found, true)
+        reopened = autoreleasepool {
+            let controller = ReaderController(preferences: preferences)
+            controller.open(url); controller.showWindow(nil)
+            return controller
+        }
+        pump { (reopened?.completedRevision ?? 0) > 0 }
+        XCTAssertEqual(title(try XCTUnwrap(reopened?.webView)), "Closed document")
         XCTAssertEqual(try Data(contentsOf: url), original)
     }
 }
