@@ -11,6 +11,38 @@ extension ReaderTests {
     }
     private func sidebarViews(_ view: NSView) -> [NSView] { [view] + view.subviews.flatMap(sidebarViews) }
 
+    func testSidebarVisibleWidthSurvivesRepeatedReopenAndCollapse() async throws {
+        let preferences = try XCTUnwrap(UserDefaults(suiteName: dir.lastPathComponent))
+        for appearance in [NSAppearance.Name.aqua, .darkAqua] {
+            reader.window?.appearance = NSAppearance(named: appearance)
+            reader.splitController.splitView.setPosition(278, ofDividerAt: 0)
+            reader.window?.contentView?.layoutSubtreeIfNeeded()
+            try await Task.sleep(nanoseconds: 100_000_000)
+            let expected = reader.sidebar.view.bounds.width
+            XCTAssertGreaterThan(expected, 240)
+            XCTAssertLessThan(expected, 300)
+            for cycle in 1...4 {
+                reader.close()
+                reader = ReaderController(preferences: preferences)
+                reader.window?.appearance = NSAppearance(named: appearance)
+                reader.showWindow(nil)
+                reader.window?.contentView?.layoutSubtreeIfNeeded()
+                try await Task.sleep(nanoseconds: 100_000_000)
+                print("LEAFLIT_WIDTH appearance=\(appearance.rawValue) cycle=\(cycle) expected=\(expected) actual=\(reader.sidebar.view.bounds.width) saved=\(preferences.double(forKey: "sidebar.width"))")
+                XCTAssertEqual(reader.sidebar.view.bounds.width, expected, accuracy: 1)
+                reader.toggleSidebar(); reader.toggleSidebar()
+                reader.window?.setContentSize(NSSize(width: 480, height: 500))
+                reader.window?.contentView?.layoutSubtreeIfNeeded()
+                XCTAssertFalse(reader.isSidebarVisible)
+                reader.window?.setContentSize(NSSize(width: 900, height: 700))
+                reader.window?.contentView?.layoutSubtreeIfNeeded()
+                try await Task.sleep(nanoseconds: 100_000_000)
+                XCTAssertTrue(reader.isSidebarVisible)
+                XCTAssertEqual(reader.sidebar.view.bounds.width, expected, accuracy: 1)
+            }
+        }
+    }
+
     func testRenderingAndOutlineProgressWhenAnimationFramesPause() async throws {
         try await loaded("# Initial")
         let previous = reader.completedRevision

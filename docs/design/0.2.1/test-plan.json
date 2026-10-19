@@ -1,0 +1,25 @@
+{
+  "feature": "Prioritized product fixes, performance and additional verification",
+  "baselineTag": "v0.2.0",
+  "baselineSHA": "5defe3c633336a8658a7c368baaed00d5fb1f4c4",
+  "approval": "Owner requested product priorities, performance improvements and additional verification on 2026-10-19",
+  "policyScope": "Personal magicsih repository; repository and global rules apply",
+  "level": "L3",
+  "redesign": false,
+  "executor": "Independent executor for native regression, ordinary Release build and matched app measurements",
+  "environments": ["local macOS development app", "local macOS Release app"],
+  "release": {"version": "0.2.1", "target": "Apple Silicon macOS", "endpoint": "verified-local-release-candidate", "remotePublication": false},
+  "commands": ["scripts/verify.sh Release", "scripts/build.sh Release"],
+  "coverage": [
+    "Sidebar visible width round-trips across reopen, toggles, narrow windows and appearances",
+    "Unchanged heading refresh retains native outline state; changed metadata refreshes correctly",
+    "Duplicate, colliding and Unicode anchors retain identity with improved scaling",
+    "Overlapping math revisions await stylesheet readiness",
+    "Closed reader ownership releases while a second reader continues and a file can reopen",
+    "Full existing opening, navigation, search, copy, zoom, rendering, refresh, security and read-only regression",
+    "20 fixed 100KiB fresh launches and 20 document transitions with timing provenance",
+    "Matched ordinary 0.2.0 and candidate memory samples, source hashes and strict helper attribution",
+    "1MiB and 5MiB documents and targeted additional native checks"
+  ],
+  "limits": "Unexecuted network isolation, spoken VoiceOver, cross-app Finder drop, earlier OS and icon surfaces remain explicitly unverified; no release or installed-app replacement is authorized by this plan."
+}
