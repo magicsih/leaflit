@@ -6,7 +6,7 @@
 
 A read-only Markdown viewer for macOS, built for the plans, specs and notes that come out of LLM terminal workflows. Open a file in a dedicated native window, read rendered tables, Mermaid diagrams and LaTeX math, then return to your terminal. Saved changes appear automatically.
 
-[Website](https://magicsih.github.io/leaflit/) · [Download the 0.1.0 preview](https://github.com/magicsih/leaflit/releases/tag/v0.1.0) · [Issues](https://github.com/magicsih/leaflit/issues)
+[Website](https://magicsih.github.io/leaflit/), [Download the 0.1.0 preview](https://github.com/magicsih/leaflit/releases/tag/v0.1.0), [Issues](https://github.com/magicsih/leaflit/issues)
 
 ## Why Leaflit exists
 
