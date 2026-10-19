@@ -188,7 +188,7 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
     func reload(preserve: Bool) {
         reading?.cancel(); reading = nil
         let request = readRevision.next()
-        guard ready, let url = documentURL else { return }
+        guard let url = documentURL, ready || editing.hasRequestedSource else { return }
         let requestDate = preserve ? Date() : requestedAt
         let location = pendingLocation; pendingLocation = nil
         let scope = documentScope

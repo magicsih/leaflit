@@ -152,6 +152,16 @@ extension ReaderTests {
         XCTAssertTrue(reader.editing.textView?.undoManager?.canUndo == true)
         try await assertJS("return document.querySelector('h1').textContent", "Unsaved")
     }
+    func testFirstSourceLoadWorksWhileRendererIsUnavailable() async throws {
+        try await loaded("# Original 한글 😀\r\n")
+        XCTAssertNil(reader.editing.draft)
+        reader.webViewWebContentProcessDidTerminate(reader.webView)
+        reader.showSource()
+        try await wait { self.reader.editing.draft != nil }
+        XCTAssertEqual(reader.editing.textView?.string, "# Original 한글 😀\r\n")
+        XCTAssertTrue(reader.editing.textView?.isEditable == true)
+        XCTAssertFalse(reader.editing.isDirty)
+    }
     func testFailedSaveCancelsNavigationAndClose() async throws {
         let url = try write("# Original"), next = try write("# Next", name: "next.md")
         reader.open(url); try await wait { self.reader.completedRevision > 0 }

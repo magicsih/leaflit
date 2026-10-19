@@ -88,7 +88,7 @@ enum SourceFileWriter {
     private static func sameLocation(_ first: URL, _ second: URL) -> Bool {
         var a = stat(), b = stat()
         let parent = first.deletingLastPathComponent(), other = second.deletingLastPathComponent()
-        guard Darwin.stat(parent.path, &a) == 0, Darwin.stat(other.path, &b) == 0,
+        guard fstatat(AT_FDCWD, parent.path, &a, 0) == 0, fstatat(AT_FDCWD, other.path, &b, 0) == 0,
               a.st_dev == b.st_dev, a.st_ino == b.st_ino else { return false }
         let sensitive = (try? parent.resourceValues(forKeys: [.volumeSupportsCaseSensitiveNamesKey]))?.volumeSupportsCaseSensitiveNames == true
         return sensitive ? first.lastPathComponent == second.lastPathComponent : first.lastPathComponent.caseInsensitiveCompare(second.lastPathComponent) == .orderedSame

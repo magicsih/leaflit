@@ -24,6 +24,7 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
     private var documentURL: URL?
     private var scope: FolderTree?
     private var scale = 1.0
+    private var unavailable = false
     weak var window: NSWindow?
     var onRequestSource: (() -> Void)?
     var onPreview: ((String) -> Void)?
@@ -53,13 +54,14 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
     }
     func reset(url: URL, within folder: FolderTree?) {
         documentURL = url; scope = folder; draft = nil; baseline = nil
-        hasRequestedSource = false; pendingLine = nil; mode = .read
+        hasRequestedSource = false; pendingLine = nil; mode = .read; unavailable = false
         textView?.string = ""; textView?.undoManager?.removeAllActions()
         message.stringValue = ""; conflictBar.isHidden = true; header.isHidden = false
         updateState()
     }
     func receive(_ snapshot: SourceFileSnapshot) throws {
         guard snapshot.url == documentURL, !isSaving else { return }
+        unavailable = false
         if var existing = draft {
             let wasDirty = existing.isDirty
             try existing.observeDisk(snapshot.data, sameIdentity: baseline?.identity == snapshot.identity)
@@ -78,6 +80,7 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
         updateState()
     }
     func readFailed() {
+        unavailable = true
         if draft != nil { draft?.markUnavailable(); showMessage(SourceFileError.unavailable.localizedDescription) }
         updateState()
     }
@@ -198,7 +201,7 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
         editorHost.isHidden = mode != .source
         textView?.isEditable = draft != nil && !isBusy
         saveButton.isEnabled = isDirty && !isBusy && draft?.hasExternalChanges != true
-        status.stringValue = isSaving ? "Saving…" : isDirty ? (mode == .read ? "Unsaved preview" : "Unsaved changes") : (mode == .source && draft == nil ? "Loading source…" : "")
+        status.stringValue = isSaving ? "Saving…" : isDirty ? (mode == .read ? "Unsaved preview" : "Unsaved changes") : (mode == .source && draft == nil ? (unavailable ? "Source unavailable" : "Loading source…") : "")
         window?.isDocumentEdited = isDirty
         onStateChanged?()
     }
@@ -220,7 +223,7 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
     }
     @objc private func reloadFromDisk() {
         guard !isBusy, let window else { return }
-        func reload() { draft = nil; baseline = nil; textView?.undoManager?.removeAllActions(); onRequestSource?(); updateState() }
+        func reload() { draft = nil; baseline = nil; unavailable = false; textView?.string = ""; textView?.undoManager?.removeAllActions(); onRequestSource?(); updateState() }
         guard isDirty else { reload(); return }
         let alert = NSAlert(); alert.messageText = "Discard your edits and reload from disk?"
         alert.informativeText = "This cannot be undone. You can save a new copy first."
