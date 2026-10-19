@@ -26,3 +26,5 @@ After changes, check desktop/narrow rendering, all images, anchors, keyboard foc
 - `assets/social-preview.png` is a 1200×630 presentation card composed in HTML from the canonical SVG, text and actual public app capture. It does not replace or fabricate the app screenshot. Update it when its text or imagery becomes stale.
 
 Use the repository [branding source](../assets/branding/README.md) to change the icon. Keep download version, captions, structured data and public distribution status consistent.
+
+Search indexing and discovery measurement remain separate follow-up work in [issue #16](https://github.com/magicsih/leaflit/issues/16).
