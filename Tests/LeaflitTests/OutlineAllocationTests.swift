@@ -92,6 +92,37 @@ extension ReaderTests {
         XCTAssertTrue(texts(sidebar.view).contains("Open a Markdown file to see its headings."))
     }
 
+    private final class ClosedReaderProbe {
+        weak var reader: ReaderController?
+        weak var window: NSWindow?
+        weak var webView: ReaderWebView?
+        weak var sidebar: NavigationSidebarController?
+        init(_ reader: ReaderController) {
+            self.reader = reader; window = reader.window
+            webView = reader.webView; sidebar = reader.sidebar
+        }
+        var released: Bool { reader == nil && window == nil && webView == nil && sidebar == nil }
+    }
+
+    private func renderAndCloseReader(_ url: URL, preferences: UserDefaults) async throws -> (ClosedReaderProbe, Int) {
+        // End the owner's async scope and drain Objective-C temporaries before checking weak references.
+        let closing = autoreleasepool {
+            let controller = ReaderController(preferences: preferences)
+            controller.open(url); controller.showWindow(nil)
+            return controller
+        }
+        var closeCalls = 0
+        closing.onClose = { closeCalls += 1 }
+        defer { if closeCalls == 0 { autoreleasepool { closing.close() } } }
+        try await wait { closing.completedRevision > 0 }
+        let probe = autoreleasepool {
+            let probe = ClosedReaderProbe(closing)
+            closing.close()
+            return probe
+        }
+        return (probe, closeCalls)
+    }
+
     func testClosingOneReaderReleasesItsViewsWithoutStoppingAnotherReader() async throws {
         try await loaded("# Survivor\n\nA stable searchable paragraph.")
         let url = try write("# Closed document\n\nA read-only lifetime fixture.", name: "closed document.md")
@@ -99,24 +130,15 @@ extension ReaderTests {
         let suite = "Leaflit Lifetime \(UUID().uuidString)"
         let preferences = try XCTUnwrap(UserDefaults(suiteName: suite))
         preferences.removePersistentDomain(forName: suite)
-        var closing: ReaderController? = ReaderController(preferences: preferences)
         var reopened: ReaderController?
         defer {
-            closing?.close(); reopened?.close()
+            reopened?.close()
             preferences.removePersistentDomain(forName: suite)
         }
-        weak var releasedReader = closing
-        weak var releasedWindow = closing?.window
-        weak var releasedWebView = closing?.webView
-        weak var releasedSidebar = closing?.sidebar
-        var closeCalls = 0
-        closing?.onClose = { closeCalls += 1 }
-        closing?.open(url); closing?.showWindow(nil)
-        try await wait { (closing?.completedRevision ?? 0) > 0 }
-        closing?.close(); closing = nil
+        let (probe, closeCalls) = try await renderAndCloseReader(url, preferences: preferences)
         XCTAssertEqual(closeCalls, 1)
-        try await wait({ releasedReader == nil && releasedWindow == nil && releasedWebView == nil && releasedSidebar == nil }, seconds: 5)
-        print("LEAFLIT_CLOSED_LIFETIME reader=\(releasedReader != nil) window=\(releasedWindow != nil) webView=\(releasedWebView != nil) sidebar=\(releasedSidebar != nil)")
+        try await wait({ probe.released }, seconds: 5)
+        print("LEAFLIT_CLOSED_LIFETIME reader=\(probe.reader != nil) window=\(probe.window != nil) webView=\(probe.webView != nil) sidebar=\(probe.sidebar != nil)")
 
         try await assertJS("return document.querySelector('h1').textContent", "Survivor")
         let found: Bool = await withCheckedContinuation { continuation in
