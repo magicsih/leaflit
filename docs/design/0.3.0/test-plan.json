@@ -1,0 +1,49 @@
+{
+  "version": "0.3.0",
+  "approval": "Owner explicitly requested public 0.3.0 release on 2026-10-19",
+  "sourceSHA": "f7f6cd9c74e3d601b6a7beca60a65adc3d698851",
+  "endpoint": "Public GitHub preview, personal Homebrew, downloaded and installed artifact execution, README and Pages live readback",
+  "level": "L3",
+  "sourceEvidence": "Existing independent complete verify and separate build at the exact source, completed 2026-10-19T06:53:38Z",
+  "carriedUI": "Three original Source UI reviews and whole ordinary artifact equivalence; no fourth redesign round",
+  "distribution": [
+    "Developer ID/hardened runtime",
+    "Accepted notarization and stapled ticket",
+    "Strict signature and Gatekeeper",
+    "Independent exact signed ZIP smoke",
+    "Remote tag and draft asset digest",
+    "Unauthenticated public download and execution",
+    "Personal cask syntax/style/full audit outcomes",
+    "Isolated real quarantined Homebrew installer and launcher",
+    "Responsive README/site and live deployed assets"
+  ],
+  "preservation": "Do not replace the installed app, global launcher or Homebrew receipt; preserve pre-existing user processes, preferences, originals and historical evidence",
+  "limits": [
+    "macOS14 target only, no older runtime",
+    "Spoken VoiceOver",
+    "Finder drop",
+    "Network isolation",
+    "Ordinary Source dark appearance #27",
+    "Formula copy #26",
+    "Official cask prerelease policy",
+    "Normal global Homebrew upgrade unexecuted",
+    "Initial inactive public-artifact Read capture blank, recovered after Source-to-Read; cause unconfirmed #29"
+  ],
+  "environments": [
+    "local macOS development app",
+    "ordinary local macOS Release app",
+    "extracted Developer ID signed ZIP",
+    "unauthenticated public download",
+    "isolated quarantined Homebrew installation"
+  ],
+  "commands": [
+    "./scripts/verify.sh Release",
+    "./scripts/build.sh Release"
+  ],
+  "executor": "Independent complete source verification at the fixed candidate; independent bounded signed/public/installed execution, root signs and publishes",
+  "carriedEvidence": [
+    "docs/qa/source-editing-0.3.0.md",
+    "docs/qa/source-editing-0.3.0.json",
+    "docs/qa/product-followups-0.2.1.md"
+  ]
+}

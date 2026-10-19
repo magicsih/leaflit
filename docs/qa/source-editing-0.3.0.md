@@ -1,6 +1,8 @@
 # Source editing in the local 0.3.0 candidate
 
-Leaflit now starts in Read and offers a native Source editor for explicit corrections. The owner approved this scope after encountering malformed Markdown from terminal LLM workflows. Rich-text Write remains deferred. This report follows the [approved design](../design/source-editing/design.md) and [L3 test plan](../design/source-editing/test-plan.json). Public 0.2.0, the personal Homebrew tap, the website and the installed app remain unchanged.
+This report preserves the local candidate checkpoint and its original limits. The later owner-approved public distribution is recorded separately in [0.3.0 release verification](../releases/0.3.0-verification.md).
+
+Leaflit now starts in Read and offers a native Source editor for explicit corrections. The owner approved this scope after encountering malformed Markdown from terminal LLM workflows. Rich-text Write remains deferred. This report follows the [approved design](../design/source-editing/design.md) and [L3 test plan](../design/source-editing/test-plan.json). At that local checkpoint, public 0.2.0, the personal Homebrew tap, the website and the installed app remained unchanged.
 
 ## Candidate and automated verification
 
