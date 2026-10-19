@@ -186,9 +186,9 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         reload(preserve: false)
     }
     func reload(preserve: Bool) {
-        guard ready, let url = documentURL else { return }
-        reading?.cancel()
+        reading?.cancel(); reading = nil
         let request = readRevision.next()
+        guard ready, let url = documentURL else { return }
         let requestDate = preserve ? Date() : requestedAt
         let location = pendingLocation; pendingLocation = nil
         let scope = documentScope
@@ -282,7 +282,7 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
             self.editing.confirmBeforeLeaving { [weak self] accepted in
                 guard let self else { return }
                 guard accepted, self.navigationSerial == request, self.documentURL == origin,
-                      folder?.canOpen(raw) != false else { self.sidebar.setDocument(self.documentURL); return }
+                      folder?.canOpen(raw) != false, self.canNavigate?(target) != false else { self.sidebar.setDocument(self.documentURL); return }
                 self.history.append((origin, location, self.documentScope)); self.back.isEnabled = true
                 self.openResolved(raw, location: anchor.map { ["anchor": $0] }, within: folder)
             }
@@ -342,7 +342,7 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
     @objc func goBack() {
         guard let (url, location, scope) = history.last else { return }
         editing.confirmBeforeLeaving { [weak self] accepted in
-            guard let self, accepted, scope?.canOpen(url) != false else { return }
+            guard let self, accepted, scope?.canOpen(url) != false, self.canNavigate?(url) != false else { return }
             self.history.removeLast(); self.back.isEnabled = !self.history.isEmpty
             self.openResolved(url, location: location, within: scope)
         }

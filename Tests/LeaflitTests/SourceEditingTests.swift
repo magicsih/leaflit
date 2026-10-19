@@ -68,7 +68,7 @@ extension ReaderTests {
         try await wait { self.reader.documentURL == DocumentPath.canonical(first) }
         XCTAssertFalse(reader.editing.isDirty); XCTAssertEqual(reader.editing.mode, .read)
     }
-    func testLateReadCannotReplaceNewEditsOrAnotherDocument() async throws {
+    func testLateReadCannotReplaceNewEditsAndCancelledOpenKeepsDraft() async throws {
         let url = try write("# Original"); reader.open(url); try await wait { self.reader.completedRevision > 0 }
         reader.showSource(); try await wait { self.reader.editing.draft != nil }
         let started = expectation(description: "source read started"), gate = DispatchSemaphore(value: 0)
@@ -88,6 +88,38 @@ extension ReaderTests {
         XCTAssertEqual(reader.documentURL, DocumentPath.canonical(url))
         XCTAssertTrue(reader.editing.isDirty)
         reader.sourceReader = SourceFileSnapshot.read
+    }
+    func testDiscardSynchronizesEditorEvenWhenFinalNavigationIsRejected() async throws {
+        let url = try write("# Original"), next = try write("# Next", name: "next.md")
+        reader.open(url); try await wait { self.reader.completedRevision > 0 }
+        try await source("# Unsaved")
+        reader.navigate(to: next); try await wait { self.reader.editing.unsavedAlert != nil }
+        reader.canNavigate = { _ in false }
+        reader.editing.unsavedAlert?.buttons[2].performClick(nil)
+        try await wait { self.reader.editing.unsavedAlert == nil }
+        XCTAssertEqual(reader.documentURL, DocumentPath.canonical(url))
+        XCTAssertEqual(reader.editing.textView?.string, "# Original")
+        XCTAssertEqual(reader.editing.draft?.text, "# Original"); XCTAssertFalse(reader.editing.isDirty)
+        XCTAssertFalse(reader.editing.textView?.undoManager?.canUndo == true)
+    }
+    func testDraftPreviewRebuildsImageAllowlistAndKeepsHostileInputInert() async throws {
+        try await loaded("# Original\n\n![old](old.png)")
+        try await source("# Draft\n\n![new](new.png)\n\n<script>window.compromised=true</script>\n\n![remote](https://example.com/private.png)\n\n[x](javascript:alert(1))")
+        let previous = reader.completedRevision; reader.showRead()
+        try await wait { self.reader.completedRevision > previous }
+        XCTAssertEqual(Set(reader.resources.images.keys), ["new.png"])
+        try await assertJS("return window.compromised === undefined", true)
+        try await assertJS("return document.querySelectorAll('img[src^=https],script:not([src]),a[href^=javascript]').length", 0)
+    }
+    func testRendererRestartRetainsDraftAndUndo() async throws {
+        try await loaded("# Original")
+        try await source("# Unsaved")
+        reader.showRead(); let previous = reader.completedRevision
+        reader.webViewWebContentProcessDidTerminate(reader.webView); reader.retry()
+        try await wait { self.reader.completedRevision > previous && self.reader.completedRevision == self.reader.revision.current }
+        XCTAssertEqual(reader.editing.draft?.text, "# Unsaved"); XCTAssertTrue(reader.editing.isDirty)
+        XCTAssertTrue(reader.editing.textView?.undoManager?.canUndo == true)
+        try await assertJS("return document.querySelector('h1').textContent", "Unsaved")
     }
     func testFailedSaveCancelsNavigationAndClose() async throws {
         let url = try write("# Original"), next = try write("# Next", name: "next.md")

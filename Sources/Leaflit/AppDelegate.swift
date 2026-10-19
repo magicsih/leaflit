@@ -23,7 +23,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         if !flag { newWindow(nil) }; return true
     }
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        guard !terminating else { return .terminateCancel }
+        guard !terminating, !readers.contains(where: { $0.editing.isBusy }) else { return .terminateCancel }
         guard readers.contains(where: { $0.editing.isDirty || $0.editing.isBusy }) else { return .terminateNow }
         terminating = true
         resolveUnsavedDocuments { [weak self] accepted in

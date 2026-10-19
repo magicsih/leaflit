@@ -109,7 +109,7 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
         editor.textContainerInset = NSSize(width: 16, height: 16)
         editor.isVerticallyResizable = true; editor.isHorizontallyResizable = false
         editor.autoresizingMask = [.width]; editor.textContainer?.widthTracksTextView = true
-        editor.minSize = .zero; editor.maxSize = NSSize(width: .greatestFiniteMagnitude, height: .greatestFiniteMagnitude)
+        editor.minSize = .zero; editor.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
         editor.setAccessibilityLabel("Markdown source")
         editor.delegate = self; textView = editor; scroll.documentView = editor
         scroll.translatesAutoresizingMaskIntoConstraints = false; editorHost.addSubview(scroll)
@@ -174,7 +174,12 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
             switch response {
             case .alertFirstButtonReturn: self.save(completion: completion)
             case .alertThirdButtonReturn:
-                self.draft?.discardChanges(); self.updateState(); completion(true)
+                self.draft?.discardChanges()
+                if let draft = self.draft {
+                    self.replaceEditorText(draft.text, clearUndo: true)
+                    if self.mode == .read { self.onPreview?(draft.text) }
+                }
+                self.updateState(); completion(true)
             default: completion(false)
             }
         }
@@ -201,6 +206,7 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
         panel.beginSheetModal(for: window) { [weak self] response in
             guard let self else { return }; self.copyPanel = nil
             guard response == .OK, let url = panel.url else { return }
+            guard url.standardizedFileURL != self.documentURL?.standardizedFileURL else { self.showMessage("Choose a new path for the copy. The original draft stays open."); return }
             do { try SourceFileWriter.copy(data, to: url) }
             catch { self.showMessage("Could not save a new copy. Choose a path that does not already exist. " + error.localizedDescription) }
         }
