@@ -58,6 +58,42 @@ extension ReaderTests {
         XCTAssertEqual(reader.sidebar.headings.map(\.id), ["plain-b"])
     }
 
+    func testFindLayoutDoesNotPersistTemporarySidebarCompression() async throws {
+        let preferences = try XCTUnwrap(UserDefaults(suiteName: dir.lastPathComponent))
+        preferences.set(312.0, forKey: "sidebar.width")
+        reader.close()
+        reader = ReaderController(preferences: preferences); reader.showWindow(nil)
+        try await loaded("# Reading\n\nA paragraph for the narrow-window Find regression.")
+        let url = try XCTUnwrap(reader.documentURL)
+        let original = try Data(contentsOf: url)
+        let expected = reader.sidebar.view.bounds.width
+        XCTAssertEqual(expected, 312, accuracy: 1)
+
+        reader.window?.setContentSize(NSSize(width: 620, height: 500))
+        for _ in 0..<10 { reader.zoomIn() }
+        reader.showFind()
+        reader.window?.contentView?.layoutSubtreeIfNeeded()
+        try await Task.sleep(nanoseconds: 150_000_000)
+        let compressed = reader.sidebar.view.bounds.width
+        print("LEAFLIT_FIND_WIDTH expected=\(expected) compressed=\(compressed) saved=\(preferences.double(forKey: "sidebar.width"))")
+        XCTAssertEqual(reader.webView.pageZoom, 2, accuracy: 0.01)
+        XCTAssertTrue(reader.isSidebarVisible)
+        XCTAssertLessThan(compressed, expected - 10, "The Find bar must actually constrain the pane in this reproduction")
+        XCTAssertEqual(preferences.double(forKey: "sidebar.width"), expected, accuracy: 1, "Automatic layout must not overwrite the preferred width")
+
+        reader.window?.setContentSize(NSSize(width: 900, height: 700))
+        reader.window?.contentView?.layoutSubtreeIfNeeded()
+        try await Task.sleep(nanoseconds: 150_000_000)
+        XCTAssertEqual(reader.sidebar.view.bounds.width, expected, accuracy: 1)
+        reader.close()
+        reader = ReaderController(preferences: preferences); reader.showWindow(nil)
+        reader.window?.contentView?.layoutSubtreeIfNeeded()
+        try await Task.sleep(nanoseconds: 100_000_000)
+        print("LEAFLIT_FIND_WIDTH reopened=\(reader.sidebar.view.bounds.width) saved=\(preferences.double(forKey: "sidebar.width"))")
+        XCTAssertEqual(reader.sidebar.view.bounds.width, expected, accuracy: 1)
+        XCTAssertEqual(try Data(contentsOf: url), original)
+    }
+
     func testWideSidebarSurvivesNarrowVisibleWindowBoundary() async throws {
         reader.splitController.splitView.setPosition(320, ofDividerAt: 0)
         reader.window?.contentView?.layoutSubtreeIfNeeded()
