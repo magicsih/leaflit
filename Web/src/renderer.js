@@ -50,7 +50,10 @@ function failure(node, source, kind) {
   node.replaceChildren();
   const label = document.createElement('small'); label.textContent = `${kind} could not be rendered`;
   const raw = document.createElement('code'); raw.textContent = source;
-  const pre = document.createElement('pre'); pre.append(raw); node.append(label, pre); node.classList.add('render-error');
+  const edit = document.createElement('button'); edit.type = 'button'; edit.className = 'edit-source'; edit.textContent = 'Edit Source';
+  const line = Number(node.dataset.sourceLine || 0), revision = current;
+  edit.addEventListener('click', () => { if (revision === current) post({ type: 'editSource', revision, line }); });
+  const pre = document.createElement('pre'); pre.append(raw); node.append(label, edit, pre); node.classList.add('render-error');
 }
 window.Leaflit = {
   position,
@@ -60,9 +63,18 @@ window.Leaflit = {
     current = payload.revision;
     const revision = current, start = performance.now();
     const saved = payload.location || (payload.preserve ? position() : { y: 0 });
-    const result = markdown(payload.text, revision);
+    let result;
+    try { result = markdown(payload.text, revision); }
+    catch {
+      article.replaceChildren(); article.dataset.sourceLine = '0'; failure(article, payload.text, 'Markdown');
+      headingIDs = []; trackOutline();
+      const timing = await waitForFrames();
+      if (revision === current) for (const phase of ['body', 'complete']) post({ type: 'displayed', revision, phase, timing, headings: [] });
+      return;
+    }
     if (revision !== current) return;
     article.innerHTML = result.html;
+    article.classList.remove('render-error'); delete article.dataset.sourceLine;
     headingIDs = result.headings.map(heading => heading.id); trackOutline();
     article.querySelectorAll('img').forEach(img => {
       img.addEventListener('error', () => { const fallback = document.createElement('span'); fallback.className = 'image-fallback'; fallback.textContent = `${img.alt || 'Image'} — image unavailable`; img.replaceWith(fallback); });

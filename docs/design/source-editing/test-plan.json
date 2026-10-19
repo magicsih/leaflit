@@ -1,0 +1,26 @@
+{
+  "feature": "Explicit Source editing in the read-first viewer",
+  "baselineSHA": "b3eb6b484d5fabb16dfd89abc83731582e6eed69",
+  "approval": "Owner approved the preceding Read and Source proposal with proceed on 2026-10-19",
+  "policyScope": "Personal magicsih macOS repository; no Seorilabs market contract enrollment",
+  "level": "L3",
+  "redesign": true,
+  "executor": "Independent executor for automated regression, native integration, build and profiling; three independent native UI review rounds",
+  "environments": ["local macOS development app", "ordinary local macOS Release app"],
+  "release": {"version": "0.3.0", "target": "Apple Silicon macOS", "endpoint": "verified-local-release-candidate", "remotePublication": false},
+  "commands": ["scripts/verify.sh Release", "scripts/build.sh Release"],
+  "coverage": [
+    "Test-first draft encoding, explicit save, conflicts, immutable read paths and original file preservation",
+    "Native lazy Source editor, unsaved Read preview, save and undo/redo",
+    "External replacement, deletion, permissions, symlinks, failed saves and safe new-file copies",
+    "Unsaved navigation, Back, window close and app quit: Save, Cancel and Discard",
+    "Formula and Mermaid error-to-source repair and unchanged preview security boundaries",
+    "Full existing core, Web, packaging and native Release regression including 1MiB and 5MiB",
+    "Round 1: actual Read/Source editing, preview, explicit save, error repair and read-only input hashes",
+    "Round 2: actual unsaved navigation/close/quit and external-file conflicts with preserved drafts",
+    "Round 3: actual keyboard, Source Find, small windows, 200% zoom, appearances and paired memory samples",
+    "Three fresh-process paired 100KiB Read/Source memory runs, exact process ownership and timing/observer provenance",
+    "Final merged-source verification/build and ordinary artifact equivalence to the reviewed candidate"
+  ],
+  "limits": "No Android/iOS access. No global network/appearance/VoiceOver change without a concrete need. Unexecuted older macOS, spoken VoiceOver, Finder drop and offline-isolation checks remain unverified. No fourth UI round without approval. No public release, new signing/notarization or installed-app replacement."
+}

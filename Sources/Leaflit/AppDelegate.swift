@@ -4,8 +4,10 @@ import LeaflitCore
 
 @main
 @MainActor
-final class AppDelegate: NSObject, NSApplicationDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     private(set) var readers: [ReaderController] = []
+    private var terminating = false
+    init(readers: [ReaderController] = []) { self.readers = readers; super.init() }
     static func main() {
         let app = NSApplication.shared
         let delegate = AppDelegate(); app.delegate = delegate
@@ -20,6 +22,24 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func application(_ sender: NSApplication, open urls: [URL]) { open(urls) }
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         if !flag { newWindow(nil) }; return true
+    }
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        guard !terminating, !readers.contains(where: { $0.editing.isBusy }) else { return .terminateCancel }
+        guard readers.contains(where: { $0.editing.isDirty || $0.editing.isBusy }) else { return .terminateNow }
+        terminating = true
+        resolveUnsavedDocuments { [weak self] accepted in
+            self?.terminating = false; sender.reply(toApplicationShouldTerminate: accepted)
+        }
+        return .terminateLater
+    }
+    func resolveUnsavedDocuments(_ completion: @escaping (Bool) -> Void) {
+        guard !readers.contains(where: { $0.editing.isBusy }) else { completion(false); return }
+        guard let reader = readers.first(where: { $0.editing.isDirty }) else { completion(true); return }
+        reader.window?.makeKeyAndOrderFront(nil)
+        reader.editing.confirmBeforeLeaving { [weak self] accepted in
+            guard accepted, let self else { completion(false); return }
+            self.resolveUnsavedDocuments(completion)
+        }
     }
     func open(_ urls: [URL]) {
         for raw in urls {
@@ -66,6 +86,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func actualSize(_ sender: Any?) { activeReader?.actualSize() }
     @objc func toggleSidebar(_ sender: Any?) { activeReader?.toggleSidebar() }
     @objc func openFolder(_ sender: Any?) { activeReader?.sidebar.openFolder() }
+    @objc func saveDocument(_ sender: Any?) { activeReader?.saveDocument() }
+    @objc func saveCopy(_ sender: Any?) { activeReader?.saveCopy() }
+    @objc func showRead(_ sender: Any?) { activeReader?.showRead() }
+    @objc func showSource(_ sender: Any?) { activeReader?.showSource() }
+    func validateMenuItem(_ item: NSMenuItem) -> Bool {
+        switch item.action {
+        case #selector(saveDocument(_:)): return activeReader?.editing.isDirty == true && activeReader?.editing.isBusy == false && activeReader?.editing.draft?.hasExternalChanges != true
+        case #selector(saveCopy(_:)): return activeReader?.editing.draft != nil && activeReader?.editing.isBusy == false
+        case #selector(showRead(_:)), #selector(showSource(_:)):
+            let source = item.action == #selector(showSource(_:))
+            item.state = activeReader?.editing.mode == (source ? .source : .read) ? .on : .off
+            return activeReader?.documentURL != nil && activeReader?.editing.isBusy == false
+        default: return true
+        }
+    }
     private func buildMenus() {
         let main = NSMenu(); NSApp.mainMenu = main
         func menu(_ title: String) -> NSMenu {
@@ -82,8 +117,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         add(file, "New Window", #selector(newWindow(_:)), "n", target: self)
         add(file, "Open…", #selector(openPanel(_:)), "o", target: self)
         add(file, "Open Folder…", #selector(openFolder(_:)), "o", target: self, modifiers: [.command, .shift])
+        file.addItem(.separator()); add(file, "Save", #selector(saveDocument(_:)), "s", target: self)
+        add(file, "Save a Copy…", #selector(saveCopy(_:)), "s", target: self, modifiers: [.command, .shift])
         file.addItem(.separator()); add(file, "Close Window", #selector(NSWindow.performClose(_:)), "w")
         let edit = menu("Edit")
+        add(edit, "Undo", NSSelectorFromString("undo:"), "z")
+        add(edit, "Redo", NSSelectorFromString("redo:"), "z", modifiers: [.command, .shift])
+        edit.addItem(.separator())
         add(edit, "Cut", #selector(NSText.cut(_:)), "x")
         add(edit, "Copy", #selector(NSText.copy(_:)), "c")
         add(edit, "Paste", #selector(NSText.paste(_:)), "v")
@@ -92,6 +132,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         add(edit, "Find Next", #selector(findNext(_:)), "g", target: self)
         add(edit, "Find Previous", #selector(findPrevious(_:)), "g", target: self, modifiers: [.command, .shift])
         let view = menu("View")
+        add(view, "Read", #selector(showRead(_:)), "1", target: self, modifiers: [.command, .option])
+        add(view, "Source", #selector(showSource(_:)), "2", target: self, modifiers: [.command, .option])
+        view.addItem(.separator())
         add(view, "Toggle Sidebar", #selector(toggleSidebar(_:)), "s", target: self, modifiers: [.command, .control])
         add(view, "Back", #selector(back(_:)), "[", target: self)
         view.addItem(.separator()); add(view, "Zoom In", #selector(zoomIn(_:)), "+", target: self)

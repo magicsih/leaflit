@@ -4,7 +4,9 @@
 
 **Markdown from your terminal. Room to read.**
 
-A read-only Markdown viewer for macOS, built for the plans, specs and notes that come out of LLM terminal workflows. Open a file in a dedicated native window, read rendered tables, Mermaid diagrams and LaTeX math, then return to your terminal. Saved changes appear automatically.
+A read-first Markdown viewer for macOS, built for the plans, specs and notes that come out of LLM terminal workflows. Open a file in a dedicated native window, read rendered tables, Mermaid diagrams and LaTeX math, then return to your terminal. Saved changes appear automatically.
+
+The public **0.2.0 preview is read-only**. Current source builds produce a **local 0.3.0 candidate** with explicit Source editing, described below; it has not been published or added to Homebrew.
 
 [Website](https://magicsih.github.io/leaflit/), [Download the 0.2.0 preview](https://github.com/magicsih/leaflit/releases/tag/v0.2.0), [Issues](https://github.com/magicsih/leaflit/issues)
 
@@ -12,7 +14,7 @@ A read-only Markdown viewer for macOS, built for the plans, specs and notes that
 
 I built Leaflit because I wanted to open Markdown from an LLM terminal workflow without bringing an IDE and its workspace along just to read a file. Raw terminal output is useful while working, but plans and technical notes are easier to review with rendered headings, tables, diagrams and math.
 
-Leaflit gives that reading step its own window and a command: `leaflit ./plan.md`. It stays read-only, follows saves and leaves the source file untouched. The aim is a small, direct reading workflow; measured resource use and its limits are documented below.
+Leaflit gives that reading step its own window and a command: `leaflit ./plan.md`. It follows saved changes and leaves the file untouched while reading. In the local 0.3.0 candidate, switch to Source when generated Markdown needs a small correction, preview it in Read, then save explicitly. The aim is a small, direct reading workflow; measured resource use and its limits are documented below.
 
 ## See it in use
 
@@ -49,7 +51,7 @@ The launcher does not change Finder's default application. The [public distribut
 
 Math delimiters are `$…$`, `$$…$$`, `\(…\)` and `\[…\]`. Diagram and formula errors preserve the original source with a short message. Long code blocks and tables scroll horizontally.
 
-Raw HTML is shown as text. Remote resources, document scripts, unsafe URL schemes and Mermaid configuration directives are blocked. External web links open in the default browser only after a user click. The app never edits its source documents.
+Raw HTML is shown as text. Remote resources, document scripts, unsafe URL schemes and Mermaid configuration directives are blocked. External web links open in the default browser only after a user click. Reading, refreshing and switching modes never write a document. In the local 0.3.0 candidate, only explicit Save or Save a Copy writes files.
 
 | Action | Shortcut |
 | --- | --- |
@@ -62,6 +64,23 @@ Raw HTML is shown as text. Remote resources, document scripts, unsafe URL scheme
 | Copy selection | ⌘C |
 | Zoom in / out / reset | ⌘+ / ⌘− / ⌘0 |
 
+## Correct generated Markdown in the local 0.3.0 candidate
+
+Read remains the default. Source is a native plain-text Markdown editor for quick corrections, including malformed diagrams and formulas. It is created only when first opened. There is no autosave, automatic formatting or rich-text Write mode.
+
+![Local Leaflit 0.3.0 candidate with the native Source editor](docs/qa/screenshots/source-editor-0.3.0.jpg)
+
+Actual ordinary local Release app, before distribution signing. The [Source editing verification report](docs/qa/source-editing-0.3.0.md) records the reviewed candidate, three UI rounds, resource measurements and remaining limitations.
+
+- Switch to Source with ⌥⌘2 and back to Read with ⌥⌘1. Read previews unsaved changes.
+- Use **Edit Source** on a diagram or formula error to reach its original source block.
+- Save explicitly with ⌘S in either mode, or use **Save a Copy…** with ⇧⌘S. Native Undo, Redo and Find work in Source.
+- External changes keep a dirty draft intact. Reload requires an explicit discard; Save a Copy creates a new file without overwriting the changed original.
+- Navigation, window close and quit offer Save, Cancel or Discard when changes are pending. A failed save retains the draft and cancels the pending action.
+- Choosing an Outline heading from Source returns to Read at that heading.
+
+Original UTF-8 BOM and existing line endings are retained. Coordinated saves compare file identity and bytes before atomic replacement; this is not a filesystem-wide compare-and-swap guarantee against an unrelated writer racing during replacement. See the [saving design](docs/design/source-editing/design.md).
+
 ## Build locally
 
 The public 0.2.0 preview includes the collapsible native `Files` and `Outline` sidebar and the Leaf Page app icon. Use `Open Folder…` (Shift-Command-O) to browse a folder, switch to `Outline` for document headings, and toggle the sidebar with Control-Command-S. See the [sidebar design](docs/design/navigation-sidebar/design.md), [historical product QA](docs/qa/sidebar-report.md) and [0.2.0 distribution verification](docs/releases/0.2.0-verification.md).
@@ -72,14 +91,14 @@ The additional Files/Outline screenshot is the preserved actual local 0.2.0 revi
 
 Verified with Xcode 27, Node.js 24 and npm 11. Dependencies are pinned in `package-lock.json`. Ruby is needed only when regenerating the Xcode project, not for a normal build.
 
-Source builds now produce the local 0.2.1 product follow-up candidate. The public preview remains 0.2.0.
-The [0.2.1 verification report](docs/qa/product-followups-0.2.1.md) records sidebar fixes, document-switching improvements, memory measurements and remaining limits.
+Source builds now produce the local 0.3.0 Source editing candidate. The public preview remains 0.2.0.
+The [0.3.0 verification report](docs/qa/source-editing-0.3.0.md) records explicit editing and its verification. The historical [0.2.1 report](docs/qa/product-followups-0.2.1.md) retains sidebar fixes, document-switching improvements and its separate measurements.
 
 ```sh
 ./scripts/build.sh
-open build/Leaflit-0.2.1/Leaflit.app
-./build/Leaflit-0.2.1/leaflit Fixtures/Welcome.md
-open -a "$PWD/build/Leaflit-0.2.1/Leaflit.app" "Fixtures/Next Page.markdown"
+open build/Leaflit-0.3.0/Leaflit.app
+./build/Leaflit-0.3.0/leaflit Fixtures/Welcome.md
+open -a "$PWD/build/Leaflit-0.3.0/Leaflit.app" "Fixtures/Next Page.markdown"
 ```
 
 For Xcode, build the web assets first, then run the Leaflit scheme:
@@ -95,7 +114,7 @@ The local candidate folder contains the app and launcher. Keep them together whe
 ## Verify
 
 ```sh
-./scripts/verify.sh
+./scripts/verify.sh Release
 # Run performance measurements separately from other app reviews.
 python3 scripts/benchmark.py
 python3 scripts/measure-resources.py
@@ -105,9 +124,11 @@ swift test
 npm test
 ```
 
-See the original 0.1.0 [implementation design](docs/design/0.1.0/design.md), [test plan](docs/design/0.1.0/test-plan.json), [QA report](docs/qa/report.md) and [memory measurements](docs/qa/memory-analysis.md). Those historical measurements include the app and WebKit helpers: median footprint was 69.7MiB for a 1KiB document and 85.6–131.1MiB across the measured 100KiB document structures. Some runs used more memory; the reports preserve the full ranges. The initial 60MiB comparison target was not met. Current 0.2.0 verification and its separate matched comparison are tracked in the [sidebar report](docs/qa/sidebar-report.md).
+The local 0.3.0 comparison measured total footprint medians of 130.6MiB in Read and 145.0MiB in Source after Read, using the same 100KiB math/Mermaid document, three fresh runs per mode and CUA observation. These include the app and its WebKit helpers. They describe whole states, not an isolated editor allocation cost; the 60MiB comparison target remains unmet. See the [Source verification report](docs/qa/source-editing-0.3.0.md) for ranges, all samples and the corrected timing protocol.
 
-Editing, printing, PDF export, syntax highlighting, Obsidian-specific syntax and automatic updates are outside the 0.2.0 preview. Outline provides heading navigation. Spoken VoiceOver navigation and earlier macOS runtime coverage remain incomplete. Follow-up work is tracked in [GitHub issues](https://github.com/magicsih/leaflit/issues).
+The original 0.1.0 [implementation design](docs/design/0.1.0/design.md), [test plan](docs/design/0.1.0/test-plan.json), [QA report](docs/qa/report.md) and [memory measurements](docs/qa/memory-analysis.md) remain historical evidence. Separate 0.2.0 and 0.2.1 measurements are preserved in the [sidebar report](docs/qa/sidebar-report.md) and [product follow-up report](docs/qa/product-followups-0.2.1.md). Their observer conditions differ; do not pool them with this Source comparison.
+
+The public 0.2.0 preview does not edit documents. The local 0.3.0 candidate adds Source editing; rich-text Write, printing, PDF export, syntax highlighting, Obsidian-specific syntax and automatic updates remain deferred. Outline provides heading navigation. Rendered math currently has a [plain-text clipboard fidelity limitation](https://github.com/magicsih/leaflit/issues/26). Spoken VoiceOver navigation and earlier macOS runtime coverage remain incomplete. Follow-up work is tracked in [GitHub issues](https://github.com/magicsih/leaflit/issues).
 
 Regenerate the project only when its structure changes, using `ruby scripts/generate-project.rb` with xcodeproj 1.27.0. The generated Xcode project and scheme are checked in.
 

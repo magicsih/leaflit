@@ -97,11 +97,14 @@ extension ReaderTests {
         weak var window: NSWindow?
         weak var webView: ReaderWebView?
         weak var sidebar: NavigationSidebarController?
-        init(_ reader: ReaderController) {
+        weak var editing: SourceEditingController?
+        weak var editor: NSTextView?
+        @MainActor init(_ reader: ReaderController) {
             self.reader = reader; window = reader.window
             webView = reader.webView; sidebar = reader.sidebar
+            editing = reader.editing; editor = reader.editing.textView
         }
-        var released: Bool { reader == nil && window == nil && webView == nil && sidebar == nil }
+        var released: Bool { reader == nil && window == nil && webView == nil && sidebar == nil && editing == nil && editor == nil }
     }
 
     func testClosingOneReaderReleasesItsViewsWithoutStoppingAnotherReader() throws {
@@ -135,6 +138,13 @@ extension ReaderTests {
         var closeCalls = 0
         closing?.onClose = { closeCalls += 1 }
         pump { [weak closing] in (closing?.completedRevision ?? 0) > 0 }
+        autoreleasepool { closing?.showSource() }
+        pump { [weak closing] in closing?.editing.draft != nil }
+        autoreleasepool {
+            let editor = closing?.editing.textView
+            editor?.insertText("Unsaved lifetime draft.", replacementRange: NSRange(location: (editor?.string as NSString?)?.length ?? 0, length: 0))
+            XCTAssertTrue(closing?.editing.isDirty == true)
+        }
         let probe = autoreleasepool {
             let probe = ClosedReaderProbe(closing!)
             closing?.close(); closing = nil
