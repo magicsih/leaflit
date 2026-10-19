@@ -2,6 +2,17 @@ import XCTest
 @testable import LeaflitCore
 
 final class SourceDraftTests: XCTestCase {
+    func testCanonicalUnicodeEquivalenceDoesNotHideAByteChange() throws {
+        let composed = "# Caf\u{e9}\n", decomposed = "# Cafe\u{301}\n"
+        XCTAssertEqual(composed, decomposed)
+        var draft = try SourceDraft(data: Data(composed.utf8))
+        draft.replaceText(decomposed)
+        XCTAssertTrue(draft.isDirty)
+        XCTAssertEqual(draft.encodedData, Data(decomposed.utf8))
+        try draft.observeDisk(Data(decomposed.utf8))
+        XCTAssertTrue(draft.hasExternalChanges)
+        XCTAssertEqual(draft.originalData, Data(composed.utf8))
+    }
     func testUnchangedBOMCRLFAndUnicodeRoundTripExactly() throws {
         let data = Data([0xef, 0xbb, 0xbf]) + Data("# 한글 😀\r\n\r\n  text\t\r\n".utf8)
         let draft = try SourceDraft(data: data)
