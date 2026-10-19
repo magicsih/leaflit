@@ -28,6 +28,7 @@ Save changes to “document.md”?
 - Opening, reading, rendering, refreshing, copying and mode changes never write a document. No autosave, automatic formatting or rich-text conversion.
 - Instantiate the plain NSTextView only when Source is first requested. Keep drafts and undo in memory. Keep original UTF-8 BOM, existing line endings and Unicode without normalization. Provide native selection, copy/paste, undo/redo, Find and zoom.
 - Read previews the in-memory draft and clearly labels unsaved changes. Saving works in either mode with Command-S. A new document resets to Read. The sidebar remains navigation, not a second editing-mode selector.
+- Choosing an existing Outline heading in Source switches to Read and includes the target anchor in the same preview request after layout is finalized.
 - Formula/diagram errors retain raw source and a short error. Add Edit Source to reach the relevant original block; never derive editable Markdown from rendered HTML. A parser failure must retain readable raw text and an editing route.
 - File changes with a clean draft refresh normally. A dirty draft is never replaced by a watcher event. Changed/deleted/replaced/unreadable originals block normal Save and offer reload after explicit discard, or Save a Copy to a new path. Never offer a silent overwrite action.
 - Close, relative links, Files navigation, Back and app quit protect unsaved drafts with Save, Cancel or Discard. A failed save cancels the pending destructive action and keeps the draft.
@@ -40,6 +41,8 @@ Coordination protects cooperating writers. A comparison followed by replacement 
 
 The reader owns the draft, editor and pending save. Saving temporarily disables edits to freeze the submitted text. Watcher events are reconciled after completion. No server, editor web framework, new runtime dependency or storage migration is needed. Existing security boundaries for raw HTML, URLs, images, math and Mermaid remain in force for draft previews.
 
+The editor owns a dedicated Undo manager. Completed Undo and Redo synchronize the draft with the visible text. Saving breaks typing coalescing; font/layout updates do not enter edit history. Actual keypress verification is separate from integration tests that create explicit Undo groups.
+
 ## Acceptance and verification
 
 Follow [the test plan](test-plan.json). Write failing core tests before implementation, then independent native integration and full Release regression. Three independent actual UI rounds cover the new screen and data-loss routes. Only reviewer-owned fixtures may be modified; preserve installed/user apps, unrelated documents, preferences and all earlier candidate/evidence folders. Use new 0.3.0 build paths.
@@ -51,6 +54,7 @@ Older macOS, spoken VoiceOver, cross-app Finder drop and true offline isolation 
 ## Official references
 
 - [NSTextView](https://developer.apple.com/documentation/appkit/nstextview)
+- [Typing coalescing and saving](https://developer.apple.com/documentation/appkit/nstextview/breakundocoalescing())
 - [Coordinated writing](https://developer.apple.com/documentation/foundation/nsfilecoordinator/coordinate(writingitemat:options:error:byaccessor:))
 - [Alerts](https://developer.apple.com/design/human-interface-guidelines/alerts)
 

@@ -1,0 +1,2622 @@
+{
+  "scope": "Local 0.3.0 Source editing candidate; no public release or installed-app replacement",
+  "productSourceSHA": "0e1bf1217c486997c9f2c8bec8427a001b7a9072",
+  "binarySHA256": "7bf13064f9a786888a883efdcf8c3ae9dca3d061850b1f679a442db05d6123b5",
+  "version": "0.3.0",
+  "build": 4,
+  "environment": {
+    "chip": "Apple M3",
+    "model": "Mac15,13",
+    "architecture": "arm64",
+    "macOS": "26.6.2",
+    "macOSBuild": "25G83",
+    "Xcode": "27.0",
+    "XcodeBuild": "27A266a",
+    "Swift": "6.4",
+    "Node": "24.16.0",
+    "npm": "11.13.0",
+    "deploymentTarget": "14.0"
+  },
+  "automatedVerification": {
+    "Web": 14,
+    "SwiftPMCore": 16,
+    "Packaging": 7,
+    "Xcode": {
+      "total": 79,
+      "Reader": 53,
+      "SourceFile": 10,
+      "repeatedCore": 16
+    },
+    "executionsAcrossLayers": 116,
+    "uniqueMethods": 100,
+    "verifyExit": 0,
+    "ordinaryBuildExit": 0,
+    "evidenceDirectory": "build/source-editing/full-0e1bf12"
+  },
+  "history": [
+    {
+      "candidate": "2266188",
+      "scope": "Core test-first",
+      "result": "Compilation failed on missing SourceDraft; behavioral tests unexecuted"
+    },
+    {
+      "candidate": "b3c2db0",
+      "scope": "SourceDraft",
+      "result": "8 passed"
+    },
+    {
+      "candidate": "95ec49b",
+      "scope": "Native test-first",
+      "result": "Compilation failed on missing APIs; 9 unexecuted"
+    },
+    {
+      "candidate": "4a33f30",
+      "scope": "Native checkpoint",
+      "result": "Web 14 and build passed; native test compilation failed on CGFloat ambiguity; 13 unexecuted"
+    },
+    {
+      "candidate": "0dad67c",
+      "scope": "Native checkpoint",
+      "result": "3 started; 2 completed failures; 1 cancelled; 13 unstarted. Stopped after file acquisition failures"
+    },
+    {
+      "candidate": "e156848",
+      "scope": "Native checkpoint",
+      "result": "Compilation failed on Darwin.stat namespace; 21 unexecuted"
+    },
+    {
+      "candidate": "7aa45a2",
+      "scope": "Native checkpoint",
+      "result": "22 executed; 21 passed; Undo failed with 2 assertions"
+    },
+    {
+      "candidate": "2464df3",
+      "scope": "Native checkpoint",
+      "result": "Compilation failed on MainActor probe; 28 unexecuted"
+    },
+    {
+      "candidate": "45f3001",
+      "scope": "Native checkpoint",
+      "result": "29 started; 27 completed passes; 1 Outline completed failure; 1 Undo incomplete after 3 failed assertions and allocator diagnostic. Xcode restarted remaining tests automatically"
+    },
+    {
+      "candidate": "1813249",
+      "scope": "Targeted Undo and Outline",
+      "result": "Outline passed; Undo had 3 failed assertions and abnormal incomplete exit"
+    },
+    {
+      "candidate": "ab383f1",
+      "scope": "Targeted Undo and Outline",
+      "result": "3 completed; 2 passed; new Undo grouping fixture failed 4 assertions; no abnormal exit"
+    },
+    {
+      "candidate": "0e1bf12",
+      "scope": "Targeted and full regression",
+      "result": "3 targeted passed, followed by full verification and ordinary Release build passed. Explicit test Undo groups are not real keyboard evidence"
+    }
+  ],
+  "knownLimitations": [
+    "Coordinated comparison and replacement is not filesystem-wide compare-and-swap against an unrelated uncoordinated writer",
+    "Rendered formula plain-text clipboard fidelity observed incomplete; issue 26",
+    "Earlier macOS, spoken VoiceOver, cross-app Finder drop and true offline isolation remain unverified",
+    "No new Developer ID signing, notarization, installation, public Release, Homebrew publication or downloaded-artifact verification",
+    "Ordinary Source/Read dark appearance unverified after per-process argument remained light; issue 27"
+  ],
+  "uiRounds": [
+    {
+      "round": 1,
+      "reviewer": "Independent UI reviewer 1",
+      "sourceSHA": "0e1bf1217c486997c9f2c8bec8427a001b7a9072",
+      "status": "Core workflow passed with a formula clipboard fidelity limitation",
+      "checks": [
+        "Read default",
+        "Diagram and formula Edit Source targets",
+        "Native repair and basic Undo/Redo",
+        "Unsaved Read preview",
+        "Explicit Command-S exact bytes",
+        "Read Find and match movement",
+        "Ordinary body Copy verified by paste and Undo",
+        "Relative link and Back"
+      ],
+      "notPassed": [
+        "Rendered formula plain-text clipboard fidelity"
+      ],
+      "evidenceDirectory": "build/source-editing/ui-round1-0e1bf12",
+      "documentIntegrity": {
+        "beforeExplicitSave": {
+          "bytes": 425,
+          "sha256": "7d780c8cb6c555d5a20520128c9ffc828e41607413c0f64c03e3a563491aa56c"
+        },
+        "afterExplicitSave": {
+          "bytes": 445,
+          "sha256": "4ae28ce93ee831f72fe59b2c96a8946e38efc6200fafac7b605015a288a0c5df"
+        },
+        "onlyIntendedCorrectionsSaved": true,
+        "transientClipboardCheckUndoneWithoutSave": true
+      },
+      "preservation": {
+        "source": true,
+        "installedAppAndExistingProcess": true,
+        "ordinaryCandidateAndArchive": true,
+        "earlierEvidence": true,
+        "preferencesRestoredByteExact": true
+      }
+    },
+    {
+      "round": 2,
+      "reviewer": "Independent UI reviewer 2",
+      "sourceSHA": "0e1bf1217c486997c9f2c8bec8427a001b7a9072",
+      "status": "Core workflow passed with instrumentation limits",
+      "checks": [
+        "Dirty relative-link navigation Save and Cancel",
+        "Dirty Back Cancel and Discard",
+        "Dirty Files navigation Save and Cancel",
+        "Close Save, Cancel and Discard with surviving readers",
+        "External atomic replacement protects dirty draft",
+        "Reload Cancel with another watcher event",
+        "Save a Copy retains original conflict and exact draft",
+        "Explicit Discard and Reload adopts external bytes",
+        "Deleted original not recreated by Command-S; exact new copy",
+        "Read-only Save failure cancels navigation and close",
+        "Multiwindow Quit Discard then Cancel",
+        "Quit Save failure retains draft; permission recovery and explicit Save quits"
+      ],
+      "directObservationLimits": [
+        "Q1 editor contents after discard were not directly observed because CUA Window-menu item had no frame. Window inventory, unchanged original and subsequent Quit asking only Q2 were observed"
+      ],
+      "unresolvedProductDefects": [],
+      "instrumentationLimits": [
+        "Transient first-transition AX failures recovered through a fresh uniquely owned target",
+        "One stale-state rejection",
+        "Native chooser field commitment required Tab before action enabled"
+      ],
+      "evidenceDirectory": "build/source-editing/ui-round2-0e1bf12",
+      "preservation": {
+        "source": true,
+        "installedAppAndExistingProcess": true,
+        "ordinaryCandidateAndArchive": true,
+        "earlierEvidence": true,
+        "preferencesRestoredByteExact": true
+      }
+    },
+    {
+      "round": 3,
+      "reviewer": "Independent UI reviewer 3",
+      "sourceSHA": "0e1bf1217c486997c9f2c8bec8427a001b7a9072",
+      "status": "Executed UI scenarios passed within observation limits",
+      "checks": [
+        "Individual CUA keypresses 1,2,3 then Command-S, 4,5,6 then Undo restored saved123 and clean state",
+        "Second Undo removed123 and marked dirty; Redo restored saved123 and clean",
+        "Saved disk exactly original plus123",
+        "Source and Read Find next/previous",
+        "Source Escape returned editing focus",
+        "Source Outline selection returned Read at heading",
+        "480x784px narrow capture and Actual Size then ten native Zoom In actions; both modes and Find usable"
+      ],
+      "notVerified": [
+        "Ordinary Release dark appearance: per-process AppleInterfaceStyle Dark attempt left Source and Read light",
+        "Native point-valued window width and numeric zoom not directly observed through CUA"
+      ],
+      "inputMethodNote": "Initial letter keypress probe used the existing non-Latin input method; composition was undone before Save. Final boundary test used individual digit keypresses without changing OS input settings",
+      "evidenceDirectory": "build/source-editing/ui-round3-0e1bf12",
+      "preservation": {
+        "source": true,
+        "installedAppAndExistingProcess": true,
+        "ordinaryCandidateAndArchive": true,
+        "earlierEvidence": true,
+        "preferencesByteExactUnchanged": true
+      }
+    }
+  ],
+  "memory": {
+    "mainComparison": "corrected",
+    "units": "MiB",
+    "protocol": {
+      "name": "CUA-observed Read versus after-Read Source, absolute settle deadline",
+      "fixture": {
+        "bytes": 102400,
+        "sha256": "55464dacf92db737fbec845a17723c38da683d0fcef0b52d994a0040edff7f61"
+      },
+      "order": [
+        "Read",
+        "Source",
+        "Source",
+        "Read",
+        "Read",
+        "Source"
+      ],
+      "observer": "Three explicit AX/screenshot requests per run; identical intended sequence, API-internal work not quantified",
+      "window": "Fresh default native window, initial 100% zoom, sidebar hidden, no chosen folder; observed 900x784 raster",
+      "settleOrigin": "Final CUA snapshot completion before evidence writing or model confirmation",
+      "firstFootprintChildWindowSeconds": [
+        15,
+        15.5
+      ],
+      "observedFirstChildRangeSeconds": [
+        15.00367784500122,
+        15.012412071228027
+      ],
+      "minimumCaptureGapSeconds": 0.5,
+      "observedCaptureGapRangeSeconds": [
+        0.5030720233917236,
+        0.5111281871795654
+      ],
+      "nodePythonClockProbeDifferenceMs": 3.65,
+      "clockProbeToleranceMs": 150,
+      "ownership": "Exact newly owned app/helper paths, start tokens and responsibility before and after every capture; existing user app excluded",
+      "aggregation": "Three technical captures per fresh run; three fresh runs per mode; median of run medians with full run-median range"
+    },
+    "rootRecomputedAllRunAndCohortMedians": true,
+    "correctedSummary": {
+      "Read": {
+        "medianFootprintMiB": {
+          "median": 130.58123779296875,
+          "min": 130.25320434570312,
+          "max": 132.00315856933594,
+          "runMedians": [
+            130.58123779296875,
+            130.25320434570312,
+            132.00315856933594
+          ]
+        },
+        "medianAppFootprintMiB": {
+          "median": 37.59473419189453,
+          "min": 37.51665496826172,
+          "max": 37.65721130371094,
+          "runMedians": [
+            37.65721130371094,
+            37.51665496826172,
+            37.59473419189453
+          ]
+        },
+        "medianHelperFootprintMiB": {
+          "median": 93.17402648925781,
+          "min": 92.9865493774414,
+          "max": 94.6584243774414,
+          "runMedians": [
+            93.17402648925781,
+            92.9865493774414,
+            94.6584243774414
+          ]
+        },
+        "medianRSSMiB": {
+          "median": 282.15625,
+          "min": 281.890625,
+          "max": 284.71875,
+          "runMedians": [
+            281.890625,
+            282.15625,
+            284.71875
+          ]
+        }
+      },
+      "Source": {
+        "medianFootprintMiB": {
+          "median": 145.0345458984375,
+          "min": 143.72211456298828,
+          "max": 145.15961456298828,
+          "runMedians": [
+            143.72211456298828,
+            145.15961456298828,
+            145.0345458984375
+          ]
+        },
+        "medianAppFootprintMiB": {
+          "median": 43.48558807373047,
+          "min": 43.01679229736328,
+          "max": 43.59498596191406,
+          "runMedians": [
+            43.48558807373047,
+            43.59498596191406,
+            43.01679229736328
+          ]
+        },
+        "medianHelperFootprintMiB": {
+          "median": 101.81462860107422,
+          "min": 100.48652648925781,
+          "max": 102.26775360107422,
+          "runMedians": [
+            100.48652648925781,
+            101.81462860107422,
+            102.26775360107422
+          ]
+        },
+        "medianRSSMiB": {
+          "median": 317.171875,
+          "min": 316.421875,
+          "max": 317.234375,
+          "runMedians": [
+            316.421875,
+            317.171875,
+            317.234375
+          ]
+        }
+      }
+    },
+    "pairDifferences": [
+      {
+        "pair": 1,
+        "readRun": 1,
+        "sourceRun": 2,
+        "sourceMinusReadMiB": {
+          "medianFootprintMiB": 13.140876770019531,
+          "medianAppFootprintMiB": 5.828376770019531,
+          "medianHelperFootprintMiB": 7.3125,
+          "medianRSSMiB": 34.53125
+        }
+      },
+      {
+        "pair": 2,
+        "readRun": 4,
+        "sourceRun": 3,
+        "sourceMinusReadMiB": {
+          "medianFootprintMiB": 14.906410217285156,
+          "medianAppFootprintMiB": 6.078330993652344,
+          "medianHelperFootprintMiB": 8.828079223632812,
+          "medianRSSMiB": 35.015625
+        }
+      },
+      {
+        "pair": 3,
+        "readRun": 5,
+        "sourceRun": 6,
+        "sourceMinusReadMiB": {
+          "medianFootprintMiB": 13.031387329101562,
+          "medianAppFootprintMiB": 5.42205810546875,
+          "medianHelperFootprintMiB": 7.6093292236328125,
+          "medianRSSMiB": 32.515625
+        }
+      }
+    ],
+    "initialAttempt": {
+      "runCount": 6,
+      "captureCount": 18,
+      "collectionStatus": "completed with ownership",
+      "comparisonStatus": "failed strict timing match; descriptive only",
+      "firstFootprintAgeRangeSeconds": [
+        19.1,
+        35.5
+      ],
+      "additionalLimit": "Last Source capture appeared inactive",
+      "preservedUnchanged": true
+    },
+    "interpretation": "Whole observed-state comparison after Source also visited Read, not isolated editor allocation. No comparison with earlier no-CUA datasets. Small sample and uncontrolled host/cache state; 60MiB target not met.",
+    "corrected": {
+      "status": "passed-corrected-bounded-memory-protocol",
+      "mainComparisonEligible": true,
+      "scope": "Memory-only correction after completed UI round 3; no new rendered regression round",
+      "sourceSHA": "0e1bf1217c486997c9f2c8bec8427a001b7a9072",
+      "binarySHA256": "7bf13064f9a786888a883efdcf8c3ae9dca3d061850b1f679a442db05d6123b5",
+      "fixture": {
+        "repositoryFixture": "Fixtures/Benchmark100KiB.md",
+        "bytes": 102400,
+        "sha256": "55464dacf92db737fbec845a17723c38da683d0fcef0b52d994a0040edff7f61"
+      },
+      "units": "MiB, 1048576 bytes; footprint tool total and RSS sum are separate metrics",
+      "runCount": 6,
+      "captureCount": 18,
+      "order": [
+        "Read",
+        "Source",
+        "Source",
+        "Read",
+        "Read",
+        "Source"
+      ],
+      "pairs": [
+        {
+          "pair": 1,
+          "readRun": 1,
+          "sourceRun": 2,
+          "sourceMinusReadMiB": {
+            "medianFootprintMiB": 13.140876770019531,
+            "medianAppFootprintMiB": 5.828376770019531,
+            "medianHelperFootprintMiB": 7.3125,
+            "medianRSSMiB": 34.53125
+          }
+        },
+        {
+          "pair": 2,
+          "readRun": 4,
+          "sourceRun": 3,
+          "sourceMinusReadMiB": {
+            "medianFootprintMiB": 14.906410217285156,
+            "medianAppFootprintMiB": 6.078330993652344,
+            "medianHelperFootprintMiB": 8.828079223632812,
+            "medianRSSMiB": 35.015625
+          }
+        },
+        {
+          "pair": 3,
+          "readRun": 5,
+          "sourceRun": 6,
+          "sourceMinusReadMiB": {
+            "medianFootprintMiB": 13.031387329101562,
+            "medianAppFootprintMiB": 5.42205810546875,
+            "medianHelperFootprintMiB": 7.6093292236328125,
+            "medianRSSMiB": 32.515625
+          }
+        }
+      ],
+      "observerCondition": "Three full CUA AX+screenshot observations per process, with actual first Read formula and Mermaid, expected native mode click and native title activation before final observation. Same requested sequence, API internal work unquantified.",
+      "timing": {
+        "origin": "Documented CUA observation return timestamp, recorded immediately before evidence writes/image emission/model confirmation",
+        "requiredFirstFootprintChildAfterObservationSeconds": [
+          15.0,
+          15.5
+        ],
+        "actualFirstChildAgeSecondsRange": [
+          15.00367784500122,
+          15.012412071228027
+        ],
+        "requiredMinimumGapAfterCompletionSeconds": 0.5,
+        "actualGapAfterCompletionSecondsRange": [
+          0.5030720233917236,
+          0.5111281871795654
+        ],
+        "clockProbe": {
+          "status": "passed",
+          "pythonObservedEpochSeconds": 1792391533.698647,
+          "nodeEpochSeconds": 1792391533.695,
+          "readDelayOrClockOffsetSeconds": 0.0036470890045166016,
+          "toleranceSeconds": 0.15
+        },
+        "childStartTimestampMethod": "Parent time.time immediately after successful Popen returns, bounded by retained request timestamp before Popen. No kernel execution signpost.",
+        "collectorWaitedBeforeEachFinalSnapshot": true,
+        "allAbsoluteTimingPassed": true
+      },
+      "cohorts": {
+        "Read": {
+          "medianFootprintMiB": {
+            "median": 130.58123779296875,
+            "min": 130.25320434570312,
+            "max": 132.00315856933594,
+            "runMedians": [
+              130.58123779296875,
+              130.25320434570312,
+              132.00315856933594
+            ]
+          },
+          "medianAppFootprintMiB": {
+            "median": 37.59473419189453,
+            "min": 37.51665496826172,
+            "max": 37.65721130371094,
+            "runMedians": [
+              37.65721130371094,
+              37.51665496826172,
+              37.59473419189453
+            ]
+          },
+          "medianHelperFootprintMiB": {
+            "median": 93.17402648925781,
+            "min": 92.9865493774414,
+            "max": 94.6584243774414,
+            "runMedians": [
+              93.17402648925781,
+              92.9865493774414,
+              94.6584243774414
+            ]
+          },
+          "medianRSSMiB": {
+            "median": 282.15625,
+            "min": 281.890625,
+            "max": 284.71875,
+            "runMedians": [
+              281.890625,
+              282.15625,
+              284.71875
+            ]
+          }
+        },
+        "Source": {
+          "medianFootprintMiB": {
+            "median": 145.0345458984375,
+            "min": 143.72211456298828,
+            "max": 145.15961456298828,
+            "runMedians": [
+              143.72211456298828,
+              145.15961456298828,
+              145.0345458984375
+            ]
+          },
+          "medianAppFootprintMiB": {
+            "median": 43.48558807373047,
+            "min": 43.01679229736328,
+            "max": 43.59498596191406,
+            "runMedians": [
+              43.48558807373047,
+              43.59498596191406,
+              43.01679229736328
+            ]
+          },
+          "medianHelperFootprintMiB": {
+            "median": 101.81462860107422,
+            "min": 100.48652648925781,
+            "max": 102.26775360107422,
+            "runMedians": [
+              100.48652648925781,
+              101.81462860107422,
+              102.26775360107422
+            ]
+          },
+          "medianRSSMiB": {
+            "median": 317.171875,
+            "min": 316.421875,
+            "max": 317.234375,
+            "runMedians": [
+              316.421875,
+              317.171875,
+              317.234375
+            ]
+          }
+        }
+      },
+      "roleFootprintSummary": {
+        "Read": {
+          "app": {
+            "median": 37.59473419189453,
+            "min": 37.51665496826172,
+            "max": 37.65721130371094,
+            "runMedians": [
+              37.65721130371094,
+              37.51665496826172,
+              37.59473419189453
+            ]
+          },
+          "WebContent": {
+            "median": 76.79781341552734,
+            "min": 76.57908630371094,
+            "max": 78.42285919189453,
+            "runMedians": [
+              76.79781341552734,
+              76.57908630371094,
+              78.42285919189453
+            ]
+          },
+          "GPU": {
+            "median": 12.094505310058594,
+            "min": 11.985130310058594,
+            "max": 12.125755310058594,
+            "runMedians": [
+              12.094505310058594,
+              12.125755310058594,
+              11.985130310058594
+            ]
+          },
+          "Networking": {
+            "median": 4.281707763671875,
+            "min": 4.250434875488281,
+            "max": 4.281707763671875,
+            "runMedians": [
+              4.281707763671875,
+              4.281707763671875,
+              4.250434875488281
+            ]
+          }
+        },
+        "Source": {
+          "app": {
+            "median": 43.48558807373047,
+            "min": 43.01679229736328,
+            "max": 43.59498596191406,
+            "runMedians": [
+              43.48558807373047,
+              43.59498596191406,
+              43.01679229736328
+            ]
+          },
+          "WebContent": {
+            "median": 85.57910919189453,
+            "min": 84.36035919189453,
+            "max": 85.95406341552734,
+            "runMedians": [
+              84.36035919189453,
+              85.57910919189453,
+              85.95406341552734
+            ]
+          },
+          "GPU": {
+            "median": 12.016334533691406,
+            "min": 11.875709533691406,
+            "max": 12.031959533691406,
+            "runMedians": [
+              11.875709533691406,
+              12.031959533691406,
+              12.016334533691406
+            ]
+          },
+          "Networking": {
+            "median": 4.250457763671875,
+            "min": 4.203559875488281,
+            "max": 4.297355651855469,
+            "runMedians": [
+              4.250457763671875,
+              4.203559875488281,
+              4.297355651855469
+            ]
+          }
+        }
+      },
+      "runs": [
+        {
+          "run": 1,
+          "mode": "Read",
+          "status": "passed",
+          "activeAppearanceObserved": true,
+          "modeSelectedObserved": true,
+          "observerCount": 3,
+          "observer": "same three full CUA AX+screenshot observations; final native title activation in both states",
+          "collectorStartedEpochSeconds": 1792391638.387222,
+          "finalObservationStartedEpochSeconds": 1792391644.556,
+          "finalObservationCompletedEpochSeconds": 1792391644.98,
+          "finalEvidenceWrittenEpochSeconds": 1792391644.982,
+          "gateConfirmedEpochSeconds": 1792391648.865807,
+          "gateFileStatMtime": 1792391648.866141,
+          "gateFileReadEpochSeconds": 1792391648.8704839,
+          "confirmationSecondsAfterObservation": 3.8858070373535156,
+          "firstFootprintTargetEpochSeconds": 1792391659.98,
+          "samples": [
+            {
+              "capture": 1,
+              "footprintMiB": 130.58123779296875,
+              "rssSumMiB": 281.890625,
+              "appFootprintMiB": 37.65721130371094,
+              "helperFootprintMiB": 93.17402648925781,
+              "warnings": [],
+              "ownershipProofEpochSeconds": 1792391659.685517,
+              "requestedEpochSeconds": 1792391659.983007,
+              "childStartedEpochSeconds": 1792391659.989873,
+              "finishedEpochSeconds": 1792391660.0463202,
+              "secondsAfterObservation": 15.009872913360596,
+              "targetEpochSeconds": 1792391659.98,
+              "startLatenessSeconds": 0.009872913360595703,
+              "gapAfterPreviousCompletionSeconds": null,
+              "processRoles": [
+                {
+                  "role": "WebContent",
+                  "footprintBytes": 80528344,
+                  "footprintMiB": 76.79781341552734,
+                  "rssKiB": 121488,
+                  "rssMiB": 118.640625
+                },
+                {
+                  "role": "app",
+                  "footprintBytes": 39486448,
+                  "footprintMiB": 37.65721130371094,
+                  "rssKiB": 119104,
+                  "rssMiB": 116.3125
+                },
+                {
+                  "role": "GPU",
+                  "footprintBytes": 12682008,
+                  "footprintMiB": 12.094505310058594,
+                  "rssKiB": 34576,
+                  "rssMiB": 33.765625
+                },
+                {
+                  "role": "Networking",
+                  "footprintBytes": 4489696,
+                  "footprintMiB": 4.281707763671875,
+                  "rssKiB": 13488,
+                  "rssMiB": 13.171875
+                }
+              ],
+              "rawJSON": "1-Read/footprint-1.json"
+            },
+            {
+              "capture": 2,
+              "footprintMiB": 130.58123779296875,
+              "rssSumMiB": 281.890625,
+              "appFootprintMiB": 37.65721130371094,
+              "helperFootprintMiB": 93.17402648925781,
+              "warnings": [],
+              "ownershipProofEpochSeconds": 1792391660.145364,
+              "requestedEpochSeconds": 1792391660.5513642,
+              "childStartedEpochSeconds": 1792391660.553013,
+              "finishedEpochSeconds": 1792391660.605786,
+              "secondsAfterObservation": 15.573013067245483,
+              "targetEpochSeconds": 1792391660.5463202,
+              "startLatenessSeconds": 0.0066928863525390625,
+              "gapAfterPreviousCompletionSeconds": 0.5066928863525391,
+              "processRoles": [
+                {
+                  "role": "WebContent",
+                  "footprintBytes": 80528344,
+                  "footprintMiB": 76.79781341552734,
+                  "rssKiB": 121488,
+                  "rssMiB": 118.640625
+                },
+                {
+                  "role": "app",
+                  "footprintBytes": 39486448,
+                  "footprintMiB": 37.65721130371094,
+                  "rssKiB": 119104,
+                  "rssMiB": 116.3125
+                },
+                {
+                  "role": "GPU",
+                  "footprintBytes": 12682008,
+                  "footprintMiB": 12.094505310058594,
+                  "rssKiB": 34576,
+                  "rssMiB": 33.765625
+                },
+                {
+                  "role": "Networking",
+                  "footprintBytes": 4489696,
+                  "footprintMiB": 4.281707763671875,
+                  "rssKiB": 13488,
+                  "rssMiB": 13.171875
+                }
+              ],
+              "rawJSON": "1-Read/footprint-2.json"
+            },
+            {
+              "capture": 3,
+              "footprintMiB": 130.58123779296875,
+              "rssSumMiB": 281.890625,
+              "appFootprintMiB": 37.65721130371094,
+              "helperFootprintMiB": 93.17402648925781,
+              "warnings": [],
+              "ownershipProofEpochSeconds": 1792391660.7037172,
+              "requestedEpochSeconds": 1792391661.110893,
+              "childStartedEpochSeconds": 1792391661.114562,
+              "finishedEpochSeconds": 1792391661.1718662,
+              "secondsAfterObservation": 16.134562015533447,
+              "targetEpochSeconds": 1792391661.105786,
+              "startLatenessSeconds": 0.008775949478149414,
+              "gapAfterPreviousCompletionSeconds": 0.5087759494781494,
+              "processRoles": [
+                {
+                  "role": "WebContent",
+                  "footprintBytes": 80528344,
+                  "footprintMiB": 76.79781341552734,
+                  "rssKiB": 121488,
+                  "rssMiB": 118.640625
+                },
+                {
+                  "role": "app",
+                  "footprintBytes": 39486448,
+                  "footprintMiB": 37.65721130371094,
+                  "rssKiB": 119104,
+                  "rssMiB": 116.3125
+                },
+                {
+                  "role": "GPU",
+                  "footprintBytes": 12682008,
+                  "footprintMiB": 12.094505310058594,
+                  "rssKiB": 34576,
+                  "rssMiB": 33.765625
+                },
+                {
+                  "role": "Networking",
+                  "footprintBytes": 4489696,
+                  "footprintMiB": 4.281707763671875,
+                  "rssKiB": 13488,
+                  "rssMiB": 13.171875
+                }
+              ],
+              "rawJSON": "1-Read/footprint-3.json"
+            }
+          ],
+          "medianFootprintMiB": 130.58123779296875,
+          "medianAppFootprintMiB": 37.65721130371094,
+          "medianHelperFootprintMiB": 93.17402648925781,
+          "medianRSSMiB": 281.890625,
+          "roleRunMedians": {
+            "app": 37.65721130371094,
+            "WebContent": 76.79781341552734,
+            "GPU": 12.094505310058594,
+            "Networking": 4.281707763671875
+          },
+          "evidence": "1-Read/",
+          "ownedAppAndHelpersExited": true
+        },
+        {
+          "run": 2,
+          "mode": "Source",
+          "status": "passed",
+          "activeAppearanceObserved": true,
+          "modeSelectedObserved": true,
+          "observerCount": 3,
+          "observer": "same three full CUA AX+screenshot observations; final native title activation in both states",
+          "collectorStartedEpochSeconds": 1792391682.299424,
+          "finalObservationStartedEpochSeconds": 1792391687.965,
+          "finalObservationCompletedEpochSeconds": 1792391688.367,
+          "finalEvidenceWrittenEpochSeconds": 1792391688.369,
+          "gateConfirmedEpochSeconds": 1792391692.427876,
+          "gateFileStatMtime": 1792391692.4281836,
+          "gateFileReadEpochSeconds": 1792391692.432651,
+          "confirmationSecondsAfterObservation": 4.06087589263916,
+          "firstFootprintTargetEpochSeconds": 1792391703.367,
+          "samples": [
+            {
+              "capture": 1,
+              "footprintMiB": 143.72211456298828,
+              "rssSumMiB": 316.421875,
+              "appFootprintMiB": 43.48558807373047,
+              "helperFootprintMiB": 100.48652648925781,
+              "warnings": [],
+              "ownershipProofEpochSeconds": 1792391703.071983,
+              "requestedEpochSeconds": 1792391703.368939,
+              "childStartedEpochSeconds": 1792391703.370678,
+              "finishedEpochSeconds": 1792391703.4356961,
+              "secondsAfterObservation": 15.00367784500122,
+              "targetEpochSeconds": 1792391703.367,
+              "startLatenessSeconds": 0.003677845001220703,
+              "gapAfterPreviousCompletionSeconds": null,
+              "processRoles": [
+                {
+                  "role": "WebContent",
+                  "footprintBytes": 88458248,
+                  "footprintMiB": 84.36035919189453,
+                  "rssKiB": 138960,
+                  "rssMiB": 135.703125
+                },
+                {
+                  "role": "app",
+                  "footprintBytes": 45597944,
+                  "footprintMiB": 43.48558807373047,
+                  "rssKiB": 136720,
+                  "rssMiB": 133.515625
+                },
+                {
+                  "role": "GPU",
+                  "footprintBytes": 12452584,
+                  "footprintMiB": 11.875709533691406,
+                  "rssKiB": 34656,
+                  "rssMiB": 33.84375
+                },
+                {
+                  "role": "Networking",
+                  "footprintBytes": 4456928,
+                  "footprintMiB": 4.250457763671875,
+                  "rssKiB": 13680,
+                  "rssMiB": 13.359375
+                }
+              ],
+              "rawJSON": "2-Source/footprint-1.json"
+            },
+            {
+              "capture": 2,
+              "footprintMiB": 143.72211456298828,
+              "rssSumMiB": 316.421875,
+              "appFootprintMiB": 43.48558807373047,
+              "helperFootprintMiB": 100.48652648925781,
+              "warnings": [],
+              "ownershipProofEpochSeconds": 1792391703.534039,
+              "requestedEpochSeconds": 1792391703.940737,
+              "childStartedEpochSeconds": 1792391703.94222,
+              "finishedEpochSeconds": 1792391704.00105,
+              "secondsAfterObservation": 15.575219869613647,
+              "targetEpochSeconds": 1792391703.9356961,
+              "startLatenessSeconds": 0.006523847579956055,
+              "gapAfterPreviousCompletionSeconds": 0.506523847579956,
+              "processRoles": [
+                {
+                  "role": "WebContent",
+                  "footprintBytes": 88458248,
+                  "footprintMiB": 84.36035919189453,
+                  "rssKiB": 138960,
+                  "rssMiB": 135.703125
+                },
+                {
+                  "role": "app",
+                  "footprintBytes": 45597944,
+                  "footprintMiB": 43.48558807373047,
+                  "rssKiB": 136720,
+                  "rssMiB": 133.515625
+                },
+                {
+                  "role": "GPU",
+                  "footprintBytes": 12452584,
+                  "footprintMiB": 11.875709533691406,
+                  "rssKiB": 34656,
+                  "rssMiB": 33.84375
+                },
+                {
+                  "role": "Networking",
+                  "footprintBytes": 4456928,
+                  "footprintMiB": 4.250457763671875,
+                  "rssKiB": 13680,
+                  "rssMiB": 13.359375
+                }
+              ],
+              "rawJSON": "2-Source/footprint-2.json"
+            },
+            {
+              "capture": 3,
+              "footprintMiB": 143.70648956298828,
+              "rssSumMiB": 316.421875,
+              "appFootprintMiB": 43.48558807373047,
+              "helperFootprintMiB": 100.47090148925781,
+              "warnings": [],
+              "ownershipProofEpochSeconds": 1792391704.099383,
+              "requestedEpochSeconds": 1792391704.506161,
+              "childStartedEpochSeconds": 1792391704.511737,
+              "finishedEpochSeconds": 1792391704.583889,
+              "secondsAfterObservation": 16.144737005233765,
+              "targetEpochSeconds": 1792391704.50105,
+              "startLatenessSeconds": 0.010687112808227539,
+              "gapAfterPreviousCompletionSeconds": 0.5106871128082275,
+              "processRoles": [
+                {
+                  "role": "WebContent",
+                  "footprintBytes": 88458248,
+                  "footprintMiB": 84.36035919189453,
+                  "rssKiB": 138960,
+                  "rssMiB": 135.703125
+                },
+                {
+                  "role": "app",
+                  "footprintBytes": 45597944,
+                  "footprintMiB": 43.48558807373047,
+                  "rssKiB": 136720,
+                  "rssMiB": 133.515625
+                },
+                {
+                  "role": "GPU",
+                  "footprintBytes": 12436200,
+                  "footprintMiB": 11.860084533691406,
+                  "rssKiB": 34656,
+                  "rssMiB": 33.84375
+                },
+                {
+                  "role": "Networking",
+                  "footprintBytes": 4456928,
+                  "footprintMiB": 4.250457763671875,
+                  "rssKiB": 13680,
+                  "rssMiB": 13.359375
+                }
+              ],
+              "rawJSON": "2-Source/footprint-3.json"
+            }
+          ],
+          "medianFootprintMiB": 143.72211456298828,
+          "medianAppFootprintMiB": 43.48558807373047,
+          "medianHelperFootprintMiB": 100.48652648925781,
+          "medianRSSMiB": 316.421875,
+          "roleRunMedians": {
+            "app": 43.48558807373047,
+            "WebContent": 84.36035919189453,
+            "GPU": 11.875709533691406,
+            "Networking": 4.250457763671875
+          },
+          "evidence": "2-Source/",
+          "ownedAppAndHelpersExited": true
+        },
+        {
+          "run": 3,
+          "mode": "Source",
+          "status": "passed",
+          "activeAppearanceObserved": true,
+          "modeSelectedObserved": true,
+          "observerCount": 3,
+          "observer": "same three full CUA AX+screenshot observations; final native title activation in both states",
+          "collectorStartedEpochSeconds": 1792391732.5235572,
+          "finalObservationStartedEpochSeconds": 1792391737.638,
+          "finalObservationCompletedEpochSeconds": 1792391738.047,
+          "finalEvidenceWrittenEpochSeconds": 1792391738.049,
+          "gateConfirmedEpochSeconds": 1792391741.40892,
+          "gateFileStatMtime": 1792391741.4092498,
+          "gateFileReadEpochSeconds": 1792391741.412205,
+          "confirmationSecondsAfterObservation": 3.361920118331909,
+          "firstFootprintTargetEpochSeconds": 1792391753.047,
+          "samples": [
+            {
+              "capture": 1,
+              "footprintMiB": 145.17523956298828,
+              "rssSumMiB": 317.171875,
+              "appFootprintMiB": 43.59498596191406,
+              "helperFootprintMiB": 101.83025360107422,
+              "warnings": [],
+              "ownershipProofEpochSeconds": 1792391752.8098009,
+              "requestedEpochSeconds": 1792391753.050525,
+              "childStartedEpochSeconds": 1792391753.059412,
+              "finishedEpochSeconds": 1792391753.77984,
+              "secondsAfterObservation": 15.012412071228027,
+              "targetEpochSeconds": 1792391753.047,
+              "startLatenessSeconds": 0.012412071228027344,
+              "gapAfterPreviousCompletionSeconds": null,
+              "processRoles": [
+                {
+                  "role": "WebContent",
+                  "footprintBytes": 89736200,
+                  "footprintMiB": 85.57910919189453,
+                  "rssKiB": 139824,
+                  "rssMiB": 136.546875
+                },
+                {
+                  "role": "app",
+                  "footprintBytes": 45712656,
+                  "footprintMiB": 43.59498596191406,
+                  "rssKiB": 136688,
+                  "rssMiB": 133.484375
+                },
+                {
+                  "role": "GPU",
+                  "footprintBytes": 12632808,
+                  "footprintMiB": 12.047584533691406,
+                  "rssKiB": 34768,
+                  "rssMiB": 33.953125
+                },
+                {
+                  "role": "Networking",
+                  "footprintBytes": 4407752,
+                  "footprintMiB": 4.203559875488281,
+                  "rssKiB": 13504,
+                  "rssMiB": 13.1875
+                }
+              ],
+              "rawJSON": "3-Source/footprint-1.json"
+            },
+            {
+              "capture": 2,
+              "footprintMiB": 145.15961456298828,
+              "rssSumMiB": 317.171875,
+              "appFootprintMiB": 43.59498596191406,
+              "helperFootprintMiB": 101.81462860107422,
+              "warnings": [],
+              "ownershipProofEpochSeconds": 1792391754.142414,
+              "requestedEpochSeconds": 1792391754.284191,
+              "childStartedEpochSeconds": 1792391754.2866108,
+              "finishedEpochSeconds": 1792391754.375229,
+              "secondsAfterObservation": 16.23961091041565,
+              "targetEpochSeconds": 1792391754.27984,
+              "startLatenessSeconds": 0.0067708492279052734,
+              "gapAfterPreviousCompletionSeconds": 0.5067708492279053,
+              "processRoles": [
+                {
+                  "role": "WebContent",
+                  "footprintBytes": 89736200,
+                  "footprintMiB": 85.57910919189453,
+                  "rssKiB": 139824,
+                  "rssMiB": 136.546875
+                },
+                {
+                  "role": "app",
+                  "footprintBytes": 45712656,
+                  "footprintMiB": 43.59498596191406,
+                  "rssKiB": 136688,
+                  "rssMiB": 133.484375
+                },
+                {
+                  "role": "GPU",
+                  "footprintBytes": 12616424,
+                  "footprintMiB": 12.031959533691406,
+                  "rssKiB": 34768,
+                  "rssMiB": 33.953125
+                },
+                {
+                  "role": "Networking",
+                  "footprintBytes": 4407752,
+                  "footprintMiB": 4.203559875488281,
+                  "rssKiB": 13504,
+                  "rssMiB": 13.1875
+                }
+              ],
+              "rawJSON": "3-Source/footprint-2.json"
+            },
+            {
+              "capture": 3,
+              "footprintMiB": 145.15961456298828,
+              "rssSumMiB": 317.15625,
+              "appFootprintMiB": 43.59498596191406,
+              "helperFootprintMiB": 101.81462860107422,
+              "warnings": [],
+              "ownershipProofEpochSeconds": 1792391754.500971,
+              "requestedEpochSeconds": 1792391754.880266,
+              "childStartedEpochSeconds": 1792391754.8819609,
+              "finishedEpochSeconds": 1792391754.9548109,
+              "secondsAfterObservation": 16.8349609375,
+              "targetEpochSeconds": 1792391754.875229,
+              "startLatenessSeconds": 0.006731986999511719,
+              "gapAfterPreviousCompletionSeconds": 0.5067319869995117,
+              "processRoles": [
+                {
+                  "role": "WebContent",
+                  "footprintBytes": 89736200,
+                  "footprintMiB": 85.57910919189453,
+                  "rssKiB": 139824,
+                  "rssMiB": 136.546875
+                },
+                {
+                  "role": "app",
+                  "footprintBytes": 45712656,
+                  "footprintMiB": 43.59498596191406,
+                  "rssKiB": 136688,
+                  "rssMiB": 133.484375
+                },
+                {
+                  "role": "GPU",
+                  "footprintBytes": 12616424,
+                  "footprintMiB": 12.031959533691406,
+                  "rssKiB": 34752,
+                  "rssMiB": 33.9375
+                },
+                {
+                  "role": "Networking",
+                  "footprintBytes": 4407752,
+                  "footprintMiB": 4.203559875488281,
+                  "rssKiB": 13504,
+                  "rssMiB": 13.1875
+                }
+              ],
+              "rawJSON": "3-Source/footprint-3.json"
+            }
+          ],
+          "medianFootprintMiB": 145.15961456298828,
+          "medianAppFootprintMiB": 43.59498596191406,
+          "medianHelperFootprintMiB": 101.81462860107422,
+          "medianRSSMiB": 317.171875,
+          "roleRunMedians": {
+            "app": 43.59498596191406,
+            "WebContent": 85.57910919189453,
+            "GPU": 12.031959533691406,
+            "Networking": 4.203559875488281
+          },
+          "evidence": "3-Source/",
+          "ownedAppAndHelpersExited": true
+        },
+        {
+          "run": 4,
+          "mode": "Read",
+          "status": "passed",
+          "activeAppearanceObserved": true,
+          "modeSelectedObserved": true,
+          "observerCount": 3,
+          "observer": "same three full CUA AX+screenshot observations; final native title activation in both states",
+          "collectorStartedEpochSeconds": 1792391774.7770061,
+          "finalObservationStartedEpochSeconds": 1792391779.595,
+          "finalObservationCompletedEpochSeconds": 1792391780.032,
+          "finalEvidenceWrittenEpochSeconds": 1792391780.033,
+          "gateConfirmedEpochSeconds": 1792391786.244292,
+          "gateFileStatMtime": 1792391786.2446105,
+          "gateFileReadEpochSeconds": 1792391786.2505012,
+          "confirmationSecondsAfterObservation": 6.212291955947876,
+          "firstFootprintTargetEpochSeconds": 1792391795.032,
+          "samples": [
+            {
+              "capture": 1,
+              "footprintMiB": 130.25320434570312,
+              "rssSumMiB": 282.15625,
+              "appFootprintMiB": 37.51665496826172,
+              "helperFootprintMiB": 92.9865493774414,
+              "warnings": [],
+              "ownershipProofEpochSeconds": 1792391794.748478,
+              "requestedEpochSeconds": 1792391795.0336561,
+              "childStartedEpochSeconds": 1792391795.036708,
+              "finishedEpochSeconds": 1792391795.09246,
+              "secondsAfterObservation": 15.004708051681519,
+              "targetEpochSeconds": 1792391795.032,
+              "startLatenessSeconds": 0.004708051681518555,
+              "gapAfterPreviousCompletionSeconds": null,
+              "processRoles": [
+                {
+                  "role": "WebContent",
+                  "footprintBytes": 80298992,
+                  "footprintMiB": 76.57908630371094,
+                  "rssKiB": 121840,
+                  "rssMiB": 118.984375
+                },
+                {
+                  "role": "app",
+                  "footprintBytes": 39339064,
+                  "footprintMiB": 37.51665496826172,
+                  "rssKiB": 118912,
+                  "rssMiB": 116.125
+                },
+                {
+                  "role": "GPU",
+                  "footprintBytes": 12714776,
+                  "footprintMiB": 12.125755310058594,
+                  "rssKiB": 34736,
+                  "rssMiB": 33.921875
+                },
+                {
+                  "role": "Networking",
+                  "footprintBytes": 4489696,
+                  "footprintMiB": 4.281707763671875,
+                  "rssKiB": 13440,
+                  "rssMiB": 13.125
+                }
+              ],
+              "rawJSON": "4-Read/footprint-1.json"
+            },
+            {
+              "capture": 2,
+              "footprintMiB": 130.25320434570312,
+              "rssSumMiB": 282.15625,
+              "appFootprintMiB": 37.51665496826172,
+              "helperFootprintMiB": 92.9865493774414,
+              "warnings": [],
+              "ownershipProofEpochSeconds": 1792391795.1887329,
+              "requestedEpochSeconds": 1792391795.595498,
+              "childStartedEpochSeconds": 1792391795.597384,
+              "finishedEpochSeconds": 1792391795.6520069,
+              "secondsAfterObservation": 15.565383911132812,
+              "targetEpochSeconds": 1792391795.59246,
+              "startLatenessSeconds": 0.00492405891418457,
+              "gapAfterPreviousCompletionSeconds": 0.5049240589141846,
+              "processRoles": [
+                {
+                  "role": "WebContent",
+                  "footprintBytes": 80298992,
+                  "footprintMiB": 76.57908630371094,
+                  "rssKiB": 121840,
+                  "rssMiB": 118.984375
+                },
+                {
+                  "role": "app",
+                  "footprintBytes": 39339064,
+                  "footprintMiB": 37.51665496826172,
+                  "rssKiB": 118912,
+                  "rssMiB": 116.125
+                },
+                {
+                  "role": "GPU",
+                  "footprintBytes": 12714776,
+                  "footprintMiB": 12.125755310058594,
+                  "rssKiB": 34736,
+                  "rssMiB": 33.921875
+                },
+                {
+                  "role": "Networking",
+                  "footprintBytes": 4489696,
+                  "footprintMiB": 4.281707763671875,
+                  "rssKiB": 13440,
+                  "rssMiB": 13.125
+                }
+              ],
+              "rawJSON": "4-Read/footprint-2.json"
+            },
+            {
+              "capture": 3,
+              "footprintMiB": 130.25320434570312,
+              "rssSumMiB": 282.15625,
+              "appFootprintMiB": 37.51665496826172,
+              "helperFootprintMiB": 92.9865493774414,
+              "warnings": [],
+              "ownershipProofEpochSeconds": 1792391795.749826,
+              "requestedEpochSeconds": 1792391796.157055,
+              "childStartedEpochSeconds": 1792391796.1585312,
+              "finishedEpochSeconds": 1792391796.211445,
+              "secondsAfterObservation": 16.12653112411499,
+              "targetEpochSeconds": 1792391796.1520069,
+              "startLatenessSeconds": 0.006524324417114258,
+              "gapAfterPreviousCompletionSeconds": 0.5065243244171143,
+              "processRoles": [
+                {
+                  "role": "WebContent",
+                  "footprintBytes": 80298992,
+                  "footprintMiB": 76.57908630371094,
+                  "rssKiB": 121840,
+                  "rssMiB": 118.984375
+                },
+                {
+                  "role": "app",
+                  "footprintBytes": 39339064,
+                  "footprintMiB": 37.51665496826172,
+                  "rssKiB": 118912,
+                  "rssMiB": 116.125
+                },
+                {
+                  "role": "GPU",
+                  "footprintBytes": 12714776,
+                  "footprintMiB": 12.125755310058594,
+                  "rssKiB": 34736,
+                  "rssMiB": 33.921875
+                },
+                {
+                  "role": "Networking",
+                  "footprintBytes": 4489696,
+                  "footprintMiB": 4.281707763671875,
+                  "rssKiB": 13440,
+                  "rssMiB": 13.125
+                }
+              ],
+              "rawJSON": "4-Read/footprint-3.json"
+            }
+          ],
+          "medianFootprintMiB": 130.25320434570312,
+          "medianAppFootprintMiB": 37.51665496826172,
+          "medianHelperFootprintMiB": 92.9865493774414,
+          "medianRSSMiB": 282.15625,
+          "roleRunMedians": {
+            "app": 37.51665496826172,
+            "WebContent": 76.57908630371094,
+            "GPU": 12.125755310058594,
+            "Networking": 4.281707763671875
+          },
+          "evidence": "4-Read/",
+          "ownedAppAndHelpersExited": true
+        },
+        {
+          "run": 5,
+          "mode": "Read",
+          "status": "passed",
+          "activeAppearanceObserved": true,
+          "modeSelectedObserved": true,
+          "observerCount": 3,
+          "observer": "same three full CUA AX+screenshot observations; final native title activation in both states",
+          "collectorStartedEpochSeconds": 1792391827.3615239,
+          "finalObservationStartedEpochSeconds": 1792391831.797,
+          "finalObservationCompletedEpochSeconds": 1792391832.223,
+          "finalEvidenceWrittenEpochSeconds": 1792391832.223,
+          "gateConfirmedEpochSeconds": 1792391835.042068,
+          "gateFileStatMtime": 1792391835.0423694,
+          "gateFileReadEpochSeconds": 1792391835.043126,
+          "confirmationSecondsAfterObservation": 2.81906795501709,
+          "firstFootprintTargetEpochSeconds": 1792391847.223,
+          "samples": [
+            {
+              "capture": 1,
+              "footprintMiB": 132.00315856933594,
+              "rssSumMiB": 284.71875,
+              "appFootprintMiB": 37.59473419189453,
+              "helperFootprintMiB": 94.6584243774414,
+              "warnings": [],
+              "ownershipProofEpochSeconds": 1792391846.928942,
+              "requestedEpochSeconds": 1792391847.228151,
+              "childStartedEpochSeconds": 1792391847.235144,
+              "finishedEpochSeconds": 1792391847.300311,
+              "secondsAfterObservation": 15.012143850326538,
+              "targetEpochSeconds": 1792391847.223,
+              "startLatenessSeconds": 0.012143850326538086,
+              "gapAfterPreviousCompletionSeconds": null,
+              "processRoles": [
+                {
+                  "role": "WebContent",
+                  "footprintBytes": 82232328,
+                  "footprintMiB": 78.42285919189453,
+                  "rssKiB": 124032,
+                  "rssMiB": 121.125
+                },
+                {
+                  "role": "app",
+                  "footprintBytes": 39420936,
+                  "footprintMiB": 37.59473419189453,
+                  "rssKiB": 119360,
+                  "rssMiB": 116.5625
+                },
+                {
+                  "role": "GPU",
+                  "footprintBytes": 12567320,
+                  "footprintMiB": 11.985130310058594,
+                  "rssKiB": 34640,
+                  "rssMiB": 33.828125
+                },
+                {
+                  "role": "Networking",
+                  "footprintBytes": 4456904,
+                  "footprintMiB": 4.250434875488281,
+                  "rssKiB": 13520,
+                  "rssMiB": 13.203125
+                }
+              ],
+              "rawJSON": "5-Read/footprint-1.json"
+            },
+            {
+              "capture": 2,
+              "footprintMiB": 132.00315856933594,
+              "rssSumMiB": 284.71875,
+              "appFootprintMiB": 37.59473419189453,
+              "helperFootprintMiB": 94.6584243774414,
+              "warnings": [],
+              "ownershipProofEpochSeconds": 1792391847.399981,
+              "requestedEpochSeconds": 1792391847.801198,
+              "childStartedEpochSeconds": 1792391847.805585,
+              "finishedEpochSeconds": 1792391847.860091,
+              "secondsAfterObservation": 15.582584857940674,
+              "targetEpochSeconds": 1792391847.800311,
+              "startLatenessSeconds": 0.0052738189697265625,
+              "gapAfterPreviousCompletionSeconds": 0.5052738189697266,
+              "processRoles": [
+                {
+                  "role": "WebContent",
+                  "footprintBytes": 82232328,
+                  "footprintMiB": 78.42285919189453,
+                  "rssKiB": 124032,
+                  "rssMiB": 121.125
+                },
+                {
+                  "role": "app",
+                  "footprintBytes": 39420936,
+                  "footprintMiB": 37.59473419189453,
+                  "rssKiB": 119360,
+                  "rssMiB": 116.5625
+                },
+                {
+                  "role": "GPU",
+                  "footprintBytes": 12567320,
+                  "footprintMiB": 11.985130310058594,
+                  "rssKiB": 34640,
+                  "rssMiB": 33.828125
+                },
+                {
+                  "role": "Networking",
+                  "footprintBytes": 4456904,
+                  "footprintMiB": 4.250434875488281,
+                  "rssKiB": 13520,
+                  "rssMiB": 13.203125
+                }
+              ],
+              "rawJSON": "5-Read/footprint-2.json"
+            },
+            {
+              "capture": 3,
+              "footprintMiB": 132.00315856933594,
+              "rssSumMiB": 284.71875,
+              "appFootprintMiB": 37.59473419189453,
+              "helperFootprintMiB": 94.6584243774414,
+              "warnings": [],
+              "ownershipProofEpochSeconds": 1792391847.96096,
+              "requestedEpochSeconds": 1792391848.3651562,
+              "childStartedEpochSeconds": 1792391848.367894,
+              "finishedEpochSeconds": 1792391848.4223459,
+              "secondsAfterObservation": 16.144893884658813,
+              "targetEpochSeconds": 1792391848.360091,
+              "startLatenessSeconds": 0.0078029632568359375,
+              "gapAfterPreviousCompletionSeconds": 0.5078029632568359,
+              "processRoles": [
+                {
+                  "role": "WebContent",
+                  "footprintBytes": 82232328,
+                  "footprintMiB": 78.42285919189453,
+                  "rssKiB": 124032,
+                  "rssMiB": 121.125
+                },
+                {
+                  "role": "app",
+                  "footprintBytes": 39420936,
+                  "footprintMiB": 37.59473419189453,
+                  "rssKiB": 119360,
+                  "rssMiB": 116.5625
+                },
+                {
+                  "role": "GPU",
+                  "footprintBytes": 12567320,
+                  "footprintMiB": 11.985130310058594,
+                  "rssKiB": 34640,
+                  "rssMiB": 33.828125
+                },
+                {
+                  "role": "Networking",
+                  "footprintBytes": 4456904,
+                  "footprintMiB": 4.250434875488281,
+                  "rssKiB": 13520,
+                  "rssMiB": 13.203125
+                }
+              ],
+              "rawJSON": "5-Read/footprint-3.json"
+            }
+          ],
+          "medianFootprintMiB": 132.00315856933594,
+          "medianAppFootprintMiB": 37.59473419189453,
+          "medianHelperFootprintMiB": 94.6584243774414,
+          "medianRSSMiB": 284.71875,
+          "roleRunMedians": {
+            "app": 37.59473419189453,
+            "WebContent": 78.42285919189453,
+            "GPU": 11.985130310058594,
+            "Networking": 4.250434875488281
+          },
+          "evidence": "5-Read/",
+          "ownedAppAndHelpersExited": true
+        },
+        {
+          "run": 6,
+          "mode": "Source",
+          "status": "passed",
+          "activeAppearanceObserved": true,
+          "modeSelectedObserved": true,
+          "observerCount": 3,
+          "observer": "same three full CUA AX+screenshot observations; final native title activation in both states",
+          "collectorStartedEpochSeconds": 1792391869.812053,
+          "finalObservationStartedEpochSeconds": 1792391875.032,
+          "finalObservationCompletedEpochSeconds": 1792391875.463,
+          "finalEvidenceWrittenEpochSeconds": 1792391875.465,
+          "gateConfirmedEpochSeconds": 1792391878.835915,
+          "gateFileStatMtime": 1792391878.8363433,
+          "gateFileReadEpochSeconds": 1792391878.838986,
+          "confirmationSecondsAfterObservation": 3.372915029525757,
+          "firstFootprintTargetEpochSeconds": 1792391890.463,
+          "samples": [
+            {
+              "capture": 1,
+              "footprintMiB": 145.0345458984375,
+              "rssSumMiB": 317.234375,
+              "appFootprintMiB": 43.01679229736328,
+              "helperFootprintMiB": 102.26775360107422,
+              "warnings": [],
+              "ownershipProofEpochSeconds": 1792391890.182216,
+              "requestedEpochSeconds": 1792391890.467948,
+              "childStartedEpochSeconds": 1792391890.472894,
+              "finishedEpochSeconds": 1792391890.5373309,
+              "secondsAfterObservation": 15.009893894195557,
+              "targetEpochSeconds": 1792391890.463,
+              "startLatenessSeconds": 0.00989389419555664,
+              "gapAfterPreviousCompletionSeconds": null,
+              "processRoles": [
+                {
+                  "role": "WebContent",
+                  "footprintBytes": 90129368,
+                  "footprintMiB": 85.95406341552734,
+                  "rssKiB": 139776,
+                  "rssMiB": 136.5
+                },
+                {
+                  "role": "app",
+                  "footprintBytes": 45106376,
+                  "footprintMiB": 43.01679229736328,
+                  "rssKiB": 136912,
+                  "rssMiB": 133.703125
+                },
+                {
+                  "role": "GPU",
+                  "footprintBytes": 12600040,
+                  "footprintMiB": 12.016334533691406,
+                  "rssKiB": 34704,
+                  "rssMiB": 33.890625
+                },
+                {
+                  "role": "Networking",
+                  "footprintBytes": 4506104,
+                  "footprintMiB": 4.297355651855469,
+                  "rssKiB": 13456,
+                  "rssMiB": 13.140625
+                }
+              ],
+              "rawJSON": "6-Source/footprint-1.json"
+            },
+            {
+              "capture": 2,
+              "footprintMiB": 145.0345458984375,
+              "rssSumMiB": 317.234375,
+              "appFootprintMiB": 43.01679229736328,
+              "helperFootprintMiB": 102.26775360107422,
+              "warnings": [],
+              "ownershipProofEpochSeconds": 1792391890.633237,
+              "requestedEpochSeconds": 1792391891.04244,
+              "childStartedEpochSeconds": 1792391891.048459,
+              "finishedEpochSeconds": 1792391891.109555,
+              "secondsAfterObservation": 15.585458993911743,
+              "targetEpochSeconds": 1792391891.0373309,
+              "startLatenessSeconds": 0.01112818717956543,
+              "gapAfterPreviousCompletionSeconds": 0.5111281871795654,
+              "processRoles": [
+                {
+                  "role": "WebContent",
+                  "footprintBytes": 90129368,
+                  "footprintMiB": 85.95406341552734,
+                  "rssKiB": 139776,
+                  "rssMiB": 136.5
+                },
+                {
+                  "role": "app",
+                  "footprintBytes": 45106376,
+                  "footprintMiB": 43.01679229736328,
+                  "rssKiB": 136912,
+                  "rssMiB": 133.703125
+                },
+                {
+                  "role": "GPU",
+                  "footprintBytes": 12600040,
+                  "footprintMiB": 12.016334533691406,
+                  "rssKiB": 34704,
+                  "rssMiB": 33.890625
+                },
+                {
+                  "role": "Networking",
+                  "footprintBytes": 4506104,
+                  "footprintMiB": 4.297355651855469,
+                  "rssKiB": 13456,
+                  "rssMiB": 13.140625
+                }
+              ],
+              "rawJSON": "6-Source/footprint-2.json"
+            },
+            {
+              "capture": 3,
+              "footprintMiB": 145.0189208984375,
+              "rssSumMiB": 317.234375,
+              "appFootprintMiB": 43.01679229736328,
+              "helperFootprintMiB": 102.25212860107422,
+              "warnings": [],
+              "ownershipProofEpochSeconds": 1792391891.206749,
+              "requestedEpochSeconds": 1792391891.610903,
+              "childStartedEpochSeconds": 1792391891.612627,
+              "finishedEpochSeconds": 1792391891.6732569,
+              "secondsAfterObservation": 16.149626970291138,
+              "targetEpochSeconds": 1792391891.609555,
+              "startLatenessSeconds": 0.003072023391723633,
+              "gapAfterPreviousCompletionSeconds": 0.5030720233917236,
+              "processRoles": [
+                {
+                  "role": "WebContent",
+                  "footprintBytes": 90129368,
+                  "footprintMiB": 85.95406341552734,
+                  "rssKiB": 139776,
+                  "rssMiB": 136.5
+                },
+                {
+                  "role": "app",
+                  "footprintBytes": 45106376,
+                  "footprintMiB": 43.01679229736328,
+                  "rssKiB": 136912,
+                  "rssMiB": 133.703125
+                },
+                {
+                  "role": "GPU",
+                  "footprintBytes": 12583656,
+                  "footprintMiB": 12.000709533691406,
+                  "rssKiB": 34704,
+                  "rssMiB": 33.890625
+                },
+                {
+                  "role": "Networking",
+                  "footprintBytes": 4506104,
+                  "footprintMiB": 4.297355651855469,
+                  "rssKiB": 13456,
+                  "rssMiB": 13.140625
+                }
+              ],
+              "rawJSON": "6-Source/footprint-3.json"
+            }
+          ],
+          "medianFootprintMiB": 145.0345458984375,
+          "medianAppFootprintMiB": 43.01679229736328,
+          "medianHelperFootprintMiB": 102.26775360107422,
+          "medianRSSMiB": 317.234375,
+          "roleRunMedians": {
+            "app": 43.01679229736328,
+            "WebContent": 85.95406341552734,
+            "GPU": 12.016334533691406,
+            "Networking": 4.297355651855469
+          },
+          "evidence": "6-Source/",
+          "ownedAppAndHelpersExited": true
+        }
+      ],
+      "ownership": "Exact executable paths and start tokens, unique exact-path app PID and responsible PID self; only new owned WebKit helpers, responsibility equal to app. Ownership and stable process set checked before and after each capture. Baseline helpers excluded.",
+      "preservation": {
+        "status": "passed",
+        "repositoryExactEqual": true,
+        "protectedEntriesExactEqual": true,
+        "preferencesDictionaryEqual": true,
+        "preferencesRawSHA256Equal": true,
+        "preservedUserAppExactIdentity": true,
+        "ownedHelpersSignaled": 0,
+        "sourceSHA": "0e1bf1217c486997c9f2c8bec8427a001b7a9072"
+      },
+      "limits": [
+        "Source state follows completed Read rendering, so hidden WKWebView, WebContent, GPU and Networking remain part of the observed state. This does not isolate editor allocation or memory savings.",
+        "Three fresh processes per mode and one structured 100KiB fixture are a small descriptive sample, not a population estimate or memory target claim.",
+        "RSS was queried during the fresh pre-capture ownership proof, shortly before footprint launch, and is not interchangeable with footprint.",
+        "Three Source clicks returned AXError.failure while final actual state showed Source selected, loaded native editor, active appearance and disabled clean Save. No extra mode clicks or observations replaced a sample; internal API work is unquantified.",
+        "CUA raster is 900x784, not confirmed native point bounds; initial zoom was unchanged fresh default, not numerically introspected.",
+        "The prior six-run cohort failed equal-time protocol and included an inactive-looking Source run 6. It is retained separately and not pooled.",
+        "No comparison with earlier no-CUA 0.2.1 measurements."
+      ],
+      "rawEvidence": "build/source-editing/memory-0e1bf12-corrected",
+      "previousDescriptiveCohort": "prior-mismatched-normalized.json"
+    },
+    "original": {
+      "status": "failed-matched-timing-protocol-retained-descriptive-only",
+      "collectorCoverage": "six successful fresh-process runs, eighteen captures",
+      "strictExactly15SecondPostCUAGateMatch": false,
+      "sourceSHA": "0e1bf1217c486997c9f2c8bec8427a001b7a9072",
+      "binarySHA256": "7bf13064f9a786888a883efdcf8c3ae9dca3d061850b1f679a442db05d6123b5",
+      "fixture": {
+        "repositoryFixture": "Fixtures/Benchmark100KiB.md",
+        "bytes": 102400,
+        "sha256": "55464dacf92db737fbec845a17723c38da683d0fcef0b52d994a0040edff7f61"
+      },
+      "units": "MiB, 1048576 bytes",
+      "cohorts": {
+        "Read": {
+          "medianFootprintMiB": {
+            "median": 133.75313568115234,
+            "min": 125.76882934570312,
+            "max": 134.92494201660156,
+            "runMedians": [
+              125.76882934570312,
+              133.75313568115234,
+              134.92494201660156
+            ]
+          },
+          "medianAppFootprintMiB": {
+            "median": 36.188438415527344,
+            "min": 36.06346130371094,
+            "max": 37.50098419189453,
+            "runMedians": [
+              37.50098419189453,
+              36.06346130371094,
+              36.188438415527344
+            ]
+          },
+          "medianHelperFootprintMiB": {
+            "median": 97.9396743774414,
+            "min": 88.5178451538086,
+            "max": 98.98650360107422,
+            "runMedians": [
+              88.5178451538086,
+              97.9396743774414,
+              98.98650360107422
+            ]
+          },
+          "medianRSSMiB": {
+            "median": 209.734375,
+            "min": 206.8125,
+            "max": 215.296875,
+            "runMedians": [
+              206.8125,
+              215.296875,
+              209.734375
+            ]
+          }
+        },
+        "Source": {
+          "medianFootprintMiB": {
+            "median": 142.81588745117188,
+            "min": 141.1907730102539,
+            "max": 144.42523956298828,
+            "runMedians": [
+              142.81588745117188,
+              141.1907730102539,
+              144.42523956298828
+            ]
+          },
+          "medianAppFootprintMiB": {
+            "median": 44.14186096191406,
+            "min": 42.813690185546875,
+            "max": 44.329383850097656,
+            "runMedians": [
+              44.14186096191406,
+              42.813690185546875,
+              44.329383850097656
+            ]
+          },
+          "medianHelperFootprintMiB": {
+            "median": 98.92402648925781,
+            "min": 98.62708282470703,
+            "max": 100.34585571289062,
+            "runMedians": [
+              98.92402648925781,
+              98.62708282470703,
+              100.34585571289062
+            ]
+          },
+          "medianRSSMiB": {
+            "median": 244.25,
+            "min": 151.71875,
+            "max": 316.171875,
+            "runMedians": [
+              244.25,
+              151.71875,
+              316.171875
+            ]
+          }
+        }
+      },
+      "roleFootprintSummary": {
+        "Read": {
+          "app": {
+            "median": 36.188438415527344,
+            "min": 36.06346130371094,
+            "max": 37.50098419189453
+          },
+          "WebContent": {
+            "median": 79.00096130371094,
+            "min": 69.48535919189453,
+            "max": 79.96968841552734
+          },
+          "GPU": {
+            "median": 13.922630310058594,
+            "min": 13.906982421875,
+            "max": 13.953903198242188
+          },
+          "Networking": {
+            "median": 5.078582763671875,
+            "min": 5.016082763671875,
+            "max": 5.109832763671875
+          }
+        },
+        "Source": {
+          "app": {
+            "median": 44.14186096191406,
+            "min": 42.813690185546875,
+            "max": 44.329383850097656
+          },
+          "WebContent": {
+            "median": 80.48531341552734,
+            "min": 80.20406341552734,
+            "max": 84.23533630371094
+          },
+          "GPU": {
+            "median": 13.094436645507812,
+            "min": 11.875709533691406,
+            "max": 13.719505310058594
+          },
+          "Networking": {
+            "median": 5.000457763671875,
+            "min": 4.234809875488281,
+            "max": 5.047332763671875
+          }
+        }
+      },
+      "pairs": [
+        {
+          "pair": 1,
+          "readRun": 1,
+          "sourceRun": 2,
+          "sourceMinusReadMiB": {
+            "medianFootprintMiB": 17.04705810546875,
+            "medianAppFootprintMiB": 6.640876770019531,
+            "medianHelperFootprintMiB": 10.406181335449219,
+            "medianRSSMiB": 37.4375
+          }
+        },
+        {
+          "pair": 2,
+          "readRun": 4,
+          "sourceRun": 3,
+          "sourceMinusReadMiB": {
+            "medianFootprintMiB": 7.4376373291015625,
+            "medianAppFootprintMiB": 6.7502288818359375,
+            "medianHelperFootprintMiB": 0.687408447265625,
+            "medianRSSMiB": -63.578125
+          }
+        },
+        {
+          "pair": 3,
+          "readRun": 5,
+          "sourceRun": 6,
+          "sourceMinusReadMiB": {
+            "medianFootprintMiB": 9.500297546386719,
+            "medianAppFootprintMiB": 8.140945434570312,
+            "medianHelperFootprintMiB": 1.3593521118164062,
+            "medianRSSMiB": 106.4375
+          }
+        }
+      ],
+      "runs": [
+        {
+          "run": 1,
+          "cohort": "Read",
+          "freshProcess": true,
+          "readVisitedBeforeSource": false,
+          "runMedianFootprintMiB": 125.76882934570312,
+          "runMedianAppFootprintMiB": 37.50098419189453,
+          "runMedianHelpersFootprintMiB": 88.5178451538086,
+          "runMedianRSSMiB": 206.8125,
+          "roleRunMedianFootprintMiB": {
+            "app": 37.50098419189453,
+            "WebContent": 69.48535919189453,
+            "GPU": 13.953903198242188,
+            "Networking": 5.078582763671875
+          },
+          "explicitAXScreenshotRequests": 3,
+          "ownershipAndThreeCapturesPassed": true,
+          "samplingStartedSecondsAfterGate": 22.957905459101312,
+          "finalNativeAppearance": "active-looking",
+          "samples": [
+            {
+              "capture": 1,
+              "aggregateFootprintMiB": 125.76882934570312,
+              "appFootprintMiB": 37.50098419189453,
+              "helperFootprintMiB": 88.5178451538086,
+              "rssSumMiB": 206.796875,
+              "processes": [
+                {
+                  "role": "WebContent",
+                  "footprintMiB": 69.48535919189453,
+                  "rssMiB": 70.90625
+                },
+                {
+                  "role": "app",
+                  "footprintMiB": 37.50098419189453,
+                  "rssMiB": 98.5625
+                },
+                {
+                  "role": "GPU",
+                  "footprintMiB": 13.953903198242188,
+                  "rssMiB": 26.65625
+                },
+                {
+                  "role": "Networking",
+                  "footprintMiB": 5.078582763671875,
+                  "rssMiB": 10.671875
+                }
+              ],
+              "startUTC": "2026-10-19T06:14:33.741929+00:00",
+              "startSecondsSinceFinalCUAGate": 22.957905459101312,
+              "endSecondsSinceFinalCUAGate": 23.16778887610417
+            },
+            {
+              "capture": 2,
+              "aggregateFootprintMiB": 125.76882934570312,
+              "appFootprintMiB": 37.50098419189453,
+              "helperFootprintMiB": 88.5178451538086,
+              "rssSumMiB": 206.8125,
+              "processes": [
+                {
+                  "role": "WebContent",
+                  "footprintMiB": 69.48535919189453,
+                  "rssMiB": 70.90625
+                },
+                {
+                  "role": "app",
+                  "footprintMiB": 37.50098419189453,
+                  "rssMiB": 98.5625
+                },
+                {
+                  "role": "GPU",
+                  "footprintMiB": 13.953903198242188,
+                  "rssMiB": 26.65625
+                },
+                {
+                  "role": "Networking",
+                  "footprintMiB": 5.078582763671875,
+                  "rssMiB": 10.6875
+                }
+              ],
+              "startUTC": "2026-10-19T06:14:34.638997+00:00",
+              "startSecondsSinceFinalCUAGate": 23.85497087612748,
+              "endSecondsSinceFinalCUAGate": 24.052719209110364
+            },
+            {
+              "capture": 3,
+              "aggregateFootprintMiB": 125.76882934570312,
+              "appFootprintMiB": 37.50098419189453,
+              "helperFootprintMiB": 88.5178451538086,
+              "rssSumMiB": 206.8125,
+              "processes": [
+                {
+                  "role": "WebContent",
+                  "footprintMiB": 69.48535919189453,
+                  "rssMiB": 70.90625
+                },
+                {
+                  "role": "app",
+                  "footprintMiB": 37.50098419189453,
+                  "rssMiB": 98.5625
+                },
+                {
+                  "role": "GPU",
+                  "footprintMiB": 13.953903198242188,
+                  "rssMiB": 26.65625
+                },
+                {
+                  "role": "Networking",
+                  "footprintMiB": 5.078582763671875,
+                  "rssMiB": 10.6875
+                }
+              ],
+              "startUTC": "2026-10-19T06:14:35.553365+00:00",
+              "startSecondsSinceFinalCUAGate": 24.76933737611398,
+              "endSecondsSinceFinalCUAGate": 24.977952293120325
+            }
+          ]
+        },
+        {
+          "run": 2,
+          "cohort": "Source",
+          "freshProcess": true,
+          "readVisitedBeforeSource": true,
+          "runMedianFootprintMiB": 142.81588745117188,
+          "runMedianAppFootprintMiB": 44.14186096191406,
+          "runMedianHelpersFootprintMiB": 98.92402648925781,
+          "runMedianRSSMiB": 244.25,
+          "roleRunMedianFootprintMiB": {
+            "app": 44.14186096191406,
+            "WebContent": 80.20406341552734,
+            "GPU": 13.719505310058594,
+            "Networking": 5.000457763671875
+          },
+          "explicitAXScreenshotRequests": 3,
+          "ownershipAndThreeCapturesPassed": true,
+          "samplingStartedSecondsAfterGate": 21.12998634192627,
+          "finalNativeAppearance": "active-looking",
+          "samples": [
+            {
+              "capture": 1,
+              "aggregateFootprintMiB": 142.81588745117188,
+              "appFootprintMiB": 44.14186096191406,
+              "helperFootprintMiB": 98.92402648925781,
+              "rssSumMiB": 244.25,
+              "processes": [
+                {
+                  "role": "WebContent",
+                  "footprintMiB": 80.20406341552734,
+                  "rssMiB": 87.5
+                },
+                {
+                  "role": "app",
+                  "footprintMiB": 44.14186096191406,
+                  "rssMiB": 118.625
+                },
+                {
+                  "role": "GPU",
+                  "footprintMiB": 13.719505310058594,
+                  "rssMiB": 27.4375
+                },
+                {
+                  "role": "Networking",
+                  "footprintMiB": 5.000457763671875,
+                  "rssMiB": 10.6875
+                }
+              ],
+              "startUTC": "2026-10-19T06:15:44.336032+00:00",
+              "startSecondsSinceFinalCUAGate": 21.12998634192627,
+              "endSecondsSinceFinalCUAGate": 21.385169174929615
+            },
+            {
+              "capture": 2,
+              "aggregateFootprintMiB": 142.81588745117188,
+              "appFootprintMiB": 44.14186096191406,
+              "helperFootprintMiB": 98.92402648925781,
+              "rssSumMiB": 244.25,
+              "processes": [
+                {
+                  "role": "WebContent",
+                  "footprintMiB": 80.20406341552734,
+                  "rssMiB": 87.5
+                },
+                {
+                  "role": "app",
+                  "footprintMiB": 44.14186096191406,
+                  "rssMiB": 118.625
+                },
+                {
+                  "role": "GPU",
+                  "footprintMiB": 13.719505310058594,
+                  "rssMiB": 27.4375
+                },
+                {
+                  "role": "Networking",
+                  "footprintMiB": 5.000457763671875,
+                  "rssMiB": 10.6875
+                }
+              ],
+              "startUTC": "2026-10-19T06:15:45.494504+00:00",
+              "startSecondsSinceFinalCUAGate": 22.2884548419388,
+              "endSecondsSinceFinalCUAGate": 22.59371734195156
+            },
+            {
+              "capture": 3,
+              "aggregateFootprintMiB": 142.81588745117188,
+              "appFootprintMiB": 44.14186096191406,
+              "helperFootprintMiB": 98.92402648925781,
+              "rssSumMiB": 244.25,
+              "processes": [
+                {
+                  "role": "WebContent",
+                  "footprintMiB": 80.20406341552734,
+                  "rssMiB": 87.5
+                },
+                {
+                  "role": "app",
+                  "footprintMiB": 44.14186096191406,
+                  "rssMiB": 118.625
+                },
+                {
+                  "role": "GPU",
+                  "footprintMiB": 13.719505310058594,
+                  "rssMiB": 27.4375
+                },
+                {
+                  "role": "Networking",
+                  "footprintMiB": 5.000457763671875,
+                  "rssMiB": 10.6875
+                }
+              ],
+              "startUTC": "2026-10-19T06:15:46.712949+00:00",
+              "startSecondsSinceFinalCUAGate": 23.50689625792438,
+              "endSecondsSinceFinalCUAGate": 23.829815257922746
+            }
+          ]
+        },
+        {
+          "run": 3,
+          "cohort": "Source",
+          "freshProcess": true,
+          "readVisitedBeforeSource": true,
+          "runMedianFootprintMiB": 141.1907730102539,
+          "runMedianAppFootprintMiB": 42.813690185546875,
+          "runMedianHelpersFootprintMiB": 98.62708282470703,
+          "runMedianRSSMiB": 151.71875,
+          "roleRunMedianFootprintMiB": {
+            "app": 42.813690185546875,
+            "WebContent": 80.48531341552734,
+            "GPU": 13.094436645507812,
+            "Networking": 5.047332763671875
+          },
+          "explicitAXScreenshotRequests": 3,
+          "ownershipAndThreeCapturesPassed": true,
+          "samplingStartedSecondsAfterGate": 19.105044370226096,
+          "finalNativeAppearance": "active-looking",
+          "samples": [
+            {
+              "capture": 1,
+              "aggregateFootprintMiB": 141.1907730102539,
+              "appFootprintMiB": 42.813690185546875,
+              "helperFootprintMiB": 98.62708282470703,
+              "rssSumMiB": 152.15625,
+              "processes": [
+                {
+                  "role": "WebContent",
+                  "footprintMiB": 80.48531341552734,
+                  "rssMiB": 31.78125
+                },
+                {
+                  "role": "app",
+                  "footprintMiB": 42.813690185546875,
+                  "rssMiB": 94.421875
+                },
+                {
+                  "role": "GPU",
+                  "footprintMiB": 13.094436645507812,
+                  "rssMiB": 18.953125
+                },
+                {
+                  "role": "Networking",
+                  "footprintMiB": 5.047332763671875,
+                  "rssMiB": 7.0
+                }
+              ],
+              "startUTC": "2026-10-19T06:16:58.488091+00:00",
+              "startSecondsSinceFinalCUAGate": 19.105044370226096,
+              "endSecondsSinceFinalCUAGate": 19.29542807827238
+            },
+            {
+              "capture": 2,
+              "aggregateFootprintMiB": 141.1907730102539,
+              "appFootprintMiB": 42.813690185546875,
+              "helperFootprintMiB": 98.62708282470703,
+              "rssSumMiB": 151.71875,
+              "processes": [
+                {
+                  "role": "WebContent",
+                  "footprintMiB": 80.48531341552734,
+                  "rssMiB": 31.546875
+                },
+                {
+                  "role": "app",
+                  "footprintMiB": 42.813690185546875,
+                  "rssMiB": 94.140625
+                },
+                {
+                  "role": "GPU",
+                  "footprintMiB": 13.094436645507812,
+                  "rssMiB": 19.0
+                },
+                {
+                  "role": "Networking",
+                  "footprintMiB": 5.047332763671875,
+                  "rssMiB": 7.03125
+                }
+              ],
+              "startUTC": "2026-10-19T06:16:59.425166+00:00",
+              "startSecondsSinceFinalCUAGate": 20.04211416223552,
+              "endSecondsSinceFinalCUAGate": 20.218894620251376
+            },
+            {
+              "capture": 3,
+              "aggregateFootprintMiB": 141.1907730102539,
+              "appFootprintMiB": 42.813690185546875,
+              "helperFootprintMiB": 98.62708282470703,
+              "rssSumMiB": 151.171875,
+              "processes": [
+                {
+                  "role": "WebContent",
+                  "footprintMiB": 80.48531341552734,
+                  "rssMiB": 31.546875
+                },
+                {
+                  "role": "app",
+                  "footprintMiB": 42.813690185546875,
+                  "rssMiB": 93.59375
+                },
+                {
+                  "role": "GPU",
+                  "footprintMiB": 13.094436645507812,
+                  "rssMiB": 19.0
+                },
+                {
+                  "role": "Networking",
+                  "footprintMiB": 5.047332763671875,
+                  "rssMiB": 7.03125
+                }
+              ],
+              "startUTC": "2026-10-19T06:17:00.289505+00:00",
+              "startSecondsSinceFinalCUAGate": 20.90645437024068,
+              "endSecondsSinceFinalCUAGate": 21.10472982825013
+            }
+          ]
+        },
+        {
+          "run": 4,
+          "cohort": "Read",
+          "freshProcess": true,
+          "readVisitedBeforeSource": false,
+          "runMedianFootprintMiB": 133.75313568115234,
+          "runMedianAppFootprintMiB": 36.06346130371094,
+          "runMedianHelpersFootprintMiB": 97.9396743774414,
+          "runMedianRSSMiB": 215.296875,
+          "roleRunMedianFootprintMiB": {
+            "app": 36.06346130371094,
+            "WebContent": 79.00096130371094,
+            "GPU": 13.922630310058594,
+            "Networking": 5.016082763671875
+          },
+          "explicitAXScreenshotRequests": 3,
+          "ownershipAndThreeCapturesPassed": true,
+          "samplingStartedSecondsAfterGate": 19.25653048575623,
+          "finalNativeAppearance": "active-looking",
+          "samples": [
+            {
+              "capture": 1,
+              "aggregateFootprintMiB": 133.75313568115234,
+              "appFootprintMiB": 36.06346130371094,
+              "helperFootprintMiB": 97.9396743774414,
+              "rssSumMiB": 215.296875,
+              "processes": [
+                {
+                  "role": "WebContent",
+                  "footprintMiB": 79.00096130371094,
+                  "rssMiB": 80.921875
+                },
+                {
+                  "role": "app",
+                  "footprintMiB": 36.06346130371094,
+                  "rssMiB": 98.71875
+                },
+                {
+                  "role": "GPU",
+                  "footprintMiB": 13.922630310058594,
+                  "rssMiB": 26.359375
+                },
+                {
+                  "role": "Networking",
+                  "footprintMiB": 5.016082763671875,
+                  "rssMiB": 9.296875
+                }
+              ],
+              "startUTC": "2026-10-19T06:17:58.912578+00:00",
+              "startSecondsSinceFinalCUAGate": 19.25653048575623,
+              "endSecondsSinceFinalCUAGate": 19.59626748575829
+            },
+            {
+              "capture": 2,
+              "aggregateFootprintMiB": 133.75313568115234,
+              "appFootprintMiB": 36.06346130371094,
+              "helperFootprintMiB": 97.9396743774414,
+              "rssSumMiB": 215.328125,
+              "processes": [
+                {
+                  "role": "WebContent",
+                  "footprintMiB": 79.00096130371094,
+                  "rssMiB": 80.921875
+                },
+                {
+                  "role": "app",
+                  "footprintMiB": 36.06346130371094,
+                  "rssMiB": 98.71875
+                },
+                {
+                  "role": "GPU",
+                  "footprintMiB": 13.922630310058594,
+                  "rssMiB": 26.375
+                },
+                {
+                  "role": "Networking",
+                  "footprintMiB": 5.016082763671875,
+                  "rssMiB": 9.3125
+                }
+              ],
+              "startUTC": "2026-10-19T06:18:00.134339+00:00",
+              "startSecondsSinceFinalCUAGate": 20.47829036077019,
+              "endSecondsSinceFinalCUAGate": 20.79130115278531
+            },
+            {
+              "capture": 3,
+              "aggregateFootprintMiB": 133.75313568115234,
+              "appFootprintMiB": 36.06346130371094,
+              "helperFootprintMiB": 97.9396743774414,
+              "rssSumMiB": 215.296875,
+              "processes": [
+                {
+                  "role": "WebContent",
+                  "footprintMiB": 79.00096130371094,
+                  "rssMiB": 80.921875
+                },
+                {
+                  "role": "app",
+                  "footprintMiB": 36.06346130371094,
+                  "rssMiB": 98.6875
+                },
+                {
+                  "role": "GPU",
+                  "footprintMiB": 13.922630310058594,
+                  "rssMiB": 26.375
+                },
+                {
+                  "role": "Networking",
+                  "footprintMiB": 5.016082763671875,
+                  "rssMiB": 9.3125
+                }
+              ],
+              "startUTC": "2026-10-19T06:18:01.278178+00:00",
+              "startSecondsSinceFinalCUAGate": 21.622124235786032,
+              "endSecondsSinceFinalCUAGate": 21.87070190277882
+            }
+          ]
+        },
+        {
+          "run": 5,
+          "cohort": "Read",
+          "freshProcess": true,
+          "readVisitedBeforeSource": false,
+          "runMedianFootprintMiB": 134.92494201660156,
+          "runMedianAppFootprintMiB": 36.188438415527344,
+          "runMedianHelpersFootprintMiB": 98.98650360107422,
+          "runMedianRSSMiB": 209.734375,
+          "roleRunMedianFootprintMiB": {
+            "app": 36.188438415527344,
+            "WebContent": 79.96968841552734,
+            "GPU": 13.906982421875,
+            "Networking": 5.109832763671875
+          },
+          "explicitAXScreenshotRequests": 3,
+          "ownershipAndThreeCapturesPassed": true,
+          "samplingStartedSecondsAfterGate": 19.151907737541478,
+          "finalNativeAppearance": "active-looking",
+          "samples": [
+            {
+              "capture": 1,
+              "aggregateFootprintMiB": 134.92494201660156,
+              "appFootprintMiB": 36.188438415527344,
+              "helperFootprintMiB": 98.98650360107422,
+              "rssSumMiB": 209.71875,
+              "processes": [
+                {
+                  "role": "WebContent",
+                  "footprintMiB": 79.96968841552734,
+                  "rssMiB": 85.921875
+                },
+                {
+                  "role": "app",
+                  "footprintMiB": 36.188438415527344,
+                  "rssMiB": 89.25
+                },
+                {
+                  "role": "GPU",
+                  "footprintMiB": 13.906982421875,
+                  "rssMiB": 24.96875
+                },
+                {
+                  "role": "Networking",
+                  "footprintMiB": 5.109832763671875,
+                  "rssMiB": 9.578125
+                }
+              ],
+              "startUTC": "2026-10-19T06:19:03.690954+00:00",
+              "startSecondsSinceFinalCUAGate": 19.151907737541478,
+              "endSecondsSinceFinalCUAGate": 19.32109240454156
+            },
+            {
+              "capture": 2,
+              "aggregateFootprintMiB": 134.92494201660156,
+              "appFootprintMiB": 36.188438415527344,
+              "helperFootprintMiB": 98.98650360107422,
+              "rssSumMiB": 209.734375,
+              "processes": [
+                {
+                  "role": "WebContent",
+                  "footprintMiB": 79.96968841552734,
+                  "rssMiB": 85.921875
+                },
+                {
+                  "role": "app",
+                  "footprintMiB": 36.188438415527344,
+                  "rssMiB": 89.265625
+                },
+                {
+                  "role": "GPU",
+                  "footprintMiB": 13.906982421875,
+                  "rssMiB": 24.96875
+                },
+                {
+                  "role": "Networking",
+                  "footprintMiB": 5.109832763671875,
+                  "rssMiB": 9.578125
+                }
+              ],
+              "startUTC": "2026-10-19T06:19:04.505128+00:00",
+              "startSecondsSinceFinalCUAGate": 19.966081362508703,
+              "endSecondsSinceFinalCUAGate": 20.08840102952672
+            },
+            {
+              "capture": 3,
+              "aggregateFootprintMiB": 134.92494201660156,
+              "appFootprintMiB": 36.188438415527344,
+              "helperFootprintMiB": 98.98650360107422,
+              "rssSumMiB": 209.734375,
+              "processes": [
+                {
+                  "role": "WebContent",
+                  "footprintMiB": 79.96968841552734,
+                  "rssMiB": 85.921875
+                },
+                {
+                  "role": "app",
+                  "footprintMiB": 36.188438415527344,
+                  "rssMiB": 89.265625
+                },
+                {
+                  "role": "GPU",
+                  "footprintMiB": 13.906982421875,
+                  "rssMiB": 24.96875
+                },
+                {
+                  "role": "Networking",
+                  "footprintMiB": 5.109832763671875,
+                  "rssMiB": 9.578125
+                }
+              ],
+              "startUTC": "2026-10-19T06:19:05.244729+00:00",
+              "startSecondsSinceFinalCUAGate": 20.705681821506005,
+              "endSecondsSinceFinalCUAGate": 20.812574696494266
+            }
+          ]
+        },
+        {
+          "run": 6,
+          "cohort": "Source",
+          "freshProcess": true,
+          "readVisitedBeforeSource": true,
+          "runMedianFootprintMiB": 144.42523956298828,
+          "runMedianAppFootprintMiB": 44.329383850097656,
+          "runMedianHelpersFootprintMiB": 100.34585571289062,
+          "runMedianRSSMiB": 316.171875,
+          "roleRunMedianFootprintMiB": {
+            "app": 44.329383850097656,
+            "WebContent": 84.23533630371094,
+            "GPU": 11.875709533691406,
+            "Networking": 4.234809875488281
+          },
+          "explicitAXScreenshotRequests": 3,
+          "ownershipAndThreeCapturesPassed": true,
+          "samplingStartedSecondsAfterGate": 35.479786715935916,
+          "finalNativeAppearance": "inactive-looking",
+          "samples": [
+            {
+              "capture": 1,
+              "aggregateFootprintMiB": 144.42523956298828,
+              "appFootprintMiB": 44.329383850097656,
+              "helperFootprintMiB": 100.34585571289062,
+              "rssSumMiB": 316.171875,
+              "processes": [
+                {
+                  "role": "WebContent",
+                  "footprintMiB": 84.23533630371094,
+                  "rssMiB": 134.84375
+                },
+                {
+                  "role": "app",
+                  "footprintMiB": 44.329383850097656,
+                  "rssMiB": 134.40625
+                },
+                {
+                  "role": "GPU",
+                  "footprintMiB": 11.875709533691406,
+                  "rssMiB": 33.828125
+                },
+                {
+                  "role": "Networking",
+                  "footprintMiB": 4.234809875488281,
+                  "rssMiB": 13.09375
+                }
+              ],
+              "startUTC": "2026-10-19T06:20:44.389833+00:00",
+              "startSecondsSinceFinalCUAGate": 35.479786715935916,
+              "endSecondsSinceFinalCUAGate": 35.64238271594513
+            },
+            {
+              "capture": 2,
+              "aggregateFootprintMiB": 144.42523956298828,
+              "appFootprintMiB": 44.329383850097656,
+              "helperFootprintMiB": 100.34585571289062,
+              "rssSumMiB": 316.171875,
+              "processes": [
+                {
+                  "role": "WebContent",
+                  "footprintMiB": 84.23533630371094,
+                  "rssMiB": 134.84375
+                },
+                {
+                  "role": "app",
+                  "footprintMiB": 44.329383850097656,
+                  "rssMiB": 134.40625
+                },
+                {
+                  "role": "GPU",
+                  "footprintMiB": 11.875709533691406,
+                  "rssMiB": 33.828125
+                },
+                {
+                  "role": "Networking",
+                  "footprintMiB": 4.234809875488281,
+                  "rssMiB": 13.09375
+                }
+              ],
+              "startUTC": "2026-10-19T06:20:45.211895+00:00",
+              "startSecondsSinceFinalCUAGate": 36.301843756926246,
+              "endSecondsSinceFinalCUAGate": 36.48417079896899
+            },
+            {
+              "capture": 3,
+              "aggregateFootprintMiB": 144.42523956298828,
+              "appFootprintMiB": 44.329383850097656,
+              "helperFootprintMiB": 100.34585571289062,
+              "rssSumMiB": 316.171875,
+              "processes": [
+                {
+                  "role": "WebContent",
+                  "footprintMiB": 84.23533630371094,
+                  "rssMiB": 134.84375
+                },
+                {
+                  "role": "app",
+                  "footprintMiB": 44.329383850097656,
+                  "rssMiB": 134.40625
+                },
+                {
+                  "role": "GPU",
+                  "footprintMiB": 11.875709533691406,
+                  "rssMiB": 33.828125
+                },
+                {
+                  "role": "Networking",
+                  "footprintMiB": 4.234809875488281,
+                  "rssMiB": 13.09375
+                }
+              ],
+              "startUTC": "2026-10-19T06:20:46.076379+00:00",
+              "startSecondsSinceFinalCUAGate": 37.16633004893083,
+              "endSecondsSinceFinalCUAGate": 37.3320520069683
+            }
+          ]
+        }
+      ],
+      "limits": [
+        "Collector sleeps fifteen seconds after its command begins; orchestration delay after the final CUA gate makes actual first captures 19.1 to 35.5 seconds after that gate. The set is not a strict equal-time comparison.",
+        "Same three explicit AX/screenshot API requests and native title/mode actions per run; internal CUA AX evaluations are not counted or claimed identical.",
+        "Source click returned a transient AXError.failure in all three Source runs; no repeated click or extra observation was made, and the final native Source/editor/clean state was observed.",
+        "Run six final native window looked inactive despite the same preceding native title activation.",
+        "Source has already visited fully rendered Read and retains hidden WebKit state; whole observed-state deltas cannot isolate editor allocation.",
+        "Three fresh processes per cohort; technical capture repeats do not expand that independent sample count.",
+        "RSS is a separate metric. No numerical comparison with older no-CUA data."
+      ],
+      "rawEvidence": "build/source-editing/memory-0e1bf12",
+      "originalCollectorStatus": "passed",
+      "originalNormalizedStatus": "completed-with-timing-and-observation-limits",
+      "mainComparisonEligible": false,
+      "classification": "All six original runs and eighteen captures retained; actual first captures 19.1–35.5 seconds after final observation and Source run 6 inactive-looking. Not pooled with corrected cohort.",
+      "replacementIsNewCohort": true,
+      "originalEvidenceSHA256": {
+        "results": "2855c54350e4ed27f3d7da649cbc6301010925a753cff1be908362f0e342492d",
+        "normalizedResults": "32903d3817a56f36cb9016a3fedf9827726a2c9622ebae92c7f840d4a0e07e52",
+        "report": "429c0d16f2facfc674ab9fd50e3321726cb1410717d13aa73cfa7d79cf2e4a54",
+        "protocolFailure": "7dc4dc450b156e9b2882523e7ee6cf0dc967abd25623481ab2eae539cbec7c2f"
+      }
+    }
+  },
+  "ordinaryBundleSize": {
+    "regularFiles": 187,
+    "apparentBytes": 6770743,
+    "apparentMiB": 6.457083702087402,
+    "diskKiB": 7076,
+    "scope": "Local ad-hoc app bundle, not compressed archive or runtime memory"
+  }
+}
