@@ -25,9 +25,11 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
     private var scope: FolderTree?
     private var scale = 1.0
     private var unavailable = false
+    private let undoHistory = UndoManager()
     weak var window: NSWindow?
     var onRequestSource: (() -> Void)?
-    var onPreview: ((String) -> Void)?
+    var onPreview: ((String, String?) -> Void)?
+    var onReadSelected: (() -> Void)?
     var onStateChanged: (() -> Void)?
     var onSaved: (() -> Void)?
     var isDirty: Bool { draft?.isDirty == true }
@@ -84,7 +86,7 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
         if draft != nil { draft?.markUnavailable(); showMessage(SourceFileError.unavailable.localizedDescription) }
         updateState()
     }
-    func select(_ mode: Mode, line: Int? = nil) {
+    func select(_ mode: Mode, line: Int? = nil, anchor: String? = nil) {
         guard documentURL != nil, !isBusy else { return }
         self.mode = mode
         if mode == .source {
@@ -93,9 +95,10 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
             if !hasRequestedSource {
                 hasRequestedSource = true; onRequestSource?()
             } else if let line, draft != nil { pendingLine = nil; revealLine(line) }
-            window?.makeFirstResponder(textView)
-        } else if let draft { onPreview?(draft.text) }
+        } else if let draft { onPreview?(draft.text, anchor) }
         updateState()
+        if mode == .source { window?.makeFirstResponder(textView) }
+        else { onReadSelected?() }
     }
     private func createEditorIfNeeded() {
         guard textView == nil else { return }
@@ -127,6 +130,11 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
     func textDidChange(_ notification: Notification) {
         guard !isSaving, let textView else { return }
         draft?.replaceText(textView.string); updateState()
+    }
+    func undoManager(for view: NSTextView) -> UndoManager? { undoHistory }
+    func stop() {
+        textView?.delegate = nil; undoHistory.removeAllActions()
+        textView?.string = ""; draft = nil; baseline = nil
     }
     func revealLine(_ line: Int) {
         guard line >= 0, let editor = textView, draft != nil else { return }
@@ -179,16 +187,18 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
         alert.addButton(withTitle: "Save"); alert.addButton(withTitle: "Cancel"); alert.addButton(withTitle: "Discard Changes")
         alert.buttons[1].keyEquivalent = "\u{1b}"
         unsavedAlert = alert
+        updateState()
         alert.beginSheetModal(for: window) { [weak self] response in
             guard let self else { completion(false); return }
             self.unsavedAlert = nil
+            self.updateState()
             switch response {
             case .alertFirstButtonReturn: self.save(completion: completion)
             case .alertThirdButtonReturn:
                 self.draft?.discardChanges()
                 if let draft = self.draft {
                     self.replaceEditorText(draft.text, clearUndo: true)
-                    if self.mode == .read { self.onPreview?(draft.text) }
+                    if self.mode == .read { self.onPreview?(draft.text, nil) }
                 }
                 self.updateState(); completion(true)
             default: completion(false)
@@ -214,8 +224,9 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
         panel.message = "Save a new copy. The original draft and any conflict stay open."
         let data = draft.encodedData
         copyPanel = panel
+        updateState()
         panel.beginSheetModal(for: window) { [weak self] response in
-            guard let self else { return }; self.copyPanel = nil
+            guard let self else { return }; self.copyPanel = nil; self.updateState()
             guard response == .OK, let url = panel.url else { return }
             do { try SourceFileWriter.copy(data, to: url, excluding: self.documentURL) }
             catch { self.showMessage("Could not save a new copy. Choose a path that does not already exist. " + error.localizedDescription) }
@@ -229,8 +240,9 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
         alert.informativeText = "This cannot be undone. You can save a new copy first."
         alert.addButton(withTitle: "Cancel"); alert.addButton(withTitle: "Discard and Reload")
         unsavedAlert = alert
+        updateState()
         alert.beginSheetModal(for: window) { [weak self] response in
-            guard let self else { return }; self.unsavedAlert = nil
+            guard let self else { return }; self.unsavedAlert = nil; self.updateState()
             if response == .alertSecondButtonReturn { reload() }
         }
     }

@@ -65,7 +65,8 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         setupLayout(); setupToolbar()
         editing.window = window
         editing.onRequestSource = { [weak self] in self?.reload(preserve: true) }
-        editing.onPreview = { [weak self] text in self?.render(text, preserve: true) }
+        editing.onPreview = { [weak self] text, anchor in self?.render(text, preserve: true, location: anchor.map { ["anchor": $0] }) }
+        editing.onReadSelected = { [weak self] in guard let self else { return }; self.window?.makeFirstResponder(self.webView) }
         editing.onSaved = { [weak self] in self?.reload(preserve: true) }
         editing.onStateChanged = { [weak self] in
             guard let self else { return }
@@ -78,6 +79,7 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         }
         sidebar.onHeadingSelected = { [weak self] id in
             guard let self, self.displayedRevision == self.revision.current else { return }
+            if self.editing.mode == .source { self.editing.select(.read, anchor: id); return }
             self.webView.callAsyncJavaScript("window.Leaflit.anchor(value)", arguments: ["value": id], in: nil, in: .page) { _ in }
         }
         sidebar.onModeChanged = { [weak self] in self?.updateOutlineTracking() }
@@ -347,7 +349,7 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
             self.openResolved(url, location: location, within: scope)
         }
     }
-    @objc func showRead() { editing.select(.read); window?.makeFirstResponder(webView) }
+    @objc func showRead() { editing.select(.read) }
     @objc func showSource() { editing.select(.source); editing.zoom(webView.pageZoom) }
     @objc func saveDocument() { editing.save() }
     @objc func saveCopy() { editing.saveCopy() }
@@ -379,6 +381,7 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
     }
     func windowWillClose(_ notification: Notification) {
         reading?.cancel(); reading = nil; watcher = nil
+        editing.stop()
         sidebar.stop(); sidebarObservation = nil
         NotificationCenter.default.removeObserver(self, name: NSSplitView.didResizeSubviewsNotification, object: splitController.splitView)
         webView.configuration.userContentController.removeScriptMessageHandler(forName: "leaflit")

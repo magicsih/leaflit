@@ -7,6 +7,7 @@ import LeaflitCore
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     private(set) var readers: [ReaderController] = []
     private var terminating = false
+    init(readers: [ReaderController] = []) { self.readers = readers; super.init() }
     static func main() {
         let app = NSApplication.shared
         let delegate = AppDelegate(); app.delegate = delegate

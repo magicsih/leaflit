@@ -19,6 +19,7 @@ extension ReaderTests {
         reader.open(url); try await wait { self.reader.completedRevision > 0 }
         XCTAssertNil(reader.editing.textView)
         try await source("# Draft 한글 😀\r\n")
+        XCTAssertTrue(reader.editing.textView?.undoManager?.canUndo == true)
         XCTAssertEqual(try Data(contentsOf: url), original)
         let old = reader.completedRevision; reader.showRead()
         try await wait { self.reader.completedRevision > old }
@@ -29,11 +30,87 @@ extension ReaderTests {
         await fulfillment(of: [done], timeout: 10)
         XCTAssertFalse(reader.editing.isDirty)
         XCTAssertEqual(try Data(contentsOf: url), Data([0xef, 0xbb, 0xbf]) + Data("# Draft 한글 😀\r\n".utf8))
+        XCTAssertTrue(reader.editing.textView?.undoManager?.canUndo == true)
         reader.showSource(); reader.editing.textView?.undoManager?.undo()
+        try await wait { self.reader.editing.isDirty }
         XCTAssertTrue(reader.editing.isDirty)
         XCTAssertEqual(reader.editing.draft?.text, "# Original 한글 😀\r\n")
         reader.editing.textView?.undoManager?.redo()
         XCTAssertFalse(reader.editing.isDirty)
+    }
+    func testCancelAfterWatcherUpdateRestoresEditorAndKeepsSinglePrompt() async throws {
+        try await loaded("# Original"); try await source("# Unsaved")
+        var accepted: Bool?
+        reader.editing.confirmBeforeLeaving { accepted = $0 }
+        let alert = try XCTUnwrap(reader.editing.unsavedAlert)
+        reader.editing.readFailed()
+        XCTAssertFalse(reader.editing.textView?.isEditable == true)
+        reader.editing.confirmBeforeLeaving { XCTAssertFalse($0) }
+        XCTAssertTrue(reader.editing.unsavedAlert === alert)
+        alert.buttons[1].performClick(nil)
+        try await wait { accepted != nil }
+        XCTAssertEqual(accepted, false); XCTAssertTrue(reader.editing.isDirty)
+        XCTAssertTrue(reader.editing.textView?.isEditable == true)
+    }
+    func testSourceOutlineOpensCurrentUnsavedReadPreviewAtAnchor() async throws {
+        try await loaded("# Original\n\n## Target\n\nEnd")
+        reader.sidebar.setMode(.outline)
+        try await source("# Draft\n\n" + String(repeating: "Paragraph.\n\n", count: 80) + "## Target\n\nEnd")
+        let previous = reader.completedRevision
+        reader.sidebar.onHeadingSelected?("target")
+        try await wait { self.reader.completedRevision > previous && self.reader.completedRevision == self.reader.revision.current }
+        XCTAssertEqual(reader.editing.mode, .read); XCTAssertTrue(reader.editing.isDirty)
+        try await assertJS("return document.querySelector('h1').textContent", "Draft")
+        let top = try await js("return document.getElementById('target').getBoundingClientRect().top") as? Double ?? 1000
+        XCTAssertLessThan(top, 400)
+        XCTAssertTrue(reader.window?.firstResponder === reader.webView)
+    }
+    func testMultiwindowQuitDiscardThenCancelSynchronizesDiscardedEditor() async throws {
+        try await loaded("# First"); try await source("# First draft")
+        let second = ReaderController(preferences: UserDefaults(suiteName: dir.lastPathComponent)!)
+        defer { second.close() }
+        let url = try write("# Second", name: "second.md"); second.open(url); second.showWindow(nil)
+        second.showSource(); try await wait { second.editing.draft != nil }
+        let editor = try XCTUnwrap(second.editing.textView)
+        editor.insertText("# Second draft", replacementRange: NSRange(location: 0, length: (editor.string as NSString).length))
+        let delegate = AppDelegate(readers: [reader, second]), done = expectation(description: "cancel quit")
+        delegate.resolveUnsavedDocuments { accepted in XCTAssertFalse(accepted); done.fulfill() }
+        reader.editing.unsavedAlert?.buttons[2].performClick(nil)
+        try await wait { second.editing.unsavedAlert != nil }
+        second.editing.unsavedAlert?.buttons[1].performClick(nil)
+        await fulfillment(of: [done], timeout: 5)
+        XCTAssertEqual(delegate.readers.count, 2)
+        XCTAssertFalse(reader.editing.isDirty); XCTAssertEqual(reader.editing.textView?.string, "# First")
+        XCTAssertTrue(second.editing.isDirty); XCTAssertEqual(try String(contentsOf: url), "# Second")
+    }
+    func testQuitStopsOnFailedSaveWithoutDiscardingDraft() async throws {
+        let url = try write("# Original"); reader.open(url); try await wait { self.reader.completedRevision > 0 }
+        try await source("# Unsaved")
+        try FileManager.default.setAttributes([.posixPermissions: 0o444], ofItemAtPath: url.path)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: url.path) }
+        let delegate = AppDelegate(readers: [reader]), done = expectation(description: "failed quit save")
+        delegate.resolveUnsavedDocuments { accepted in XCTAssertFalse(accepted); done.fulfill() }
+        reader.editing.unsavedAlert?.buttons[0].performClick(nil)
+        await fulfillment(of: [done], timeout: 10)
+        XCTAssertEqual(delegate.readers.count, 1); XCTAssertTrue(reader.editing.isDirty)
+        XCTAssertTrue(reader.window?.isVisible == true); XCTAssertEqual(try String(contentsOf: url), "# Original")
+    }
+    func testLargeSourceEditsStayInMemoryUntilExplicitSave() async throws {
+        for size in [1024 * 1024, 5 * 1024 * 1024] {
+            let row = "A source paragraph with 한글 😀.\r\n"
+            let text = "# Large Source\r\n\r\n" + String(repeating: row, count: size / row.utf8.count)
+            let url = try write(text, name: "source-\(size).md"), before = try Data(contentsOf: url)
+            let previous = reader.completedRevision; reader.open(url)
+            try await wait({ self.reader.completedRevision > previous }, seconds: 60)
+            reader.showSource(); try await wait({ self.reader.editing.draft != nil }, seconds: 60)
+            let editor = try XCTUnwrap(reader.editing.textView)
+            editor.insertText("Appended.\r\n", replacementRange: NSRange(location: (editor.string as NSString).length, length: 0))
+            XCTAssertTrue(reader.editing.isDirty); XCTAssertEqual(try Data(contentsOf: url), before)
+            let done = expectation(description: "save large source")
+            reader.editing.save { saved in XCTAssertTrue(saved); done.fulfill() }
+            await fulfillment(of: [done], timeout: 20)
+            XCTAssertEqual(try Data(contentsOf: url), before + Data("Appended.\r\n".utf8))
+        }
     }
     func testDirtyExternalReplacementAndAppearanceKeepDraftAndUndo() async throws {
         let url = try write("# Original"); reader.open(url); try await wait { self.reader.completedRevision > 0 }
