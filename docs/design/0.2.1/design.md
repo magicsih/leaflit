@@ -14,6 +14,8 @@ The owner requested prioritized product fixes, performance improvements and addi
 
 These are bounded corrections to the existing design, not new screens or a sidebar redesign. The three original independent sidebar review rounds remain historical evidence. Broader asynchronous I/O coalescing and visited-folder cache eviction require separate evidence and remain follow-ups.
 
+The targeted native check also exposed a width-persistence failure when a 620pt window, 200% zoom and the Find bar constrain the pane. Automatic layout compression must not replace the user's preferred width, including across an ordinary app restart. Add this actual reproduction to the width acceptance tests before accepting the candidate. Apple documents the distinction between user resizing and layout in [split-view resize notifications](https://developer.apple.com/documentation/appkit/nssplitview/didresizesubviewsnotification?changes=__3&language=objc).
+
 ## Verification
 
 Use independent L3 regression on local macOS development and ordinary Release apps. First demonstrate the width failure, then verify the correction. Run `scripts/verify.sh Release` and `scripts/build.sh Release` at the final candidate commit. Preserve failed runs, exact source and binary identities and unchanged document hashes. Compare the preserved ordinary 0.2.0 app with the candidate using identical fixtures, warm OS caches and the same observer condition. Record body and optional-renderer completion separately, including animation-frame versus timer fallback provenance. Do not infer a whole-app memory saving from a parser microbenchmark.
