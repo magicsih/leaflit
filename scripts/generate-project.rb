@@ -40,6 +40,7 @@ build_file = embed.add_file_reference(core.product_reference); build_file.settin
 web = project.main_group.new_reference('Sources/Leaflit/Web', :group); web.last_known_file_type = 'folder'
 app.resources_build_phase.add_file_reference(web)
 app.resources_build_phase.add_file_reference(project.main_group.new_file('LICENSE'))
+app.resources_build_phase.add_file_reference(project.main_group.new_file('Sources/Leaflit/Leaflit.icns'))
 tests.add_dependency(app); tests.add_dependency(core)
 tests.frameworks_build_phase.add_file_reference(core.product_reference)
 tests.build_configurations.each do |c|
