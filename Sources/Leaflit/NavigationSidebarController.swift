@@ -233,7 +233,12 @@ final class NavigationSidebarController: NSViewController, NSOutlineViewDataSour
         else { fileStatus.stringValue = rootNode?.children?.isEmpty == true ? "No Markdown files" : "" }
     }
     func setHeadings(_ headings: [DocumentHeading]) {
-        _ = view; self.headings = headings; outline = HeadingOutline(headings)
+        _ = view
+        guard self.headings != headings else {
+            updateOutlineStatus(); if let id = activeHeadingID { setActiveHeading(id) }
+            return
+        }
+        self.headings = headings; outline = HeadingOutline(headings)
         adjustingSelection = true; outlineView.reloadData()
         func expand(_ nodes: [HeadingNode]) {
             for node in nodes where !node.children.isEmpty && !collapsedHeadings.contains(node.heading.id) { outlineView.expandItem(node); expand(node.children) }

@@ -109,8 +109,7 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         let split = splitController.view; split.translatesAutoresizingMaskIntoConstraints = false; root.addSubview(split)
         NSLayoutConstraint.activate([split.leadingAnchor.constraint(equalTo: root.leadingAnchor), split.trailingAnchor.constraint(equalTo: root.trailingAnchor), split.topAnchor.constraint(equalTo: root.topAnchor), split.bottomAnchor.constraint(equalTo: root.bottomAnchor)])
         root.layoutSubtreeIfNeeded()
-        let savedWidth = preferences.double(forKey: "sidebar.width")
-        splitController.splitView.setPosition(savedWidth > 0 ? min(320, max(180, savedWidth)) : 230, ofDividerAt: 0)
+        restoreSidebarWidth()
         updateSidebarLayout()
         let icon = NSImageView(image: NSImage(systemSymbolName: "doc.text", accessibilityDescription: "Markdown file")!)
         icon.symbolConfiguration = NSImage.SymbolConfiguration(pointSize: 44, weight: .light)
@@ -256,14 +255,30 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
     }
     func windowDidResize(_ notification: Notification) { updateSidebarLayout() }
     private func updateSidebarLayout() {
+        let wasCollapsed = sidebarItem.isCollapsed
         settingSidebar = true
         sidebarItem.isCollapsed = !sidebarRequested || (window?.contentView?.bounds.width ?? 900) < 620
+        if wasCollapsed && !sidebarItem.isCollapsed {
+            window?.contentView?.layoutSubtreeIfNeeded()
+            restoreSidebarWidth()
+        }
         settingSidebar = false
         updateOutlineTracking()
     }
-    @objc private func splitResized() {
-        guard !settingSidebar, isSidebarVisible else { return }
-        let width = sidebar.view.frame.width
+    private func restoreSidebarWidth() {
+        let split = splitController.splitView
+        guard let pane = split.arrangedSubviews.first else { return }
+        let savedWidth = preferences.double(forKey: "sidebar.width")
+        let width = savedWidth > 0 ? min(320, max(180, savedWidth)) : 230
+        // The native split pane can include margins outside the sidebar's view.
+        let frame = sidebar.view.convert(sidebar.view.bounds, to: split)
+        split.setPosition(pane.frame.maxX + width - frame.width, ofDividerAt: 0)
+    }
+    @objc private func splitResized(_ notification: Notification) {
+        // Automatic layout compression must not replace the user's chosen width.
+        guard (notification.userInfo?["NSSplitViewUserResizeKey"] as? NSNumber)?.boolValue == true,
+              !settingSidebar, isSidebarVisible, (window?.contentView?.bounds.width ?? 0) >= 620 else { return }
+        let width = sidebar.view.bounds.width
         if (180...320).contains(width) { preferences.set(Double(width), forKey: "sidebar.width") }
     }
     private func updateOutlineTracking() {
@@ -301,8 +316,9 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
     @objc func zoomOut() { webView.pageZoom = max(0.5, (webView.pageZoom * 10 - 1).rounded() / 10) }
     @objc func actualSize() { webView.pageZoom = 1 }
     func windowWillClose(_ notification: Notification) {
-        reading?.cancel(); watcher = nil
-        sidebar.stop(); sidebarObservation = nil; NotificationCenter.default.removeObserver(self)
+        reading?.cancel(); reading = nil; watcher = nil
+        sidebar.stop(); sidebarObservation = nil
+        NotificationCenter.default.removeObserver(self, name: NSSplitView.didResizeSubviewsNotification, object: splitController.splitView)
         webView.configuration.userContentController.removeScriptMessageHandler(forName: "leaflit")
         onClose?()
     }

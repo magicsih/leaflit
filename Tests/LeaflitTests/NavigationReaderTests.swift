@@ -11,6 +11,143 @@ extension ReaderTests {
     }
     private func sidebarViews(_ view: NSView) -> [NSView] { [view] + view.subviews.flatMap(sidebarViews) }
 
+    private func holdMathStylesheetCompletion() async throws {
+        try await loaded("# Initial")
+        reader.sidebar.setMode(.outline)
+        _ = try await js("""
+        window.holdMathLoad = event => {
+          if (event.target.id === 'katex-css') {
+            event.stopImmediatePropagation(); window.heldMathStyle = event.target;
+          }
+        };
+        document.addEventListener('load', window.holdMathLoad, true);
+        return true;
+        """)
+        reader.open(try write("# Math A\n\n$x^2$", name: "math A.md"))
+        try await assertJS("for(let n=0;n<200 && !window.heldMathStyle;n++) await new Promise(resolve=>setTimeout(resolve,10)); return !!window.heldMathStyle", true)
+    }
+
+    private func releaseMathStylesheetCompletion() async throws {
+        _ = try await js("document.removeEventListener('load', window.holdMathLoad, true); window.heldMathStyle.dispatchEvent(new Event('load')); return true")
+    }
+
+    func testPendingMathStylesheetOnlyCompletesLatestMathRevision() async throws {
+        try await holdMathStylesheetCompletion()
+        let first = reader.displayedRevision
+        reader.open(try write("# Math B\n\n$y^2$", name: "math B.md"))
+        try await wait { self.reader.displayedRevision > first }
+        try await Task.sleep(nanoseconds: 250_000_000)
+        XCTAssertLessThan(reader.completedRevision, reader.revision.current, "The newest math render must still await CSS readiness")
+        try await assertJS("return document.querySelectorAll('.katex').length", 0)
+        try await releaseMathStylesheetCompletion()
+        try await wait { self.reader.completedRevision == self.reader.revision.current }
+        try await assertJS("return document.querySelector('h1').textContent", "Math B")
+        try await assertJS("return document.querySelectorAll('.katex').length", 1)
+        XCTAssertEqual(reader.sidebar.headings.map(\.id), ["math-b"])
+    }
+
+    func testPlainRevisionCompletesWhileOlderMathStylesheetIsPending() async throws {
+        try await holdMathStylesheetCompletion()
+        let first = reader.displayedRevision
+        reader.open(try write("# Plain B", name: "plain B.md"))
+        try await wait { self.reader.completedRevision > first && self.reader.completedRevision == self.reader.revision.current }
+        try await releaseMathStylesheetCompletion()
+        try await Task.sleep(nanoseconds: 250_000_000)
+        try await assertJS("return document.querySelector('h1').textContent", "Plain B")
+        try await assertJS("return document.querySelectorAll('.katex').length", 0)
+        XCTAssertEqual(reader.sidebar.headings.map(\.id), ["plain-b"])
+    }
+
+    func testFindLayoutDoesNotPersistTemporarySidebarCompression() async throws {
+        let preferences = try XCTUnwrap(UserDefaults(suiteName: dir.lastPathComponent))
+        preferences.set(312.0, forKey: "sidebar.width")
+        reader.close()
+        reader = ReaderController(preferences: preferences); reader.showWindow(nil)
+        try await loaded("# Reading\n\nA paragraph for the narrow-window Find regression.")
+        let url = try XCTUnwrap(reader.documentURL)
+        let original = try Data(contentsOf: url)
+        let expected = reader.sidebar.view.bounds.width
+        XCTAssertEqual(expected, 312, accuracy: 1)
+
+        reader.window?.setContentSize(NSSize(width: 620, height: 500))
+        for _ in 0..<10 { reader.zoomIn() }
+        reader.showFind()
+        reader.window?.contentView?.layoutSubtreeIfNeeded()
+        try await Task.sleep(nanoseconds: 150_000_000)
+        let compressed = reader.sidebar.view.bounds.width
+        print("LEAFLIT_FIND_WIDTH expected=\(expected) compressed=\(compressed) saved=\(preferences.double(forKey: "sidebar.width"))")
+        XCTAssertEqual(reader.webView.pageZoom, 2, accuracy: 0.01)
+        XCTAssertTrue(reader.isSidebarVisible)
+        XCTAssertLessThan(compressed, expected - 10, "The Find bar must actually constrain the pane in this reproduction")
+        XCTAssertEqual(preferences.double(forKey: "sidebar.width"), expected, accuracy: 1, "Automatic layout must not overwrite the preferred width")
+
+        reader.window?.setContentSize(NSSize(width: 900, height: 700))
+        reader.window?.contentView?.layoutSubtreeIfNeeded()
+        try await Task.sleep(nanoseconds: 150_000_000)
+        XCTAssertEqual(reader.sidebar.view.bounds.width, expected, accuracy: 1)
+        reader.close()
+        reader = ReaderController(preferences: preferences); reader.showWindow(nil)
+        reader.window?.contentView?.layoutSubtreeIfNeeded()
+        try await Task.sleep(nanoseconds: 100_000_000)
+        print("LEAFLIT_FIND_WIDTH reopened=\(reader.sidebar.view.bounds.width) saved=\(preferences.double(forKey: "sidebar.width"))")
+        XCTAssertEqual(reader.sidebar.view.bounds.width, expected, accuracy: 1)
+        XCTAssertEqual(try Data(contentsOf: url), original)
+    }
+
+    func testWideSidebarSurvivesNarrowVisibleWindowBoundary() async throws {
+        reader.splitController.splitView.setPosition(320, ofDividerAt: 0)
+        reader.window?.contentView?.layoutSubtreeIfNeeded()
+        try await Task.sleep(nanoseconds: 100_000_000)
+        let expected = reader.sidebar.view.bounds.width
+        reader.window?.setContentSize(NSSize(width: 620, height: 500))
+        reader.window?.contentView?.layoutSubtreeIfNeeded()
+        try await Task.sleep(nanoseconds: 100_000_000)
+        print("LEAFLIT_WIDTH_BOUNDARY narrow=\(reader.sidebar.view.bounds.width) visible=\(reader.isSidebarVisible)")
+        reader.window?.setContentSize(NSSize(width: 900, height: 700))
+        reader.window?.contentView?.layoutSubtreeIfNeeded()
+        try await Task.sleep(nanoseconds: 100_000_000)
+        print("LEAFLIT_WIDTH_BOUNDARY expected=\(expected) restored=\(reader.sidebar.view.bounds.width)")
+        XCTAssertTrue(reader.isSidebarVisible)
+        XCTAssertEqual(reader.sidebar.view.bounds.width, expected, accuracy: 1)
+    }
+
+    func testSidebarVisibleWidthSurvivesRepeatedReopenAndCollapse() async throws {
+        let preferences = try XCTUnwrap(UserDefaults(suiteName: dir.lastPathComponent))
+        for appearance in [NSAppearance.Name.aqua, .darkAqua] {
+            reader.window?.appearance = NSAppearance(named: appearance)
+            reader.splitController.splitView.setPosition(278, ofDividerAt: 0)
+            reader.window?.contentView?.layoutSubtreeIfNeeded()
+            try await Task.sleep(nanoseconds: 100_000_000)
+            // Mark this simulated divider move as user initiated, unlike layout resizing.
+            NotificationCenter.default.post(name: NSSplitView.didResizeSubviewsNotification, object: reader.splitController.splitView,
+                                            userInfo: ["NSSplitViewDividerIndex": 0, "NSSplitViewUserResizeKey": true])
+            let expected = reader.sidebar.view.bounds.width
+            XCTAssertGreaterThan(expected, 240)
+            XCTAssertLessThan(expected, 300)
+            for cycle in 1...4 {
+                reader.close()
+                reader = ReaderController(preferences: preferences)
+                reader.window?.appearance = NSAppearance(named: appearance)
+                reader.showWindow(nil)
+                reader.window?.contentView?.layoutSubtreeIfNeeded()
+                try await Task.sleep(nanoseconds: 100_000_000)
+                print("LEAFLIT_WIDTH appearance=\(appearance.rawValue) cycle=\(cycle) expected=\(expected) actual=\(reader.sidebar.view.bounds.width) saved=\(preferences.double(forKey: "sidebar.width"))")
+                XCTAssertEqual(reader.sidebar.view.bounds.width, expected, accuracy: 1)
+                reader.toggleSidebar(); reader.toggleSidebar()
+                reader.window?.setContentSize(NSSize(width: 480, height: 500))
+                reader.window?.contentView?.layoutSubtreeIfNeeded()
+                print("LEAFLIT_WIDTH_NARROW cycle=\(cycle) actual=\(reader.sidebar.view.bounds.width) visible=\(reader.isSidebarVisible) saved=\(preferences.double(forKey: "sidebar.width"))")
+                XCTAssertFalse(reader.isSidebarVisible)
+                reader.window?.setContentSize(NSSize(width: 900, height: 700))
+                reader.window?.contentView?.layoutSubtreeIfNeeded()
+                try await Task.sleep(nanoseconds: 100_000_000)
+                print("LEAFLIT_WIDTH_RESTORED cycle=\(cycle) expected=\(expected) actual=\(reader.sidebar.view.bounds.width) saved=\(preferences.double(forKey: "sidebar.width")) dividerPane=\(reader.splitController.splitView.arrangedSubviews.first?.frame ?? .zero)")
+                XCTAssertTrue(reader.isSidebarVisible)
+                XCTAssertEqual(reader.sidebar.view.bounds.width, expected, accuracy: 1)
+            }
+        }
+    }
+
     func testRenderingAndOutlineProgressWhenAnimationFramesPause() async throws {
         try await loaded("# Initial")
         let previous = reader.completedRevision
