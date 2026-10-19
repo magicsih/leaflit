@@ -1,0 +1,3273 @@
+{
+  "scope": "Local 0.2.1 product follow-up report data; no public release",
+  "environment": {
+    "chip": "Apple M3",
+    "macOS": "26.6.2",
+    "architecture": "arm64"
+  },
+  "protocol": "no-observer-log-complete-settled-v1",
+  "measurementLimits": [
+    "No visual readiness/window geometry observation",
+    "No OS cache clearing",
+    "Candidate has an excluded concurrent installed Leaflit process absent from baseline",
+    "Three memory repetitions per case; footprint and RSS are different metrics",
+    "Failed first candidate attempt is entirely excluded from complete-cohort summaries; cause remains unconfirmed"
+  ],
+  "failedCandidateAttempt": {
+    "evidenceDirectory": "build/product-followups/candidate-profile",
+    "completeFreshLaunches": 13,
+    "failedIteration": 14,
+    "body": null,
+    "complete": null,
+    "cause": "unconfirmed; both required display events missing within 30 seconds; owned process remained alive",
+    "replacementHasNoReusedSamples": true
+  },
+  "cohorts": {
+    "baseline": {
+      "sourceSHA": "5defe3c633336a8658a7c368baaed00d5fb1f4c4",
+      "evidenceDirectory": "build/product-followups/baseline-profile",
+      "summary": {
+        "latency": {
+          "body": {
+            "animationFrames": {
+              "samples": 19,
+              "fromLaunchMs": {
+                "median": 682.0929050445557,
+                "min": 644.4530487060547,
+                "max": 2266.8240070343018
+              },
+              "fromOpenRequestMs": {
+                "median": 339.277983,
+                "min": 323.217034,
+                "max": 801.689029
+              }
+            },
+            "timerFallback": {
+              "samples": 1,
+              "fromLaunchMs": {
+                "median": 991.8327331542969,
+                "min": 991.8327331542969,
+                "max": 991.8327331542969
+              },
+              "fromOpenRequestMs": {
+                "median": 655.289888,
+                "min": 655.289888,
+                "max": 655.289888
+              }
+            }
+          },
+          "complete": {
+            "animationFrames": {
+              "samples": 19,
+              "fromLaunchMs": {
+                "median": 853.0941009521484,
+                "min": 812.3350143432617,
+                "max": 2475.2140045166016
+              },
+              "fromOpenRequestMs": {
+                "median": 512.477994,
+                "min": 491.124988,
+                "max": 1010.103941
+              }
+            },
+            "timerFallback": {
+              "samples": 1,
+              "fromLaunchMs": {
+                "median": 1387.9609107971191,
+                "min": 1387.9609107971191,
+                "max": 1387.9609107971191
+              },
+              "fromOpenRequestMs": {
+                "median": 1051.429987,
+                "min": 1051.429987,
+                "max": 1051.429987
+              }
+            }
+          }
+        },
+        "memory": {
+          "empty": {
+            "freshRuns": 3,
+            "medianFootprintMiB": {
+              "median": 54.4088134765625,
+              "min": 53.877655029296875,
+              "max": 54.549461364746094
+            },
+            "medianAppFootprintMiB": {
+              "median": 33.48535919189453,
+              "min": 33.00096130371094,
+              "max": 33.50096130371094
+            },
+            "medianHelperFootprintMiB": {
+              "median": 21.157852172851562,
+              "min": 21.126693725585938,
+              "max": 21.314102172851562
+            },
+            "medianRSSMiB": {
+              "median": 173.125,
+              "min": 172.484375,
+              "max": 174.0625
+            }
+          },
+          "plain100KiB": {
+            "freshRuns": 3,
+            "medianFootprintMiB": {
+              "median": 82.44049835205078,
+              "min": 74.61241912841797,
+              "max": 143.0811004638672
+            },
+            "medianAppFootprintMiB": {
+              "median": 33.21971130371094,
+              "min": 32.92285919189453,
+              "max": 33.985313415527344
+            },
+            "medianHelperFootprintMiB": {
+              "median": 48.70518493652344,
+              "min": 41.93955993652344,
+              "max": 110.09576416015625
+            },
+            "medianRSSMiB": {
+              "median": 219.484375,
+              "min": 172.828125,
+              "max": 221.125
+            }
+          },
+          "benchmark100KiB": {
+            "freshRuns": 3,
+            "medianFootprintMiB": {
+              "median": 146.62806701660156,
+              "min": 144.51878356933594,
+              "max": 201.47195434570312
+            },
+            "medianAppFootprintMiB": {
+              "median": 33.93841552734375,
+              "min": 33.53221130371094,
+              "max": 34.06346130371094
+            },
+            "medianHelperFootprintMiB": {
+              "median": 113.34585571289062,
+              "min": 110.705322265625,
+              "max": 167.78353881835938
+            },
+            "medianRSSMiB": {
+              "median": 323.3125,
+              "min": 272.21875,
+              "max": 324.546875
+            }
+          }
+        }
+      },
+      "latencySamples": [
+        {
+          "iteration": 1,
+          "body": {
+            "fromLaunchMs": 2266.8240070343018,
+            "fromOpenRequestMs": 801.689029,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 2.268241207988467
+          },
+          "complete": {
+            "fromLaunchMs": 2475.2140045166016,
+            "fromOpenRequestMs": 1010.103941,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 2.475842708023265
+          }
+        },
+        {
+          "iteration": 2,
+          "body": {
+            "fromLaunchMs": 714.6210670471191,
+            "fromOpenRequestMs": 343.95206,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.7154722909908742
+          },
+          "complete": {
+            "fromLaunchMs": 893.7790393829346,
+            "fromOpenRequestMs": 523.138046,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8944522080128081
+          }
+        },
+        {
+          "iteration": 3,
+          "body": {
+            "fromLaunchMs": 716.1769866943359,
+            "fromOpenRequestMs": 381.680012,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.7169005410396494
+          },
+          "complete": {
+            "fromLaunchMs": 914.7059917449951,
+            "fromOpenRequestMs": 580.244064,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.9152904580114409
+          }
+        },
+        {
+          "iteration": 4,
+          "body": {
+            "fromLaunchMs": 991.8327331542969,
+            "fromOpenRequestMs": 655.289888,
+            "timing": "timerFallback",
+            "receivedSecondsSinceLaunch": 0.9924008339876309
+          },
+          "complete": {
+            "fromLaunchMs": 1387.9609107971191,
+            "fromOpenRequestMs": 1051.429987,
+            "timing": "timerFallback",
+            "receivedSecondsSinceLaunch": 1.388393500004895
+          }
+        },
+        {
+          "iteration": 5,
+          "body": {
+            "fromLaunchMs": 714.5731449127197,
+            "fromOpenRequestMs": 367.470026,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.7581102089607157
+          },
+          "complete": {
+            "fromLaunchMs": 889.9812698364258,
+            "fromOpenRequestMs": 542.901039,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8909502919996157
+          }
+        },
+        {
+          "iteration": 6,
+          "body": {
+            "fromLaunchMs": 734.4260215759277,
+            "fromOpenRequestMs": 379.020929,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.7352228329982609
+          },
+          "complete": {
+            "fromLaunchMs": 917.7150726318359,
+            "fromOpenRequestMs": 562.340975,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.9183008749969304
+          }
+        },
+        {
+          "iteration": 7,
+          "body": {
+            "fromLaunchMs": 706.1798572540283,
+            "fromOpenRequestMs": 366.428018,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.7070934170042165
+          },
+          "complete": {
+            "fromLaunchMs": 883.2240104675293,
+            "fromOpenRequestMs": 543.501019,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8838039169786498
+          }
+        },
+        {
+          "iteration": 8,
+          "body": {
+            "fromLaunchMs": 756.2568187713623,
+            "fromOpenRequestMs": 410.050035,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8371638329699636
+          },
+          "complete": {
+            "fromLaunchMs": 960.8917236328125,
+            "fromOpenRequestMs": 614.707947,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.9635630419943482
+          }
+        },
+        {
+          "iteration": 9,
+          "body": {
+            "fromLaunchMs": 658.0719947814941,
+            "fromOpenRequestMs": 334.671974,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6588588749873452
+          },
+          "complete": {
+            "fromLaunchMs": 831.1331272125244,
+            "fromOpenRequestMs": 507.760048,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8318519999738783
+          }
+        },
+        {
+          "iteration": 10,
+          "body": {
+            "fromLaunchMs": 682.8770637512207,
+            "fromOpenRequestMs": 333.294988,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6835952500114217
+          },
+          "complete": {
+            "fromLaunchMs": 862.0321750640869,
+            "fromOpenRequestMs": 512.477994,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8626432500313967
+          }
+        },
+        {
+          "iteration": 11,
+          "body": {
+            "fromLaunchMs": 682.9690933227539,
+            "fromOpenRequestMs": 344.977021,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6836231250199489
+          },
+          "complete": {
+            "fromLaunchMs": 853.0941009521484,
+            "fromOpenRequestMs": 515.130997,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8538274579914287
+          }
+        },
+        {
+          "iteration": 12,
+          "body": {
+            "fromLaunchMs": 664.7541522979736,
+            "fromOpenRequestMs": 330.339074,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6655226669972762
+          },
+          "complete": {
+            "fromLaunchMs": 839.4522666931152,
+            "fromOpenRequestMs": 505.066037,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8401828749920242
+          }
+        },
+        {
+          "iteration": 13,
+          "body": {
+            "fromLaunchMs": 644.4530487060547,
+            "fromOpenRequestMs": 323.217034,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6452462910092436
+          },
+          "complete": {
+            "fromLaunchMs": 812.3350143432617,
+            "fromOpenRequestMs": 491.124988,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8130072909989394
+          }
+        },
+        {
+          "iteration": 14,
+          "body": {
+            "fromLaunchMs": 658.174991607666,
+            "fromOpenRequestMs": 328.60291,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6588045000098646
+          },
+          "complete": {
+            "fromLaunchMs": 827.0900249481201,
+            "fromOpenRequestMs": 497.544885,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.827860374993179
+          }
+        },
+        {
+          "iteration": 15,
+          "body": {
+            "fromLaunchMs": 665.5259132385254,
+            "fromOpenRequestMs": 327.481985,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6661803750321269
+          },
+          "complete": {
+            "fromLaunchMs": 836.763858795166,
+            "fromOpenRequestMs": 498.746991,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8373929160297848
+          }
+        },
+        {
+          "iteration": 16,
+          "body": {
+            "fromLaunchMs": 651.0519981384277,
+            "fromOpenRequestMs": 323.511004,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6517064169747755
+          },
+          "complete": {
+            "fromLaunchMs": 820.0700283050537,
+            "fromOpenRequestMs": 492.555022,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8206138749956153
+          }
+        },
+        {
+          "iteration": 17,
+          "body": {
+            "fromLaunchMs": 665.1690006256104,
+            "fromOpenRequestMs": 339.277983,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6659999169642106
+          },
+          "complete": {
+            "fromLaunchMs": 837.1949195861816,
+            "fromOpenRequestMs": 511.330962,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8377940829959698
+          }
+        },
+        {
+          "iteration": 18,
+          "body": {
+            "fromLaunchMs": 682.0929050445557,
+            "fromOpenRequestMs": 343.891025,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6828577920095995
+          },
+          "complete": {
+            "fromLaunchMs": 860.2888584136963,
+            "fromOpenRequestMs": 522.112966,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8609621670329943
+          }
+        },
+        {
+          "iteration": 19,
+          "body": {
+            "fromLaunchMs": 663.5160446166992,
+            "fromOpenRequestMs": 331.143975,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6643956250045449
+          },
+          "complete": {
+            "fromLaunchMs": 836.561918258667,
+            "fromOpenRequestMs": 504.220963,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8371928749838844
+          }
+        },
+        {
+          "iteration": 20,
+          "body": {
+            "fromLaunchMs": 657.3090553283691,
+            "fromOpenRequestMs": 334.053993,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6582054580212571
+          },
+          "complete": {
+            "fromLaunchMs": 828.2291889190674,
+            "fromOpenRequestMs": 505.006075,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8287413330399431
+          }
+        }
+      ],
+      "memoryRuns": [
+        {
+          "iteration": 1,
+          "case": "empty",
+          "medianFootprintMiB": 54.549461364746094,
+          "medianAppFootprintMiB": 33.48535919189453,
+          "medianHelperFootprintMiB": 21.314102172851562,
+          "medianRSSMiB": 174.0625,
+          "samples": [
+            {
+              "footprintMiB": 54.549461364746094,
+              "appFootprintMiB": 33.48535919189453,
+              "helperFootprintMiB": 21.314102172851562,
+              "rssSumMiB": 174.0625,
+              "secondsSinceSettleCondition": 15.0448826670181,
+              "secondsSinceLaunch": 15.138692084001377
+            },
+            {
+              "footprintMiB": 54.549461364746094,
+              "appFootprintMiB": 33.48535919189453,
+              "helperFootprintMiB": 21.314102172851562,
+              "rssSumMiB": 174.0625,
+              "secondsSinceSettleCondition": 15.66469349997351,
+              "secondsSinceLaunch": 15.758502916956786
+            },
+            {
+              "footprintMiB": 54.502586364746094,
+              "appFootprintMiB": 33.43848419189453,
+              "helperFootprintMiB": 21.314102172851562,
+              "rssSumMiB": 174.015625,
+              "secondsSinceSettleCondition": 16.269625082961284,
+              "secondsSinceLaunch": 16.36343449994456
+            }
+          ]
+        },
+        {
+          "iteration": 1,
+          "case": "plain100KiB",
+          "medianFootprintMiB": 74.61241912841797,
+          "medianAppFootprintMiB": 32.92285919189453,
+          "medianHelperFootprintMiB": 41.93955993652344,
+          "medianRSSMiB": 172.828125,
+          "samples": [
+            {
+              "footprintMiB": 74.61241912841797,
+              "appFootprintMiB": 32.90723419189453,
+              "helperFootprintMiB": 41.95518493652344,
+              "rssSumMiB": 172.828125,
+              "secondsSinceSettleCondition": 15.483602583000902,
+              "secondsSinceLaunch": 16.79372366599273
+            },
+            {
+              "footprintMiB": 74.61241912841797,
+              "appFootprintMiB": 32.92285919189453,
+              "helperFootprintMiB": 41.93955993652344,
+              "rssSumMiB": 172.875,
+              "secondsSinceSettleCondition": 17.293267124972772,
+              "secondsSinceLaunch": 18.6033882079646
+            },
+            {
+              "footprintMiB": 74.61241912841797,
+              "appFootprintMiB": 32.92285919189453,
+              "helperFootprintMiB": 41.93955993652344,
+              "rssSumMiB": 112.328125,
+              "secondsSinceSettleCondition": 18.245581042021513,
+              "secondsSinceLaunch": 19.55570212501334
+            }
+          ]
+        },
+        {
+          "iteration": 1,
+          "case": "benchmark100KiB",
+          "medianFootprintMiB": 146.62806701660156,
+          "medianAppFootprintMiB": 33.53221130371094,
+          "medianHelperFootprintMiB": 113.34585571289062,
+          "medianRSSMiB": 272.21875,
+          "samples": [
+            {
+              "footprintMiB": 146.62806701660156,
+              "appFootprintMiB": 33.53221130371094,
+              "helperFootprintMiB": 113.34585571289062,
+              "rssSumMiB": 272.1875,
+              "secondsSinceSettleCondition": 15.044592624995857,
+              "secondsSinceLaunch": 17.568086499988567
+            },
+            {
+              "footprintMiB": 146.62806701660156,
+              "appFootprintMiB": 33.53221130371094,
+              "helperFootprintMiB": 113.34585571289062,
+              "rssSumMiB": 272.21875,
+              "secondsSinceSettleCondition": 15.647641083982307,
+              "secondsSinceLaunch": 18.171134958975017
+            },
+            {
+              "footprintMiB": 146.62806701660156,
+              "appFootprintMiB": 33.53221130371094,
+              "helperFootprintMiB": 113.34585571289062,
+              "rssSumMiB": 272.21875,
+              "secondsSinceSettleCondition": 16.25184895901475,
+              "secondsSinceLaunch": 18.77534283400746
+            }
+          ]
+        },
+        {
+          "iteration": 2,
+          "case": "plain100KiB",
+          "medianFootprintMiB": 143.0811004638672,
+          "medianAppFootprintMiB": 33.21971130371094,
+          "medianHelperFootprintMiB": 110.09576416015625,
+          "medianRSSMiB": 221.125,
+          "samples": [
+            {
+              "footprintMiB": 81.81547546386719,
+              "appFootprintMiB": 33.15721130371094,
+              "helperFootprintMiB": 48.90826416015625,
+              "rssSumMiB": 220.671875,
+              "secondsSinceSettleCondition": 15.079762000008486,
+              "secondsSinceLaunch": 15.800606834003702
+            },
+            {
+              "footprintMiB": 143.0811004638672,
+              "appFootprintMiB": 33.23533630371094,
+              "helperFootprintMiB": 110.09576416015625,
+              "rssSumMiB": 221.125,
+              "secondsSinceSettleCondition": 15.694522165984381,
+              "secondsSinceLaunch": 16.415366999979597
+            },
+            {
+              "footprintMiB": 149.9717254638672,
+              "appFootprintMiB": 33.21971130371094,
+              "helperFootprintMiB": 117.00201416015625,
+              "rssSumMiB": 221.21875,
+              "secondsSinceSettleCondition": 16.335869457980152,
+              "secondsSinceLaunch": 17.056714291975368
+            }
+          ]
+        },
+        {
+          "iteration": 2,
+          "case": "benchmark100KiB",
+          "medianFootprintMiB": 201.47195434570312,
+          "medianAppFootprintMiB": 33.93841552734375,
+          "medianHelperFootprintMiB": 167.78353881835938,
+          "medianRSSMiB": 324.546875,
+          "samples": [
+            {
+              "footprintMiB": 160.09695434570312,
+              "appFootprintMiB": 33.92279052734375,
+              "helperFootprintMiB": 126.42416381835938,
+              "rssSumMiB": 325.03125,
+              "secondsSinceSettleCondition": 15.05952533299569,
+              "secondsSinceLaunch": 16.111818874953315
+            },
+            {
+              "footprintMiB": 208.23757934570312,
+              "appFootprintMiB": 33.93841552734375,
+              "helperFootprintMiB": 174.54916381835938,
+              "rssSumMiB": 324.046875,
+              "secondsSinceSettleCondition": 15.695330290996935,
+              "secondsSinceLaunch": 16.74762383295456
+            },
+            {
+              "footprintMiB": 201.47195434570312,
+              "appFootprintMiB": 33.93841552734375,
+              "helperFootprintMiB": 167.78353881835938,
+              "rssSumMiB": 324.546875,
+              "secondsSinceSettleCondition": 16.90815462503815,
+              "secondsSinceLaunch": 17.960448166995775
+            }
+          ]
+        },
+        {
+          "iteration": 2,
+          "case": "empty",
+          "medianFootprintMiB": 53.877655029296875,
+          "medianAppFootprintMiB": 33.00096130371094,
+          "medianHelperFootprintMiB": 21.126693725585938,
+          "medianRSSMiB": 173.125,
+          "samples": [
+            {
+              "footprintMiB": 53.877655029296875,
+              "appFootprintMiB": 33.00096130371094,
+              "helperFootprintMiB": 21.126693725585938,
+              "rssSumMiB": 173.125,
+              "secondsSinceSettleCondition": 15.04452225001296,
+              "secondsSinceLaunch": 15.191338834003545
+            },
+            {
+              "footprintMiB": 53.877655029296875,
+              "appFootprintMiB": 33.00096130371094,
+              "helperFootprintMiB": 21.126693725585938,
+              "rssSumMiB": 173.125,
+              "secondsSinceSettleCondition": 15.65968162502395,
+              "secondsSinceLaunch": 15.806498209014535
+            },
+            {
+              "footprintMiB": 53.815155029296875,
+              "appFootprintMiB": 32.93846130371094,
+              "helperFootprintMiB": 21.126693725585938,
+              "rssSumMiB": 173.03125,
+              "secondsSinceSettleCondition": 16.286765875003766,
+              "secondsSinceLaunch": 16.43358245899435
+            }
+          ]
+        },
+        {
+          "iteration": 3,
+          "case": "benchmark100KiB",
+          "medianFootprintMiB": 144.51878356933594,
+          "medianAppFootprintMiB": 34.06346130371094,
+          "medianHelperFootprintMiB": 110.705322265625,
+          "medianRSSMiB": 323.3125,
+          "samples": [
+            {
+              "footprintMiB": 144.56565856933594,
+              "appFootprintMiB": 34.11033630371094,
+              "helperFootprintMiB": 110.705322265625,
+              "rssSumMiB": 323.359375,
+              "secondsSinceSettleCondition": 15.045247916015796,
+              "secondsSinceLaunch": 16.112876625033095
+            },
+            {
+              "footprintMiB": 144.51878356933594,
+              "appFootprintMiB": 34.06346130371094,
+              "helperFootprintMiB": 110.705322265625,
+              "rssSumMiB": 323.3125,
+              "secondsSinceSettleCondition": 15.669530374987517,
+              "secondsSinceLaunch": 16.737159084004816
+            },
+            {
+              "footprintMiB": 144.47190856933594,
+              "appFootprintMiB": 34.01658630371094,
+              "helperFootprintMiB": 110.705322265625,
+              "rssSumMiB": 323.3125,
+              "secondsSinceSettleCondition": 16.29786166601116,
+              "secondsSinceLaunch": 17.365490375028457
+            }
+          ]
+        },
+        {
+          "iteration": 3,
+          "case": "empty",
+          "medianFootprintMiB": 54.4088134765625,
+          "medianAppFootprintMiB": 33.50096130371094,
+          "medianHelperFootprintMiB": 21.157852172851562,
+          "medianRSSMiB": 172.484375,
+          "samples": [
+            {
+              "footprintMiB": 54.4088134765625,
+              "appFootprintMiB": 33.50096130371094,
+              "helperFootprintMiB": 21.157852172851562,
+              "rssSumMiB": 172.484375,
+              "secondsSinceSettleCondition": 15.073569957981817,
+              "secondsSinceLaunch": 15.192184208019171
+            },
+            {
+              "footprintMiB": 54.4088134765625,
+              "appFootprintMiB": 33.50096130371094,
+              "helperFootprintMiB": 21.157852172851562,
+              "rssSumMiB": 172.484375,
+              "secondsSinceSettleCondition": 15.727247957955115,
+              "secondsSinceLaunch": 15.845862207992468
+            },
+            {
+              "footprintMiB": 54.3775634765625,
+              "appFootprintMiB": 33.46971130371094,
+              "helperFootprintMiB": 21.157852172851562,
+              "rssSumMiB": 172.421875,
+              "secondsSinceSettleCondition": 16.38778879097663,
+              "secondsSinceLaunch": 16.506403041013982
+            }
+          ]
+        },
+        {
+          "iteration": 3,
+          "case": "plain100KiB",
+          "medianFootprintMiB": 82.44049835205078,
+          "medianAppFootprintMiB": 33.985313415527344,
+          "medianHelperFootprintMiB": 48.70518493652344,
+          "medianRSSMiB": 219.484375,
+          "samples": [
+            {
+              "footprintMiB": 82.47174835205078,
+              "appFootprintMiB": 34.016563415527344,
+              "helperFootprintMiB": 48.70518493652344,
+              "rssSumMiB": 219.515625,
+              "secondsSinceSettleCondition": 15.061990249960218,
+              "secondsSinceLaunch": 15.900360208004713
+            },
+            {
+              "footprintMiB": 82.44049835205078,
+              "appFootprintMiB": 33.985313415527344,
+              "helperFootprintMiB": 48.70518493652344,
+              "rssSumMiB": 219.484375,
+              "secondsSinceSettleCondition": 15.72190549998777,
+              "secondsSinceLaunch": 16.560275458032265
+            },
+            {
+              "footprintMiB": 82.42487335205078,
+              "appFootprintMiB": 33.985313415527344,
+              "helperFootprintMiB": 48.68955993652344,
+              "rssSumMiB": 219.46875,
+              "secondsSinceSettleCondition": 16.366425708984025,
+              "secondsSinceLaunch": 17.20479566702852
+            }
+          ]
+        }
+      ]
+    },
+    "candidate": {
+      "sourceSHA": "2cb6c647084a13476296c2fd642b7b59008fafd9",
+      "evidenceDirectory": "build/product-followups/candidate-profile-2cb6c647084a13476296c2fd642b7b59008fafd9",
+      "summary": {
+        "latency": {
+          "body": {
+            "animationFrames": {
+              "samples": 20,
+              "fromLaunchMs": {
+                "median": 736.0943555831909,
+                "min": 674.5822429656982,
+                "max": 1300.1899719238281
+              },
+              "fromOpenRequestMs": {
+                "median": 337.0044825,
+                "min": 295.68994,
+                "max": 475.110054
+              }
+            }
+          },
+          "complete": {
+            "animationFrames": {
+              "samples": 20,
+              "fromLaunchMs": {
+                "median": 940.8868551254272,
+                "min": 857.0239543914795,
+                "max": 1511.854887008667
+              },
+              "fromOpenRequestMs": {
+                "median": 535.8929635,
+                "min": 472.821951,
+                "max": 756.785989
+              }
+            }
+          }
+        },
+        "memory": {
+          "empty": {
+            "freshRuns": 3,
+            "medianFootprintMiB": {
+              "median": 53.81513214111328,
+              "min": 53.6431884765625,
+              "max": 56.846336364746094
+            },
+            "medianAppFootprintMiB": {
+              "median": 32.73529052734375,
+              "min": 32.454063415527344,
+              "max": 32.78221130371094
+            },
+            "medianHelperFootprintMiB": {
+              "median": 21.439125061035156,
+              "min": 21.282920837402344,
+              "max": 24.361045837402344
+            },
+            "medianRSSMiB": {
+              "median": 168.34375,
+              "min": 126.28125,
+              "max": 169.109375
+            }
+          },
+          "plain100KiB": {
+            "freshRuns": 3,
+            "medianFootprintMiB": {
+              "median": 80.84674835205078,
+              "min": 80.4716567993164,
+              "max": 81.50297546386719
+            },
+            "medianAppFootprintMiB": {
+              "median": 33.67283630371094,
+              "min": 32.92279052734375,
+              "max": 33.891563415527344
+            },
+            "medianHelperFootprintMiB": {
+              "median": 47.798866271972656,
+              "min": 47.423912048339844,
+              "max": 47.861412048339844
+            },
+            "medianRSSMiB": {
+              "median": 214.640625,
+              "min": 213.96875,
+              "max": 214.859375
+            }
+          },
+          "benchmark100KiB": {
+            "freshRuns": 3,
+            "medianFootprintMiB": {
+              "median": 121.08121490478516,
+              "min": 110.75318145751953,
+              "max": 123.06570434570312
+            },
+            "medianAppFootprintMiB": {
+              "median": 33.93848419189453,
+              "min": 33.563438415527344,
+              "max": 34.92285919189453
+            },
+            "medianHelperFootprintMiB": {
+              "median": 87.67402648925781,
+              "min": 77.064697265625,
+              "max": 88.3928451538086
+            },
+            "medianRSSMiB": {
+              "median": 272.640625,
+              "min": 270.171875,
+              "max": 273.109375
+            }
+          }
+        }
+      },
+      "latencySamples": [
+        {
+          "iteration": 1,
+          "body": {
+            "fromLaunchMs": 1300.1899719238281,
+            "fromOpenRequestMs": 439.563036,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.3017156249843538
+          },
+          "complete": {
+            "fromLaunchMs": 1511.854887008667,
+            "fromOpenRequestMs": 651.249051,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.512693750031758
+          }
+        },
+        {
+          "iteration": 2,
+          "body": {
+            "fromLaunchMs": 759.1230869293213,
+            "fromOpenRequestMs": 342.921972,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.7599070419673808
+          },
+          "complete": {
+            "fromLaunchMs": 958.0130577087402,
+            "fromOpenRequestMs": 541.831017,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.9589564999914728
+          }
+        },
+        {
+          "iteration": 3,
+          "body": {
+            "fromLaunchMs": 766.3769721984863,
+            "fromOpenRequestMs": 383.538008,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.7675389999640174
+          },
+          "complete": {
+            "fromLaunchMs": 1009.0398788452148,
+            "fromOpenRequestMs": 626.237988,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.0104329999885522
+          }
+        },
+        {
+          "iteration": 4,
+          "body": {
+            "fromLaunchMs": 920.971155166626,
+            "fromOpenRequestMs": 475.110054,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.9361258749850094
+          },
+          "complete": {
+            "fromLaunchMs": 1192.1100616455078,
+            "fromOpenRequestMs": 746.268988,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.1930717920185998
+          }
+        },
+        {
+          "iteration": 5,
+          "body": {
+            "fromLaunchMs": 844.2449569702148,
+            "fromOpenRequestMs": 395.963073,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.9136787500465289
+          },
+          "complete": {
+            "fromLaunchMs": 1078.7780284881592,
+            "fromOpenRequestMs": 630.531073,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.0796377080259845
+          }
+        },
+        {
+          "iteration": 6,
+          "body": {
+            "fromLaunchMs": 722.1739292144775,
+            "fromOpenRequestMs": 328.485012,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.7230288329883479
+          },
+          "complete": {
+            "fromLaunchMs": 919.9950695037842,
+            "fromOpenRequestMs": 526.345968,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.9206947909551673
+          }
+        },
+        {
+          "iteration": 7,
+          "body": {
+            "fromLaunchMs": 679.9130439758301,
+            "fromOpenRequestMs": 295.68994,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.680502625007648
+          },
+          "complete": {
+            "fromLaunchMs": 857.0239543914795,
+            "fromOpenRequestMs": 472.821951,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.857441166008357
+          }
+        },
+        {
+          "iteration": 8,
+          "body": {
+            "fromLaunchMs": 750.0147819519043,
+            "fromOpenRequestMs": 333.591938,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.7507099580252543
+          },
+          "complete": {
+            "fromLaunchMs": 946.354866027832,
+            "fromOpenRequestMs": 529.95491,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.9470927080255933
+          }
+        },
+        {
+          "iteration": 9,
+          "body": {
+            "fromLaunchMs": 755.7199001312256,
+            "fromOpenRequestMs": 365.643978,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8061964160297066
+          },
+          "complete": {
+            "fromLaunchMs": 944.2098140716553,
+            "fromOpenRequestMs": 554.154038,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.9448574160342105
+          }
+        },
+        {
+          "iteration": 10,
+          "body": {
+            "fromLaunchMs": 694.0209865570068,
+            "fromOpenRequestMs": 319.661975,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6947015420300886
+          },
+          "complete": {
+            "fromLaunchMs": 885.7731819152832,
+            "fromOpenRequestMs": 511.435032,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8864249580074102
+          }
+        },
+        {
+          "iteration": 11,
+          "body": {
+            "fromLaunchMs": 703.392744064331,
+            "fromOpenRequestMs": 340.417027,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.7041839579469524
+          },
+          "complete": {
+            "fromLaunchMs": 937.5638961791992,
+            "fromOpenRequestMs": 574.612975,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.938122832973022
+          }
+        },
+        {
+          "iteration": 12,
+          "body": {
+            "fromLaunchMs": 683.8581562042236,
+            "fromOpenRequestMs": 302.333951,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6848100830102339
+          },
+          "complete": {
+            "fromLaunchMs": 877.3901462554932,
+            "fromOpenRequestMs": 495.918036,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8786162920296192
+          }
+        },
+        {
+          "iteration": 13,
+          "body": {
+            "fromLaunchMs": 705.2252292633057,
+            "fromOpenRequestMs": 302.888989,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.7058472920325585
+          },
+          "complete": {
+            "fromLaunchMs": 887.066125869751,
+            "fromOpenRequestMs": 484.749913,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8879524170188233
+          }
+        },
+        {
+          "iteration": 14,
+          "body": {
+            "fromLaunchMs": 674.5822429656982,
+            "fromOpenRequestMs": 297.127008,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.675495375005994
+          },
+          "complete": {
+            "fromLaunchMs": 861.1841201782227,
+            "fromOpenRequestMs": 483.75392,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.861791750008706
+          }
+        },
+        {
+          "iteration": 15,
+          "body": {
+            "fromLaunchMs": 691.5578842163086,
+            "fromOpenRequestMs": 311.472058,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.692251332977321
+          },
+          "complete": {
+            "fromLaunchMs": 884.2949867248535,
+            "fromOpenRequestMs": 504.230976,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8850198749569245
+          }
+        },
+        {
+          "iteration": 16,
+          "body": {
+            "fromLaunchMs": 833.4650993347168,
+            "fromOpenRequestMs": 420.662045,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8343321250285953
+          },
+          "complete": {
+            "fromLaunchMs": 1029.0563106536865,
+            "fromOpenRequestMs": 616.281986,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.0298775840201415
+          }
+        },
+        {
+          "iteration": 17,
+          "body": {
+            "fromLaunchMs": 692.6279067993164,
+            "fromOpenRequestMs": 323.187947,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6935722500202246
+          },
+          "complete": {
+            "fromLaunchMs": 885.5738639831543,
+            "fromOpenRequestMs": 516.185999,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8863667080295272
+          }
+        },
+        {
+          "iteration": 18,
+          "body": {
+            "fromLaunchMs": 696.8071460723877,
+            "fromOpenRequestMs": 321.406007,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6975161249865778
+          },
+          "complete": {
+            "fromLaunchMs": 884.2079639434814,
+            "fromOpenRequestMs": 508.834958,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.885063000023365
+          }
+        },
+        {
+          "iteration": 19,
+          "body": {
+            "fromLaunchMs": 771.8689441680908,
+            "fromOpenRequestMs": 380.143046,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.7760969579685479
+          },
+          "complete": {
+            "fromLaunchMs": 1030.6601524353027,
+            "fromOpenRequestMs": 638.972044,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.0353603329858743
+          }
+        },
+        {
+          "iteration": 20,
+          "body": {
+            "fromLaunchMs": 905.1141738891602,
+            "fromOpenRequestMs": 468.034983,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.312385750003159
+          },
+          "complete": {
+            "fromLaunchMs": 1193.8400268554688,
+            "fromOpenRequestMs": 756.785989,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.648615834012162
+          }
+        }
+      ],
+      "memoryRuns": [
+        {
+          "iteration": 1,
+          "case": "empty",
+          "medianFootprintMiB": 56.846336364746094,
+          "medianAppFootprintMiB": 32.73529052734375,
+          "medianHelperFootprintMiB": 24.361045837402344,
+          "medianRSSMiB": 126.28125,
+          "phases": {
+            "body": null,
+            "complete": null
+          },
+          "samples": [
+            {
+              "footprintMiB": 56.846336364746094,
+              "appFootprintMiB": 32.73529052734375,
+              "helperFootprintMiB": 24.361045837402344,
+              "rssSumMiB": 126.21875,
+              "secondsSinceSettleCondition": 15.047287249995861,
+              "secondsSinceLaunch": 15.220051374984905
+            },
+            {
+              "footprintMiB": 56.846336364746094,
+              "appFootprintMiB": 32.73529052734375,
+              "helperFootprintMiB": 24.361045837402344,
+              "rssSumMiB": 126.28125,
+              "secondsSinceSettleCondition": 15.667962500010617,
+              "secondsSinceLaunch": 15.840726624999661
+            },
+            {
+              "footprintMiB": 56.846336364746094,
+              "appFootprintMiB": 32.73529052734375,
+              "helperFootprintMiB": 24.361045837402344,
+              "rssSumMiB": 126.28125,
+              "secondsSinceSettleCondition": 16.27121862495551,
+              "secondsSinceLaunch": 16.443982749944553
+            }
+          ]
+        },
+        {
+          "iteration": 1,
+          "case": "plain100KiB",
+          "medianFootprintMiB": 80.4716567993164,
+          "medianAppFootprintMiB": 32.92279052734375,
+          "medianHelperFootprintMiB": 47.798866271972656,
+          "medianRSSMiB": 214.859375,
+          "phases": {
+            "body": {
+              "fromLaunchMs": 681.4060211181641,
+              "fromOpenRequestMs": 327.414989,
+              "timing": "animationFrames",
+              "receivedSecondsSinceLaunch": 0.6822251249686815
+            },
+            "complete": {
+              "fromLaunchMs": 704.2040824890137,
+              "fromOpenRequestMs": 350.236058,
+              "timing": "animationFrames",
+              "receivedSecondsSinceLaunch": 0.7366231249761768
+            }
+          },
+          "samples": [
+            {
+              "footprintMiB": 80.5654067993164,
+              "appFootprintMiB": 33.01654052734375,
+              "helperFootprintMiB": 47.798866271972656,
+              "rssSumMiB": 214.953125,
+              "secondsSinceSettleCondition": 15.048505084007047,
+              "secondsSinceLaunch": 15.786385833984241
+            },
+            {
+              "footprintMiB": 80.4716567993164,
+              "appFootprintMiB": 32.92279052734375,
+              "helperFootprintMiB": 47.798866271972656,
+              "rssSumMiB": 214.859375,
+              "secondsSinceSettleCondition": 15.659505999996327,
+              "secondsSinceLaunch": 16.39738674997352
+            },
+            {
+              "footprintMiB": 80.3779067993164,
+              "appFootprintMiB": 32.84466552734375,
+              "helperFootprintMiB": 47.783241271972656,
+              "rssSumMiB": 214.84375,
+              "secondsSinceSettleCondition": 16.27260995900724,
+              "secondsSinceLaunch": 17.010490708984435
+            }
+          ]
+        },
+        {
+          "iteration": 1,
+          "case": "benchmark100KiB",
+          "medianFootprintMiB": 123.06570434570312,
+          "medianAppFootprintMiB": 34.92285919189453,
+          "medianHelperFootprintMiB": 88.3928451538086,
+          "medianRSSMiB": 273.109375,
+          "phases": {
+            "body": {
+              "fromLaunchMs": 764.3420696258545,
+              "fromOpenRequestMs": 374.552011,
+              "timing": "animationFrames",
+              "receivedSecondsSinceLaunch": 0.8315235829795711
+            },
+            "complete": {
+              "fromLaunchMs": 954.4918537139893,
+              "fromOpenRequestMs": 564.732075,
+              "timing": "animationFrames",
+              "receivedSecondsSinceLaunch": 0.9552298330236226
+            }
+          },
+          "samples": [
+            {
+              "footprintMiB": 123.06570434570312,
+              "appFootprintMiB": 34.92285919189453,
+              "helperFootprintMiB": 88.3928451538086,
+              "rssSumMiB": 273.109375,
+              "secondsSinceSettleCondition": 15.053169499966316,
+              "secondsSinceLaunch": 16.009428291989025
+            },
+            {
+              "footprintMiB": 123.06570434570312,
+              "appFootprintMiB": 34.92285919189453,
+              "helperFootprintMiB": 88.3928451538086,
+              "rssSumMiB": 273.109375,
+              "secondsSinceSettleCondition": 15.657060333003756,
+              "secondsSinceLaunch": 16.613319125026464
+            },
+            {
+              "footprintMiB": 123.06570434570312,
+              "appFootprintMiB": 34.92285919189453,
+              "helperFootprintMiB": 88.3928451538086,
+              "rssSumMiB": 273.109375,
+              "secondsSinceSettleCondition": 16.261134375003166,
+              "secondsSinceLaunch": 17.217393167025875
+            }
+          ]
+        },
+        {
+          "iteration": 2,
+          "case": "plain100KiB",
+          "medianFootprintMiB": 81.50297546386719,
+          "medianAppFootprintMiB": 33.891563415527344,
+          "medianHelperFootprintMiB": 47.861412048339844,
+          "medianRSSMiB": 213.96875,
+          "phases": {
+            "body": {
+              "fromLaunchMs": 681.6620826721191,
+              "fromOpenRequestMs": 305.034995,
+              "timing": "animationFrames",
+              "receivedSecondsSinceLaunch": 0.6825677920132875
+            },
+            "complete": {
+              "fromLaunchMs": 711.245059967041,
+              "fromOpenRequestMs": 334.64098,
+              "timing": "animationFrames",
+              "receivedSecondsSinceLaunch": 0.7326751250075176
+            }
+          },
+          "samples": [
+            {
+              "footprintMiB": 81.51860046386719,
+              "appFootprintMiB": 33.907188415527344,
+              "helperFootprintMiB": 47.861412048339844,
+              "rssSumMiB": 213.96875,
+              "secondsSinceSettleCondition": 15.047202834044583,
+              "secondsSinceLaunch": 15.780735542008188
+            },
+            {
+              "footprintMiB": 81.50297546386719,
+              "appFootprintMiB": 33.891563415527344,
+              "helperFootprintMiB": 47.861412048339844,
+              "rssSumMiB": 213.96875,
+              "secondsSinceSettleCondition": 15.662625209020916,
+              "secondsSinceLaunch": 16.39615791698452
+            },
+            {
+              "footprintMiB": 81.47172546386719,
+              "appFootprintMiB": 33.891563415527344,
+              "helperFootprintMiB": 47.830162048339844,
+              "rssSumMiB": 213.90625,
+              "secondsSinceSettleCondition": 16.273342667031102,
+              "secondsSinceLaunch": 17.006875374994706
+            }
+          ]
+        },
+        {
+          "iteration": 2,
+          "case": "benchmark100KiB",
+          "medianFootprintMiB": 110.75318145751953,
+          "medianAppFootprintMiB": 33.93848419189453,
+          "medianHelperFootprintMiB": 77.064697265625,
+          "medianRSSMiB": 272.640625,
+          "phases": {
+            "body": {
+              "fromLaunchMs": 773.2899188995361,
+              "fromOpenRequestMs": 391.944051,
+              "timing": "animationFrames",
+              "receivedSecondsSinceLaunch": 0.7763222499634139
+            },
+            "complete": {
+              "fromLaunchMs": 944.1499710083008,
+              "fromOpenRequestMs": 562.829971,
+              "timing": "animationFrames",
+              "receivedSecondsSinceLaunch": 0.9449858339503407
+            }
+          },
+          "samples": [
+            {
+              "footprintMiB": 110.80005645751953,
+              "appFootprintMiB": 33.93848419189453,
+              "helperFootprintMiB": 77.111572265625,
+              "rssSumMiB": 272.6875,
+              "secondsSinceSettleCondition": 15.045904207974672,
+              "secondsSinceLaunch": 15.992725666961633
+            },
+            {
+              "footprintMiB": 110.75318145751953,
+              "appFootprintMiB": 33.93848419189453,
+              "helperFootprintMiB": 77.064697265625,
+              "rssSumMiB": 272.640625,
+              "secondsSinceSettleCondition": 15.651854624971747,
+              "secondsSinceLaunch": 16.598676083958708
+            },
+            {
+              "footprintMiB": 110.70630645751953,
+              "appFootprintMiB": 33.93848419189453,
+              "helperFootprintMiB": 77.017822265625,
+              "rssSumMiB": 272.640625,
+              "secondsSinceSettleCondition": 16.25238266598899,
+              "secondsSinceLaunch": 17.19920412497595
+            }
+          ]
+        },
+        {
+          "iteration": 2,
+          "case": "empty",
+          "medianFootprintMiB": 53.81513214111328,
+          "medianAppFootprintMiB": 32.78221130371094,
+          "medianHelperFootprintMiB": 21.282920837402344,
+          "medianRSSMiB": 169.109375,
+          "phases": {
+            "body": null,
+            "complete": null
+          },
+          "samples": [
+            {
+              "footprintMiB": 53.81513214111328,
+              "appFootprintMiB": 32.78221130371094,
+              "helperFootprintMiB": 21.282920837402344,
+              "rssSumMiB": 169.109375,
+              "secondsSinceSettleCondition": 15.041765208996367,
+              "secondsSinceLaunch": 15.145568625011947
+            },
+            {
+              "footprintMiB": 53.81513214111328,
+              "appFootprintMiB": 32.78221130371094,
+              "helperFootprintMiB": 21.282920837402344,
+              "rssSumMiB": 169.109375,
+              "secondsSinceSettleCondition": 15.647614208981395,
+              "secondsSinceLaunch": 15.751417624996975
+            },
+            {
+              "footprintMiB": 53.81513214111328,
+              "appFootprintMiB": 32.78221130371094,
+              "helperFootprintMiB": 21.282920837402344,
+              "rssSumMiB": 169.109375,
+              "secondsSinceSettleCondition": 16.2555739589734,
+              "secondsSinceLaunch": 16.35937737498898
+            }
+          ]
+        },
+        {
+          "iteration": 3,
+          "case": "benchmark100KiB",
+          "medianFootprintMiB": 121.08121490478516,
+          "medianAppFootprintMiB": 33.563438415527344,
+          "medianHelperFootprintMiB": 87.67402648925781,
+          "medianRSSMiB": 270.171875,
+          "phases": {
+            "body": {
+              "fromLaunchMs": 788.992166519165,
+              "fromOpenRequestMs": 390.956044,
+              "timing": "animationFrames",
+              "receivedSecondsSinceLaunch": 0.7903674580156803
+            },
+            "complete": {
+              "fromLaunchMs": 983.4470748901367,
+              "fromOpenRequestMs": 585.435987,
+              "timing": "animationFrames",
+              "receivedSecondsSinceLaunch": 0.9841869999654591
+            }
+          },
+          "samples": [
+            {
+              "footprintMiB": 121.08121490478516,
+              "appFootprintMiB": 33.657188415527344,
+              "helperFootprintMiB": 87.67402648925781,
+              "rssSumMiB": 270.265625,
+              "secondsSinceSettleCondition": 15.058789792004973,
+              "secondsSinceLaunch": 16.0444326249999
+            },
+            {
+              "footprintMiB": 120.98746490478516,
+              "appFootprintMiB": 33.563438415527344,
+              "helperFootprintMiB": 87.67402648925781,
+              "rssSumMiB": 270.171875,
+              "secondsSinceSettleCondition": 15.689798042003531,
+              "secondsSinceLaunch": 16.675440874998458
+            },
+            {
+              "footprintMiB": 126.53433990478516,
+              "appFootprintMiB": 33.516563415527344,
+              "helperFootprintMiB": 93.26777648925781,
+              "rssSumMiB": 214.984375,
+              "secondsSinceSettleCondition": 16.317796166986227,
+              "secondsSinceLaunch": 17.303438999981154
+            }
+          ]
+        },
+        {
+          "iteration": 3,
+          "case": "empty",
+          "medianFootprintMiB": 53.6431884765625,
+          "medianAppFootprintMiB": 32.454063415527344,
+          "medianHelperFootprintMiB": 21.439125061035156,
+          "medianRSSMiB": 168.34375,
+          "phases": {
+            "body": null,
+            "complete": null
+          },
+          "samples": [
+            {
+              "footprintMiB": 53.6431884765625,
+              "appFootprintMiB": 32.454063415527344,
+              "helperFootprintMiB": 21.439125061035156,
+              "rssSumMiB": 168.34375,
+              "secondsSinceSettleCondition": 15.048116417019628,
+              "secondsSinceLaunch": 15.20032570901094
+            },
+            {
+              "footprintMiB": 53.6431884765625,
+              "appFootprintMiB": 32.454063415527344,
+              "helperFootprintMiB": 21.439125061035156,
+              "rssSumMiB": 168.34375,
+              "secondsSinceSettleCondition": 15.64917179197073,
+              "secondsSinceLaunch": 15.801381083962042
+            },
+            {
+              "footprintMiB": 53.6431884765625,
+              "appFootprintMiB": 32.454063415527344,
+              "helperFootprintMiB": 21.439125061035156,
+              "rssSumMiB": 168.34375,
+              "secondsSinceSettleCondition": 16.270099791989196,
+              "secondsSinceLaunch": 16.422309083980508
+            }
+          ]
+        },
+        {
+          "iteration": 3,
+          "case": "plain100KiB",
+          "medianFootprintMiB": 80.84674835205078,
+          "medianAppFootprintMiB": 33.67283630371094,
+          "medianHelperFootprintMiB": 47.423912048339844,
+          "medianRSSMiB": 214.640625,
+          "phases": {
+            "body": {
+              "fromLaunchMs": 697.4189281463623,
+              "fromOpenRequestMs": 318.147063,
+              "timing": "animationFrames",
+              "receivedSecondsSinceLaunch": 0.6984568749903701
+            },
+            "complete": {
+              "fromLaunchMs": 728.9638519287109,
+              "fromOpenRequestMs": 349.712968,
+              "timing": "animationFrames",
+              "receivedSecondsSinceLaunch": 0.7487602920155041
+            }
+          },
+          "samples": [
+            {
+              "footprintMiB": 80.84674835205078,
+              "appFootprintMiB": 33.67283630371094,
+              "helperFootprintMiB": 47.423912048339844,
+              "rssSumMiB": 214.640625,
+              "secondsSinceSettleCondition": 15.045754416962154,
+              "secondsSinceLaunch": 15.79561074997764
+            },
+            {
+              "footprintMiB": 80.84674835205078,
+              "appFootprintMiB": 33.67283630371094,
+              "helperFootprintMiB": 47.423912048339844,
+              "rssSumMiB": 214.640625,
+              "secondsSinceSettleCondition": 15.651894167007413,
+              "secondsSinceLaunch": 16.4017505000229
+            },
+            {
+              "footprintMiB": 80.83112335205078,
+              "appFootprintMiB": 33.67283630371094,
+              "helperFootprintMiB": 47.408287048339844,
+              "rssSumMiB": 214.625,
+              "secondsSinceSettleCondition": 16.258918999985326,
+              "secondsSinceLaunch": 17.008775333000813
+            }
+          ]
+        }
+      ]
+    },
+    "intermediateCandidate": {
+      "sourceSHA": "dafb71de37e8977fa7c935ca48dcd282c1f2656c",
+      "evidenceDirectory": "build/product-followups/candidate-profile-replacement",
+      "summary": {
+        "latency": {
+          "body": {
+            "animationFrames": {
+              "samples": 20,
+              "fromLaunchMs": {
+                "median": 759.8285675048828,
+                "min": 664.2558574676514,
+                "max": 989.4289970397949
+              },
+              "fromOpenRequestMs": {
+                "median": 375.05549199999996,
+                "min": 300.975919,
+                "max": 493.607998
+              }
+            }
+          },
+          "complete": {
+            "animationFrames": {
+              "samples": 20,
+              "fromLaunchMs": {
+                "median": 1006.8359375,
+                "min": 853.8248538970947,
+                "max": 1274.2722034454346
+              },
+              "fromOpenRequestMs": {
+                "median": 605.0620074999999,
+                "min": 490.569949,
+                "max": 778.568983
+              }
+            }
+          }
+        },
+        "memory": {
+          "empty": {
+            "freshRuns": 3,
+            "medianFootprintMiB": {
+              "median": 53.69010925292969,
+              "min": 53.59642791748047,
+              "max": 54.0806884765625
+            },
+            "medianAppFootprintMiB": {
+              "median": 32.61033630371094,
+              "min": 32.516563415527344,
+              "max": 33.17283630371094
+            },
+            "medianHelperFootprintMiB": {
+              "median": 21.23609161376953,
+              "min": 21.157852172851562,
+              "max": 21.423545837402344
+            },
+            "medianRSSMiB": {
+              "median": 173.09375,
+              "min": 167.53125,
+              "max": 173.171875
+            }
+          },
+          "plain100KiB": {
+            "freshRuns": 3,
+            "medianFootprintMiB": {
+              "median": 81.9248275756836,
+              "min": 79.9716567993164,
+              "max": 82.22172546386719
+            },
+            "medianAppFootprintMiB": {
+              "median": 33.063438415527344,
+              "min": 32.92283630371094,
+              "max": 33.46971130371094
+            },
+            "medianHelperFootprintMiB": {
+              "median": 49.00201416015625,
+              "min": 47.29882049560547,
+              "max": 49.11138916015625
+            },
+            "medianRSSMiB": {
+              "median": 221.28125,
+              "min": 220.390625,
+              "max": 221.625
+            }
+          },
+          "benchmark100KiB": {
+            "freshRuns": 3,
+            "medianFootprintMiB": {
+              "median": 122.45626068115234,
+              "min": 122.00311279296875,
+              "max": 127.86251068115234
+            },
+            "medianAppFootprintMiB": {
+              "median": 34.15723419189453,
+              "min": 33.67285919189453,
+              "max": 34.25096130371094
+            },
+            "medianHelperFootprintMiB": {
+              "median": 88.58025360107422,
+              "min": 88.54902648925781,
+              "max": 93.8615493774414
+            },
+            "medianRSSMiB": {
+              "median": 270.78125,
+              "min": 218.390625,
+              "max": 276.390625
+            }
+          }
+        }
+      },
+      "latencySamples": [
+        {
+          "iteration": 1,
+          "body": {
+            "fromLaunchMs": 969.1798686981201,
+            "fromOpenRequestMs": 463.063002,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.9705084160086699
+          },
+          "complete": {
+            "fromLaunchMs": 1149.3299007415771,
+            "fromOpenRequestMs": 643.236041,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.1500109999906272
+          }
+        },
+        {
+          "iteration": 2,
+          "body": {
+            "fromLaunchMs": 753.1862258911133,
+            "fromOpenRequestMs": 371.74809,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.7540632500313222
+          },
+          "complete": {
+            "fromLaunchMs": 1020.2550888061523,
+            "fromOpenRequestMs": 638.84902,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.0213038750225678
+          }
+        },
+        {
+          "iteration": 3,
+          "body": {
+            "fromLaunchMs": 989.4289970397949,
+            "fromOpenRequestMs": 493.607998,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.0428704170044512
+          },
+          "complete": {
+            "fromLaunchMs": 1274.2722034454346,
+            "fromOpenRequestMs": 778.568983,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.2753853329923004
+          }
+        },
+        {
+          "iteration": 4,
+          "body": {
+            "fromLaunchMs": 834.6762657165527,
+            "fromOpenRequestMs": 393.169999,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8355675830389373
+          },
+          "complete": {
+            "fromLaunchMs": 1060.4941844940186,
+            "fromOpenRequestMs": 619.001985,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.061697791039478
+          }
+        },
+        {
+          "iteration": 5,
+          "body": {
+            "fromLaunchMs": 869.575023651123,
+            "fromOpenRequestMs": 423.123002,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8833699999959208
+          },
+          "complete": {
+            "fromLaunchMs": 1064.8581981658936,
+            "fromOpenRequestMs": 618.430018,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.0654989579925314
+          }
+        },
+        {
+          "iteration": 6,
+          "body": {
+            "fromLaunchMs": 681.4451217651367,
+            "fromOpenRequestMs": 323.508024,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6820824580499902
+          },
+          "complete": {
+            "fromLaunchMs": 877.3910999298096,
+            "fromOpenRequestMs": 519.48297,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8781852910178714
+          }
+        },
+        {
+          "iteration": 7,
+          "body": {
+            "fromLaunchMs": 846.0960388183594,
+            "fromOpenRequestMs": 392.387033,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8927357079810463
+          },
+          "complete": {
+            "fromLaunchMs": 1133.1870555877686,
+            "fromOpenRequestMs": 679.507971,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.1876144579728134
+          }
+        },
+        {
+          "iteration": 8,
+          "body": {
+            "fromLaunchMs": 878.5250186920166,
+            "fromOpenRequestMs": 421.383977,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.001298041024711
+          },
+          "complete": {
+            "fromLaunchMs": 1166.93115234375,
+            "fromOpenRequestMs": 709.838033,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.260156333039049
+          }
+        },
+        {
+          "iteration": 9,
+          "body": {
+            "fromLaunchMs": 834.4557285308838,
+            "fromOpenRequestMs": 410.174966,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8390044589759782
+          },
+          "complete": {
+            "fromLaunchMs": 1088.5398387908936,
+            "fromOpenRequestMs": 664.284945,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.0898236249922775
+          }
+        },
+        {
+          "iteration": 10,
+          "body": {
+            "fromLaunchMs": 766.4709091186523,
+            "fromOpenRequestMs": 357.106924,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.7674029999761842
+          },
+          "complete": {
+            "fromLaunchMs": 993.4167861938477,
+            "fromOpenRequestMs": 584.087968,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.9947881249827333
+          }
+        },
+        {
+          "iteration": 11,
+          "body": {
+            "fromLaunchMs": 866.157054901123,
+            "fromOpenRequestMs": 452.522039,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8694647919619456
+          },
+          "complete": {
+            "fromLaunchMs": 1127.4690628051758,
+            "fromOpenRequestMs": 713.858008,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.1281000829767436
+          }
+        },
+        {
+          "iteration": 12,
+          "body": {
+            "fromLaunchMs": 697.7088451385498,
+            "fromOpenRequestMs": 319.537997,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6984173330129124
+          },
+          "complete": {
+            "fromLaunchMs": 891.4608955383301,
+            "fromOpenRequestMs": 513.308048,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8921694160089828
+          }
+        },
+        {
+          "iteration": 13,
+          "body": {
+            "fromLaunchMs": 673.30002784729,
+            "fromOpenRequestMs": 320.687056,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6741125840344466
+          },
+          "complete": {
+            "fromLaunchMs": 865.9970760345459,
+            "fromOpenRequestMs": 513.411045,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8667308750445955
+          }
+        },
+        {
+          "iteration": 14,
+          "body": {
+            "fromLaunchMs": 664.2558574676514,
+            "fromOpenRequestMs": 300.975919,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6650006250129081
+          },
+          "complete": {
+            "fromLaunchMs": 853.8248538970947,
+            "fromOpenRequestMs": 490.569949,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.854407875041943
+          }
+        },
+        {
+          "iteration": 15,
+          "body": {
+            "fromLaunchMs": 872.0741271972656,
+            "fromOpenRequestMs": 454.40197,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.8729365419712849
+          },
+          "complete": {
+            "fromLaunchMs": 1064.7962093353271,
+            "fromOpenRequestMs": 647.163987,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 1.0654512500041164
+          }
+        },
+        {
+          "iteration": 16,
+          "body": {
+            "fromLaunchMs": 739.6347522735596,
+            "fromOpenRequestMs": 356.099963,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.740639999974519
+          },
+          "complete": {
+            "fromLaunchMs": 941.7738914489746,
+            "fromOpenRequestMs": 558.266044,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.94245733396383
+          }
+        },
+        {
+          "iteration": 17,
+          "body": {
+            "fromLaunchMs": 698.4739303588867,
+            "fromOpenRequestMs": 332.566023,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.699234957981389
+          },
+          "complete": {
+            "fromLaunchMs": 914.1340255737305,
+            "fromOpenRequestMs": 548.26808,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.9147642499883659
+          }
+        },
+        {
+          "iteration": 18,
+          "body": {
+            "fromLaunchMs": 695.1029300689697,
+            "fromOpenRequestMs": 335.808992,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.696102499961853
+          },
+          "complete": {
+            "fromLaunchMs": 903.1438827514648,
+            "fromOpenRequestMs": 543.878078,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.9040692499838769
+          }
+        },
+        {
+          "iteration": 19,
+          "body": {
+            "fromLaunchMs": 685.3229999542236,
+            "fromOpenRequestMs": 328.925967,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.6861980420071632
+          },
+          "complete": {
+            "fromLaunchMs": 902.2819995880127,
+            "fromOpenRequestMs": 545.912027,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.9034454170032404
+          }
+        },
+        {
+          "iteration": 20,
+          "body": {
+            "fromLaunchMs": 728.7728786468506,
+            "fromOpenRequestMs": 378.362894,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.7295769999618642
+          },
+          "complete": {
+            "fromLaunchMs": 942.0840740203857,
+            "fromOpenRequestMs": 591.693997,
+            "timing": "animationFrames",
+            "receivedSecondsSinceLaunch": 0.942881207971368
+          }
+        }
+      ],
+      "memoryRuns": [
+        {
+          "iteration": 1,
+          "case": "empty",
+          "medianFootprintMiB": 53.69010925292969,
+          "medianAppFootprintMiB": 32.516563415527344,
+          "medianHelperFootprintMiB": 21.423545837402344,
+          "medianRSSMiB": 167.53125,
+          "samples": [
+            {
+              "footprintMiB": 53.69010925292969,
+              "appFootprintMiB": 32.516563415527344,
+              "helperFootprintMiB": 21.423545837402344,
+              "rssSumMiB": 167.546875,
+              "secondsSinceSettleCondition": 15.055635833006818,
+              "secondsSinceLaunch": 15.164047292026225
+            },
+            {
+              "footprintMiB": 53.69010925292969,
+              "appFootprintMiB": 32.516563415527344,
+              "helperFootprintMiB": 21.423545837402344,
+              "rssSumMiB": 167.53125,
+              "secondsSinceSettleCondition": 15.70807833300205,
+              "secondsSinceLaunch": 15.816489792021457
+            },
+            {
+              "footprintMiB": 53.67448425292969,
+              "appFootprintMiB": 32.500938415527344,
+              "helperFootprintMiB": 21.423545837402344,
+              "rssSumMiB": 167.53125,
+              "secondsSinceSettleCondition": 16.341398915974423,
+              "secondsSinceLaunch": 16.44981037499383
+            }
+          ]
+        },
+        {
+          "iteration": 1,
+          "case": "plain100KiB",
+          "medianFootprintMiB": 82.22172546386719,
+          "medianAppFootprintMiB": 33.46971130371094,
+          "medianHelperFootprintMiB": 49.00201416015625,
+          "medianRSSMiB": 221.28125,
+          "samples": [
+            {
+              "footprintMiB": 82.23735046386719,
+              "appFootprintMiB": 33.48533630371094,
+              "helperFootprintMiB": 49.00201416015625,
+              "rssSumMiB": 221.328125,
+              "secondsSinceSettleCondition": 15.046998166013509,
+              "secondsSinceLaunch": 16.13816675002454
+            },
+            {
+              "footprintMiB": 82.22172546386719,
+              "appFootprintMiB": 33.46971130371094,
+              "helperFootprintMiB": 49.00201416015625,
+              "rssSumMiB": 221.28125,
+              "secondsSinceSettleCondition": 15.655296000011731,
+              "secondsSinceLaunch": 16.74646458402276
+            },
+            {
+              "footprintMiB": 82.17485046386719,
+              "appFootprintMiB": 33.43846130371094,
+              "helperFootprintMiB": 48.98638916015625,
+              "rssSumMiB": 221.265625,
+              "secondsSinceSettleCondition": 16.26068808301352,
+              "secondsSinceLaunch": 17.35185666702455
+            }
+          ]
+        },
+        {
+          "iteration": 1,
+          "case": "benchmark100KiB",
+          "medianFootprintMiB": 127.86251068115234,
+          "medianAppFootprintMiB": 34.25096130371094,
+          "medianHelperFootprintMiB": 93.8615493774414,
+          "medianRSSMiB": 218.390625,
+          "samples": [
+            {
+              "footprintMiB": 127.90938568115234,
+              "appFootprintMiB": 34.29783630371094,
+              "helperFootprintMiB": 93.8615493774414,
+              "rssSumMiB": 218.40625,
+              "secondsSinceSettleCondition": 15.061388208006974,
+              "secondsSinceLaunch": 16.00194804201601
+            },
+            {
+              "footprintMiB": 127.86251068115234,
+              "appFootprintMiB": 34.25096130371094,
+              "helperFootprintMiB": 93.8615493774414,
+              "rssSumMiB": 218.390625,
+              "secondsSinceSettleCondition": 15.720893665973563,
+              "secondsSinceLaunch": 16.6614534999826
+            },
+            {
+              "footprintMiB": 127.84688568115234,
+              "appFootprintMiB": 34.25096130371094,
+              "helperFootprintMiB": 93.8459243774414,
+              "rssSumMiB": 218.375,
+              "secondsSinceSettleCondition": 16.34404929098673,
+              "secondsSinceLaunch": 17.284609124995768
+            }
+          ]
+        },
+        {
+          "iteration": 2,
+          "case": "plain100KiB",
+          "medianFootprintMiB": 79.9716567993164,
+          "medianAppFootprintMiB": 32.92283630371094,
+          "medianHelperFootprintMiB": 47.29882049560547,
+          "medianRSSMiB": 220.390625,
+          "samples": [
+            {
+              "footprintMiB": 80.0185317993164,
+              "appFootprintMiB": 32.96971130371094,
+              "helperFootprintMiB": 47.29882049560547,
+              "rssSumMiB": 220.4375,
+              "secondsSinceSettleCondition": 15.05200245801825,
+              "secondsSinceLaunch": 16.187893166032154
+            },
+            {
+              "footprintMiB": 79.9716567993164,
+              "appFootprintMiB": 32.92283630371094,
+              "helperFootprintMiB": 47.29882049560547,
+              "rssSumMiB": 220.390625,
+              "secondsSinceSettleCondition": 15.663450833002571,
+              "secondsSinceLaunch": 16.799341541016474
+            },
+            {
+              "footprintMiB": 79.9091567993164,
+              "appFootprintMiB": 32.87596130371094,
+              "helperFootprintMiB": 47.28319549560547,
+              "rssSumMiB": 220.375,
+              "secondsSinceSettleCondition": 16.265129624982364,
+              "secondsSinceLaunch": 17.401020332996268
+            }
+          ]
+        },
+        {
+          "iteration": 2,
+          "case": "benchmark100KiB",
+          "medianFootprintMiB": 122.45626068115234,
+          "medianAppFootprintMiB": 34.15723419189453,
+          "medianHelperFootprintMiB": 88.54902648925781,
+          "medianRSSMiB": 276.390625,
+          "samples": [
+            {
+              "footprintMiB": 122.50313568115234,
+              "appFootprintMiB": 34.20410919189453,
+              "helperFootprintMiB": 88.54902648925781,
+              "rssSumMiB": 276.4375,
+              "secondsSinceSettleCondition": 15.051592041971162,
+              "secondsSinceLaunch": 16.00359491701238
+            },
+            {
+              "footprintMiB": 122.45626068115234,
+              "appFootprintMiB": 34.15723419189453,
+              "helperFootprintMiB": 88.54902648925781,
+              "rssSumMiB": 276.390625,
+              "secondsSinceSettleCondition": 15.666154374950565,
+              "secondsSinceLaunch": 16.618157249991782
+            },
+            {
+              "footprintMiB": 122.44063568115234,
+              "appFootprintMiB": 34.15723419189453,
+              "helperFootprintMiB": 88.53340148925781,
+              "rssSumMiB": 276.375,
+              "secondsSinceSettleCondition": 16.2715736249811,
+              "secondsSinceLaunch": 17.223576500022318
+            }
+          ]
+        },
+        {
+          "iteration": 2,
+          "case": "empty",
+          "medianFootprintMiB": 54.0806884765625,
+          "medianAppFootprintMiB": 33.17283630371094,
+          "medianHelperFootprintMiB": 21.157852172851562,
+          "medianRSSMiB": 173.171875,
+          "samples": [
+            {
+              "footprintMiB": 54.0963134765625,
+              "appFootprintMiB": 33.18846130371094,
+              "helperFootprintMiB": 21.157852172851562,
+              "rssSumMiB": 173.1875,
+              "secondsSinceSettleCondition": 15.053050832997542,
+              "secondsSinceLaunch": 15.146430124994367
+            },
+            {
+              "footprintMiB": 54.0806884765625,
+              "appFootprintMiB": 33.17283630371094,
+              "helperFootprintMiB": 21.157852172851562,
+              "rssSumMiB": 173.171875,
+              "secondsSinceSettleCondition": 15.66785141598666,
+              "secondsSinceLaunch": 15.761230707983486
+            },
+            {
+              "footprintMiB": 54.0650634765625,
+              "appFootprintMiB": 33.15721130371094,
+              "helperFootprintMiB": 21.157852172851562,
+              "rssSumMiB": 173.125,
+              "secondsSinceSettleCondition": 16.283628000004683,
+              "secondsSinceLaunch": 16.377007292001508
+            }
+          ]
+        },
+        {
+          "iteration": 3,
+          "case": "benchmark100KiB",
+          "medianFootprintMiB": 122.00311279296875,
+          "medianAppFootprintMiB": 33.67285919189453,
+          "medianHelperFootprintMiB": 88.58025360107422,
+          "medianRSSMiB": 270.78125,
+          "samples": [
+            {
+              "footprintMiB": 122.01873779296875,
+              "appFootprintMiB": 33.68848419189453,
+              "helperFootprintMiB": 88.58025360107422,
+              "rssSumMiB": 270.828125,
+              "secondsSinceSettleCondition": 15.051185375021305,
+              "secondsSinceLaunch": 16.07766391703626
+            },
+            {
+              "footprintMiB": 122.00311279296875,
+              "appFootprintMiB": 33.67285919189453,
+              "helperFootprintMiB": 88.58025360107422,
+              "rssSumMiB": 270.78125,
+              "secondsSinceSettleCondition": 15.651960666000377,
+              "secondsSinceLaunch": 16.678439208015334
+            },
+            {
+              "footprintMiB": 121.98748779296875,
+              "appFootprintMiB": 33.67285919189453,
+              "helperFootprintMiB": 88.56462860107422,
+              "rssSumMiB": 270.765625,
+              "secondsSinceSettleCondition": 16.257053458015434,
+              "secondsSinceLaunch": 17.28353200003039
+            }
+          ]
+        },
+        {
+          "iteration": 3,
+          "case": "empty",
+          "medianFootprintMiB": 53.59642791748047,
+          "medianAppFootprintMiB": 32.61033630371094,
+          "medianHelperFootprintMiB": 21.23609161376953,
+          "medianRSSMiB": 173.09375,
+          "samples": [
+            {
+              "footprintMiB": 53.61205291748047,
+              "appFootprintMiB": 32.62596130371094,
+              "helperFootprintMiB": 21.23609161376953,
+              "rssSumMiB": 173.109375,
+              "secondsSinceSettleCondition": 15.058607291954104,
+              "secondsSinceLaunch": 15.163535416999366
+            },
+            {
+              "footprintMiB": 53.59642791748047,
+              "appFootprintMiB": 32.61033630371094,
+              "helperFootprintMiB": 21.23609161376953,
+              "rssSumMiB": 173.09375,
+              "secondsSinceSettleCondition": 15.665328083967324,
+              "secondsSinceLaunch": 15.770256209012587
+            },
+            {
+              "footprintMiB": 53.59642791748047,
+              "appFootprintMiB": 32.61033630371094,
+              "helperFootprintMiB": 21.23609161376953,
+              "rssSumMiB": 173.09375,
+              "secondsSinceSettleCondition": 16.277267041965388,
+              "secondsSinceLaunch": 16.38219516701065
+            }
+          ]
+        },
+        {
+          "iteration": 3,
+          "case": "plain100KiB",
+          "medianFootprintMiB": 81.9248275756836,
+          "medianAppFootprintMiB": 33.063438415527344,
+          "medianHelperFootprintMiB": 49.11138916015625,
+          "medianRSSMiB": 221.625,
+          "samples": [
+            {
+              "footprintMiB": 82.0185775756836,
+              "appFootprintMiB": 33.157188415527344,
+              "helperFootprintMiB": 49.11138916015625,
+              "rssSumMiB": 221.625,
+              "secondsSinceSettleCondition": 15.053942541999277,
+              "secondsSinceLaunch": 15.756636999954935
+            },
+            {
+              "footprintMiB": 81.9248275756836,
+              "appFootprintMiB": 33.063438415527344,
+              "helperFootprintMiB": 49.11138916015625,
+              "rssSumMiB": 221.625,
+              "secondsSinceSettleCondition": 15.660044000018388,
+              "secondsSinceLaunch": 16.362738457974046
+            },
+            {
+              "footprintMiB": 81.9092025756836,
+              "appFootprintMiB": 33.063438415527344,
+              "helperFootprintMiB": 49.09576416015625,
+              "rssSumMiB": 221.515625,
+              "secondsSinceSettleCondition": 16.268347208038904,
+              "secondsSinceLaunch": 16.971041665994562
+            }
+          ]
+        }
+      ],
+      "acceptance": "Automated checkpoint and measurement cohort passed; subsequent native width persistence check failed"
+    }
+  },
+  "transitions": {
+    "baseline": {
+      "sourceSHA": "aa0eb96ddef8b02315a2cb260e45bc8c961e4a37",
+      "baselineGeneratedWebFilesMatched": 178,
+      "samples": [
+        {
+          "iteration": 1,
+          "body": {
+            "fromOpenRequestMs": 116.7370080947876,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 158.27298164367676,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 2,
+          "body": {
+            "fromOpenRequestMs": 110.54694652557373,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 153.99301052093506,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 3,
+          "body": {
+            "fromOpenRequestMs": 109.83192920684814,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 159.41095352172852,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 4,
+          "body": {
+            "fromOpenRequestMs": 111.48905754089355,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 154.53600883483887,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 5,
+          "body": {
+            "fromOpenRequestMs": 98.81889820098877,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 144.4249153137207,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 6,
+          "body": {
+            "fromOpenRequestMs": 117.77102947235107,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 167.6560640335083,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 7,
+          "body": {
+            "fromOpenRequestMs": 95.26801109313965,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 137.58206367492676,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 8,
+          "body": {
+            "fromOpenRequestMs": 99.94006156921387,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 143.28205585479736,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 9,
+          "body": {
+            "fromOpenRequestMs": 124.86803531646729,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 168.08199882507324,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 10,
+          "body": {
+            "fromOpenRequestMs": 99.26891326904297,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 142.11797714233398,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 11,
+          "body": {
+            "fromOpenRequestMs": 116.16206169128418,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 175.60899257659912,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 12,
+          "body": {
+            "fromOpenRequestMs": 111.71305179595947,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 154.78408336639404,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 13,
+          "body": {
+            "fromOpenRequestMs": 99.6330976486206,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 143.97799968719482,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 14,
+          "body": {
+            "fromOpenRequestMs": 134.73999500274658,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 191.9419765472412,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 15,
+          "body": {
+            "fromOpenRequestMs": 128.8059949874878,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 186.07604503631592,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 16,
+          "body": {
+            "fromOpenRequestMs": 133.20600986480713,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 189.61894512176514,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 17,
+          "body": {
+            "fromOpenRequestMs": 131.7579746246338,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 187.50202655792236,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 18,
+          "body": {
+            "fromOpenRequestMs": 147.37999439239502,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 203.5219669342041,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 19,
+          "body": {
+            "fromOpenRequestMs": 141.38901233673096,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 215.01410007476807,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 20,
+          "body": {
+            "fromOpenRequestMs": 143.2809829711914,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 207.40199089050293,
+            "timing": "animationFrames"
+          }
+        }
+      ],
+      "summary": {
+        "body": {
+          "medianMs": 116.44953489303589,
+          "minMs": 95.26801109313965,
+          "maxMs": 147.37999439239502,
+          "timingGroups": [
+            "animationFrames"
+          ]
+        },
+        "complete": {
+          "medianMs": 163.5335087776184,
+          "minMs": 137.58206367492676,
+          "maxMs": 215.01410007476807,
+          "timingGroups": [
+            "animationFrames"
+          ]
+        }
+      }
+    },
+    "candidate": {
+      "sourceSHA": "2cb6c647084a13476296c2fd642b7b59008fafd9",
+      "all20PayloadValuesMatchedLoggedPhaseMsWithin": 1e-05,
+      "samples": [
+        {
+          "iteration": 1,
+          "body": {
+            "fromOpenRequestMs": 74.27597045898438,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 141.6339874267578,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 2,
+          "body": {
+            "fromOpenRequestMs": 70.69599628448486,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 129.46105003356934,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 3,
+          "body": {
+            "fromOpenRequestMs": 63.160061836242676,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 107.34903812408447,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 4,
+          "body": {
+            "fromOpenRequestMs": 67.5579309463501,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 143.95594596862793,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 5,
+          "body": {
+            "fromOpenRequestMs": 65.74392318725586,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 125.83589553833008,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 6,
+          "body": {
+            "fromOpenRequestMs": 51.21493339538574,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 111.98699474334717,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 7,
+          "body": {
+            "fromOpenRequestMs": 69.64194774627686,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 113.24799060821533,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 8,
+          "body": {
+            "fromOpenRequestMs": 59.33094024658203,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 116.00399017333984,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 9,
+          "body": {
+            "fromOpenRequestMs": 56.47897720336914,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 107.30695724487305,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 10,
+          "body": {
+            "fromOpenRequestMs": 71.92802429199219,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 115.09501934051514,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 11,
+          "body": {
+            "fromOpenRequestMs": 61.81192398071289,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 122.3989725112915,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 12,
+          "body": {
+            "fromOpenRequestMs": 54.7710657119751,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 108.82711410522461,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 13,
+          "body": {
+            "fromOpenRequestMs": 51.36096477508545,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 95.30401229858398,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 14,
+          "body": {
+            "fromOpenRequestMs": 62.461018562316895,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 104.1719913482666,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 15,
+          "body": {
+            "fromOpenRequestMs": 67.34299659729004,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 109.83598232269287,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 16,
+          "body": {
+            "fromOpenRequestMs": 73.73392581939697,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 132.3399543762207,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 17,
+          "body": {
+            "fromOpenRequestMs": 67.81899929046631,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 109.3360185623169,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 18,
+          "body": {
+            "fromOpenRequestMs": 61.83004379272461,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 103.61599922180176,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 19,
+          "body": {
+            "fromOpenRequestMs": 63.741087913513184,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 106.30202293395996,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 20,
+          "body": {
+            "fromOpenRequestMs": 68.58789920806885,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 109.03692245483398,
+            "timing": "animationFrames"
+          }
+        }
+      ],
+      "summary": {
+        "body": {
+          "animationFrames": {
+            "samples": 20,
+            "medianMs": 64.74250555038452,
+            "minMs": 51.21493339538574,
+            "maxMs": 74.27597045898438
+          }
+        },
+        "complete": {
+          "animationFrames": {
+            "samples": 20,
+            "medianMs": 110.91148853302002,
+            "minMs": 95.30401229858398,
+            "maxMs": 143.95594596862793
+          }
+        }
+      }
+    },
+    "intermediateCandidate": {
+      "sourceSHA": "dafb71de37e8977fa7c935ca48dcd282c1f2656c",
+      "all20PayloadValuesMatchedLoggedPhaseMsWithin": 1e-05,
+      "samples": [
+        {
+          "iteration": 1,
+          "body": {
+            "fromOpenRequestMs": 84.99002456665039,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 144.36805248260498,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 2,
+          "body": {
+            "fromOpenRequestMs": 57.77597427368164,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 101.57501697540283,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 3,
+          "body": {
+            "fromOpenRequestMs": 63.67802619934082,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 105.50200939178467,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 4,
+          "body": {
+            "fromOpenRequestMs": 65.43993949890137,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 106.86099529266357,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 5,
+          "body": {
+            "fromOpenRequestMs": 50.90200901031494,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 93.46497058868408,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 6,
+          "body": {
+            "fromOpenRequestMs": 51.92995071411133,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 94.24090385437012,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 7,
+          "body": {
+            "fromOpenRequestMs": 60.20307540893555,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 104.2860746383667,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 8,
+          "body": {
+            "fromOpenRequestMs": 49.71897602081299,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 93.05191040039062,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 9,
+          "body": {
+            "fromOpenRequestMs": 47.15001583099365,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 99.8159646987915,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 10,
+          "body": {
+            "fromOpenRequestMs": 63.16101551055908,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 104.89797592163086,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 11,
+          "body": {
+            "fromOpenRequestMs": 50.6669282913208,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 94.22600269317627,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 12,
+          "body": {
+            "fromOpenRequestMs": 52.970051765441895,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 96.48895263671875,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 13,
+          "body": {
+            "fromOpenRequestMs": 58.05397033691406,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 101.45902633666992,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 14,
+          "body": {
+            "fromOpenRequestMs": 45.60995101928711,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 89.3789529800415,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 15,
+          "body": {
+            "fromOpenRequestMs": 49.7279167175293,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 92.62096881866455,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 16,
+          "body": {
+            "fromOpenRequestMs": 47.51002788543701,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 98.73795509338379,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 17,
+          "body": {
+            "fromOpenRequestMs": 59.21292304992676,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 102.7669906616211,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 18,
+          "body": {
+            "fromOpenRequestMs": 51.47194862365723,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 94.04397010803223,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 19,
+          "body": {
+            "fromOpenRequestMs": 45.1810359954834,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 80.48701286315918,
+            "timing": "animationFrames"
+          }
+        },
+        {
+          "iteration": 20,
+          "body": {
+            "fromOpenRequestMs": 58.31003189086914,
+            "timing": "animationFrames"
+          },
+          "complete": {
+            "fromOpenRequestMs": 100.45409202575684,
+            "timing": "animationFrames"
+          }
+        }
+      ],
+      "summary": {
+        "body": {
+          "medianMs": 52.45000123977661,
+          "minMs": 45.1810359954834,
+          "maxMs": 84.99002456665039,
+          "timingGroups": [
+            "animationFrames"
+          ]
+        },
+        "complete": {
+          "medianMs": 99.27695989608765,
+          "minMs": 80.48701286315918,
+          "maxMs": 144.36805248260498,
+          "timingGroups": [
+            "animationFrames"
+          ]
+        }
+      }
+    }
+  },
+  "parserOnlyMicrobenchmark": {
+    "evidenceDirectory": "build/product-followups/web-performance-20261019-122235",
+    "scope": "Node only; no inference about WebKit, native display or app footprint",
+    "duplicates": [
+      {
+        "count": 1000,
+        "sha256": "68d3b51b60eef0a43ac115f044592acde795b4b6ced759fe2655229e8a76102c",
+        "beforeMs": {
+          "median": 56.169916,
+          "min": 55.23845800000001,
+          "max": 56.384792000000004
+        },
+        "afterMs": {
+          "median": 3.647709000000006,
+          "min": 3.1023330000000016,
+          "max": 6.399499999999996
+        }
+      },
+      {
+        "count": 3000,
+        "sha256": "307cd3bc9bd754a6e729016b671c7113a87175fb379a2f4f2e841447931d8c83",
+        "beforeMs": {
+          "median": 491.01816699999995,
+          "min": 480.249875,
+          "max": 495.0552499999999
+        },
+        "afterMs": {
+          "median": 12.220917000000014,
+          "min": 11.022625000000005,
+          "max": 13.196874999999977
+        }
+      },
+      {
+        "count": 6000,
+        "sha256": "100da1a41719e630ec4b2c9c05ff4528115c2ab181ecbee0419fce0b75f5048a",
+        "beforeMs": {
+          "median": 1971.3766669999995,
+          "min": 1966.7717499999999,
+          "max": 2024.5890419999996
+        },
+        "afterMs": {
+          "median": 18.495499999999993,
+          "min": 16.45150000000001,
+          "max": 31.65270799999999
+        }
+      }
+    ],
+    "fixed": [
+      {
+        "case": "plain1KiB",
+        "sha256": "293c9cb423037c5007817852075acf1439a7134bcfb6a9aaaef1059f2f337ad2",
+        "beforeMs": {
+          "median": 0.0923335000006773,
+          "min": 0.08508400000027905,
+          "max": 0.1678330000013375
+        },
+        "afterMs": {
+          "median": 0.0668745000000115,
+          "min": 0.05904100000003609,
+          "max": 0.33575000000001864
+        },
+        "beforeSetupProbeMs": {
+          "median": 0.005583500000284403,
+          "min": 0.004791000001205248,
+          "max": 0.016292000000248663
+        },
+        "afterSetupProbeMs": {
+          "median": 0.005791499999986627,
+          "min": 0.005541999999991276,
+          "max": 0.011042000000031749
+        }
+      },
+      {
+        "case": "plain100KiB",
+        "sha256": "6f89428d6f4e3ce1efcc1e90678e76158f3b5c48dcf02827eafa8febb624925e",
+        "beforeMs": {
+          "median": 2.408374999999978,
+          "min": 2.2730830000000424,
+          "max": 3.2715420000004087
+        },
+        "afterMs": {
+          "median": 2.799895499999991,
+          "min": 2.454040999999961,
+          "max": 3.299209000000019
+        },
+        "beforeSetupProbeMs": {
+          "median": 0.0061255000000528526,
+          "min": 0.0044589999997697305,
+          "max": 0.01541700000052515
+        },
+        "afterSetupProbeMs": {
+          "median": 0.0108954999999753,
+          "min": 0.006291000000032909,
+          "max": 0.03224999999997635
+        }
+      },
+      {
+        "case": "benchmark100KiB",
+        "sha256": "55464dacf92db737fbec845a17723c38da683d0fcef0b52d994a0040edff7f61",
+        "beforeMs": {
+          "median": 62.02245800000037,
+          "min": 59.044292000000496,
+          "max": 66.83845799999835
+        },
+        "afterMs": {
+          "median": 10.002645999999999,
+          "min": 9.27704099999994,
+          "max": 12.598333000000025
+        },
+        "beforeSetupProbeMs": {
+          "median": 0.03860449999956472,
+          "min": 0.026707999997597653,
+          "max": 0.0538330000017595
+        },
+        "afterSetupProbeMs": {
+          "median": 0.023792000000014468,
+          "min": 0.015500000000088221,
+          "max": 0.03937499999994998
+        }
+      }
+    ]
+  },
+  "initialNativeFollowup": {
+    "sourceSHA": "dafb71de37e8977fa7c935ca48dcd282c1f2656c",
+    "status": "failed-width-persistence",
+    "evidenceDirectory": "build/product-followups/QA-0.2.1-73b337da",
+    "AXDividerSequence": [
+      320,
+      320,
+      282,
+      320,
+      282
+    ],
+    "windowCaptureRasterWidthsPixels": [
+      900,
+      620,
+      620,
+      900,
+      900
+    ],
+    "persistedWidthAfterQuit": 274,
+    "ordinaryReopenHasNoSidebarArgumentOverrides": true,
+    "nativeContentAndOuterPointBoundsObserved": false,
+    "tenNativeZoomInActionsFromDefault": true,
+    "numericPageZoomExposedByAX": false,
+    "fixturesAndCandidateArchivePreserved": true,
+    "optionalPathsStoppedAtFailure": true,
+    "imageMetadataCorrection": "build/product-followups/targeted-native-image-metadata-correction.json",
+    "binarySHA256": "30564c992435e6b6c7c1589bf11b5c56ca2f18409ae8af8031217238f9ee8932"
+  },
+  "correctedArtifact": {
+    "sourceSHA": "2cb6c647084a13476296c2fd642b7b59008fafd9",
+    "binarySHA256": "953d744170e0f215765f2c30f1d892ee81c3b936884d8749e0aabc6079a42f03",
+    "version": "0.2.1",
+    "build": "3",
+    "verificationDirectory": "build/product-followups/full-2cb6c647084a13476296c2fd642b7b59008fafd9",
+    "XcodeCounts": {
+      "result": "Passed",
+      "totalTestCount": 42,
+      "passedTests": 42,
+      "failedTests": 0
+    }
+  },
+  "correctedNativeFollowup": {
+    "sourceSHA": "2cb6c647084a13476296c2fd642b7b59008fafd9",
+    "status": "passed",
+    "binarySHA256": "953d744170e0f215765f2c30f1d892ee81c3b936884d8749e0aabc6079a42f03",
+    "evidenceDirectory": "build/product-followups/targeted-width-2cb6c647084a13476296c2fd642b7b59008fafd9",
+    "fixtureSHA256": "f0dfa8bb9d001340c9778b12807cd708f434de88f5825b1532676a161b34963d",
+    "sequence": [
+      {
+        "stage": "fresh normal app",
+        "AXSplitter": 188,
+        "capture": "01-owned-initial.jpg"
+      },
+      {
+        "stage": "physical divider drag",
+        "AXSplitter": 320,
+        "storedVisibleWidth": 312,
+        "capture": "02-user-divider320.jpg"
+      },
+      {
+        "stage": "physical window narrow",
+        "AXSplitter": 320,
+        "captureWidthPixels": 620,
+        "capture": "03-narrow620.jpg"
+      },
+      {
+        "stage": "ten native Zoom In actions then CmdF and phrase",
+        "AXSplitter": 282,
+        "storedVisibleWidth": 312,
+        "captureWidthPixels": 620,
+        "capture": "04-narrow-zoom-find.jpg"
+      },
+      {
+        "stage": "grow with Find still open",
+        "AXSplitter": 320,
+        "storedVisibleWidth": 312,
+        "captureWidthPixels": 900,
+        "capture": "05-restored900-find.jpg"
+      },
+      {
+        "stage": "first owned app quit",
+        "storedVisibleWidth": 312
+      },
+      {
+        "stage": "ordinary restart without sidebar overrides",
+        "AXSplitter": 320,
+        "storedVisibleWidthBeforeRestart": 312,
+        "captureWidthPixels": 900,
+        "capture": "07-ordinary-reopened320.jpg"
+      }
+    ],
+    "ordinaryRestartHasNoSidebarArgumentOverrides": true,
+    "nativeContentAndOuterPointBoundsObserved": false,
+    "numericPageZoomExposedByAX": false,
+    "rawResizeNotificationUserInfoInstrumented": false,
+    "postQuitObservation": "A fresh empty candidate appeared after an AX request; cause unconfirmed. Strict identity cleanup preceded the single planned ordinary fixture restart.",
+    "preservationChecks": {
+      "fixtureBytesUnchanged": true,
+      "candidateEntireDirectoryUnchanged": true,
+      "installedEntireBundleUnchanged": true,
+      "preExistingLeaflitProcessesPreserved": true,
+      "sidebarPreferencesRestoredToLatestPreflight": true,
+      "archivedCandidateByteModeSymlinkEquivalent": true,
+      "noOwnedCandidateRemaining": true
+    },
+    "archiveDirectory": "build/product-followups/verified-2cb6c64-candidate",
+    "archiveEntries": 192,
+    "runtimeControlReturned": true,
+    "preferenceRestoration": "Only the known owned width312 was restored to latest preflight180. No other preference key or entire domain overwritten."
+  }
+}

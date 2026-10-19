@@ -14,7 +14,7 @@ The owner requested prioritized product fixes, performance improvements and addi
 
 These are bounded corrections to the existing design, not new screens or a sidebar redesign. The three original independent sidebar review rounds remain historical evidence. Broader asynchronous I/O coalescing and visited-folder cache eviction require separate evidence and remain follow-ups.
 
-The targeted native check also exposed a width-persistence failure when a 620pt window, 200% zoom and the Find bar constrain the pane. Automatic layout compression must not replace the user's preferred width, including across an ordinary app restart. Add this actual reproduction to the width acceptance tests before accepting the candidate. Apple documents the distinction between user resizing and layout in [split-view resize notifications](https://developer.apple.com/documentation/appkit/nssplitview/didresizesubviewsnotification?changes=__3&language=objc).
+The targeted native check also exposed a width-persistence failure after narrowing the window to a 620px capture, applying ten Zoom In actions and opening Find. Native point-valued window bounds were not exposed by that UI tool. Automatic layout compression must not replace the user's preferred width, including across an ordinary app restart. The automated reproduction uses a 620pt native content width and asserts 2.0 page zoom. Add this reproduction to the width acceptance tests before accepting the candidate. Apple documents the distinction between user resizing and layout in [split-view resize notifications](https://developer.apple.com/documentation/appkit/nssplitview/didresizesubviewsnotification?changes=__3&language=objc).
 
 ## Verification
 

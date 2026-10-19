@@ -11,7 +11,7 @@
   "release": {"version": "0.2.1", "target": "Apple Silicon macOS", "endpoint": "verified-local-release-candidate", "remotePublication": false},
   "commands": ["scripts/verify.sh Release", "scripts/build.sh Release"],
   "coverage": [
-    "Sidebar visible width round-trips across reopen, toggles, narrow windows and appearances",
+    "Sidebar visible width round-trips across reopen, toggles, narrow windows, Find constraints and appearances",
     "Unchanged heading refresh retains native outline state; changed metadata refreshes correctly",
     "Duplicate, colliding and Unicode anchors retain identity with improved scaling",
     "Overlapping math revisions await stylesheet readiness",

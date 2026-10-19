@@ -73,6 +73,7 @@ The additional Files/Outline screenshot is the preserved actual local 0.2.0 revi
 Verified with Xcode 27, Node.js 24 and npm 11. Dependencies are pinned in `package-lock.json`. Ruby is needed only when regenerating the Xcode project, not for a normal build.
 
 Source builds now produce the local 0.2.1 product follow-up candidate. The public preview remains 0.2.0.
+The [0.2.1 verification report](docs/qa/product-followups-0.2.1.md) records sidebar fixes, document-switching improvements, memory measurements and remaining limits.
 
 ```sh
 ./scripts/build.sh
