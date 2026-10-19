@@ -26,6 +26,7 @@
 		CC28CBE226C4E498B230B017 /* FileWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A14133D1C05B932DCBF1D /* FileWatcher.swift */; };
 		D7140BB89A06BE56DCD400BB /* ResourceHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB4EB10BE84AFCEC691F529 /* ResourceHandler.swift */; };
 		E185AB13B49CFEAEFD977C88 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 706E9A48CCE7D46E373FF70F /* Cocoa.framework */; };
+		E8531029054212C0B28FDEEB /* OutlineAllocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278DD1DA047567E77244D04F /* OutlineAllocationTests.swift */; };
 		F36FD904A65A1266A862017A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 706E9A48CCE7D46E373FF70F /* Cocoa.framework */; };
 		FF9377F853EA19B7A3265A4E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 706E9A48CCE7D46E373FF70F /* Cocoa.framework */; };
 /* End PBXBuildFile section */
@@ -70,6 +71,7 @@
 
 /* Begin PBXFileReference section */
 		05598A237E8EA4CCC5566E51 /* NavigationReaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NavigationReaderTests.swift; path = Tests/LeaflitTests/NavigationReaderTests.swift; sourceTree = "<group>"; };
+		278DD1DA047567E77244D04F /* OutlineAllocationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OutlineAllocationTests.swift; path = Tests/LeaflitTests/OutlineAllocationTests.swift; sourceTree = "<group>"; };
 		2F681A4F882AB21B8654A37A /* Leaflit.icns */ = {isa = PBXFileReference; includeInIndex = 1; name = Leaflit.icns; path = Sources/Leaflit/Leaflit.icns; sourceTree = "<group>"; };
 		378074704FBC1BBB958B45A8 /* LeaflitCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LeaflitCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B29C19C8F67F2EB27FE6841 /* LeaflitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeaflitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -150,6 +152,7 @@
 				05598A237E8EA4CCC5566E51 /* NavigationReaderTests.swift */,
 				988340FA7374F84B6E694EEC /* FolderDocumentReader.swift */,
 				2F681A4F882AB21B8654A37A /* Leaflit.icns */,
+				278DD1DA047567E77244D04F /* OutlineAllocationTests.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -327,6 +330,7 @@
 				57BD49407D5DD983B9D42684 /* DocumentTests.swift in Sources */,
 				59D6862D9C3ADA6FDFA1432C /* NavigationTests.swift in Sources */,
 				98AAB114C3CAD59053383AF2 /* NavigationReaderTests.swift in Sources */,
+				E8531029054212C0B28FDEEB /* OutlineAllocationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
