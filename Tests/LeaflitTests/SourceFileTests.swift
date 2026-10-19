@@ -32,9 +32,43 @@ final class SourceFileTests: XCTestCase {
     }
     func testNoOpSaveDoesNotReplaceOriginal() throws {
         let original = try fixture()
+        let attributes = try FileManager.default.attributesOfItem(atPath: original.url.path)
         let saved = try SourceFileWriter.save(original.data, replacing: original, within: nil)
         XCTAssertEqual(saved.identity, original.identity)
         XCTAssertEqual(saved.data, original.data)
+        XCTAssertEqual(try SourceFileSnapshot.read(original.url, within: nil).identity, original.identity)
+        XCTAssertEqual(try FileManager.default.attributesOfItem(atPath: original.url.path)[.modificationDate] as? Date, attributes[.modificationDate] as? Date)
+        XCTAssertEqual(try Data(contentsOf: original.url), original.data)
+        try Data("# External".utf8).write(to: original.url)
+        XCTAssertThrowsError(try SourceFileWriter.save(original.data, replacing: original, within: nil))
+    }
+    func testChangesDuringStagingAreRejectedAndTemporaryFileIsRemoved() throws {
+        let original = try fixture(), changed = Data("# New external bytes".utf8)
+        XCTAssertThrowsError(try SourceFileWriter.save(Data("# Draft".utf8), replacing: original, within: nil, beforeReplace: {
+            try changed.write(to: original.url, options: .atomic)
+        }))
+        XCTAssertEqual(try Data(contentsOf: original.url), changed)
+        XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: directory.path), [original.url.lastPathComponent])
+    }
+    func testCopyRefusesSymlinksDirectoriesAndConcurrentCreation() throws {
+        let original = try fixture(), link = directory.appendingPathComponent("link.md")
+        try FileManager.default.createSymbolicLink(at: link, withDestinationURL: directory.appendingPathComponent("missing.md"))
+        XCTAssertThrowsError(try SourceFileWriter.copy(original.data, to: link))
+        XCTAssertThrowsError(try SourceFileWriter.copy(original.data, to: directory))
+        let copy = directory.appendingPathComponent("concurrent.md")
+        let queue = DispatchQueue(label: "LeaflitCopyTest", attributes: .concurrent)
+        let group = DispatchGroup(), lock = NSLock()
+        var winners = [Data]()
+        for text in ["# One", "# Two"] {
+            group.enter(); queue.async {
+                defer { group.leave() }
+                let data = Data(text.utf8)
+                if (try? SourceFileWriter.copy(data, to: copy)) != nil { lock.lock(); winners.append(data); lock.unlock() }
+            }
+        }
+        XCTAssertEqual(group.wait(timeout: .now() + 5), .success)
+        XCTAssertEqual(winners.count, 1); XCTAssertEqual(try Data(contentsOf: copy), try XCTUnwrap(winners.first))
+        XCTAssertEqual(try Data(contentsOf: original.url), original.data)
     }
     func testChangedBytesOrAtomicReplacementRejectSave() throws {
         let original = try fixture()

@@ -22,6 +22,13 @@ test('Mermaid source is escaped before deferred rendering', () => {
   assert.equal(result.diagrams.length, 1);
   assert.ok(result.html.includes('&lt;script&gt;'));
 });
+test('error repair locations come from original blocks with BOM, CRLF and repeated content', () => {
+  const source = '\ufeff# 😀\r\n\r\n$\\bad$\r\n\r\n$\\bad$\r\n\r\n$$\\bad$$\r\n\r\n```mermaid\r\ninvalid!\r\n```\r\n\r\n```mermaid\r\ninvalid!\r\n```';
+  const result = markdown(source, 41);
+  assert.deepEqual(result.math.map(item => item.line), [2, 4, 6]);
+  assert.deepEqual(result.diagrams.map(item => item.line), [8, 12]);
+  for (const item of [...result.math, ...result.diagrams]) assert.ok(result.html.includes(`id="${item.id}" data-source-line="${item.line}"`));
+});
 test('outline labels share rendered anchors, preserve hierarchy and contain plain text', () => {
   const result = markdown('# Hello **world**\n\n#### [A link](next.md)\n\n## 한글 😀\n\n## 한글 😀\n\n```md\n# not a heading\n```', 7);
   assert.deepEqual(result.headings, [

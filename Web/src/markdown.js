@@ -6,18 +6,23 @@ export const escape = text => text.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'
 export function markdown(source, revision) {
   const md = new MarkdownIt({ html: false, linkify: false, typographer: false }).use(taskLists);
   const math = [], diagrams = [], headings = new Map(), outline = [];
-  md.use(tex, { delimiters: 'all', render(content, display) {
+  md.use(tex, { delimiters: 'all', render: () => '' });
+  const renderMath = (tokens, idx, display) => {
+    const token = tokens[idx], content = token.content, line = token.map?.[0] ?? token.meta?.sourceLine ?? 0;
     const id = `math-${revision}-${math.length}`;
-    math.push({ id, content, display });
-    return `<${display ? 'div' : 'span'} id="${id}" class="math">${escape(content)}</${display ? 'div' : 'span'}>`;
-  }});
+    math.push({ id, content, display, line });
+    return `<${display ? 'div' : 'span'} id="${id}" data-source-line="${line}" class="math">${escape(content)}</${display ? 'div' : 'span'}>`;
+  };
+  md.renderer.rules.math_inline = (tokens, idx) => renderMath(tokens, idx, false);
+  md.renderer.rules.math_block = (tokens, idx) => renderMath(tokens, idx, true);
   const fence = md.renderer.rules.fence;
   md.renderer.rules.fence = (tokens, idx, options, env, renderer) => {
     const token = tokens[idx];
     if (token.info.trim() !== 'mermaid') return fence(tokens, idx, options, env, renderer);
     const id = `diagram-${revision}-${diagrams.length}`;
-    diagrams.push({ id, content: token.content });
-    return `<figure id="${id}" class="diagram" aria-label="Diagram"><pre>${escape(token.content)}</pre></figure>`;
+    const line = token.map?.[0] ?? 0;
+    diagrams.push({ id, content: token.content, line });
+    return `<figure id="${id}" data-source-line="${line}" class="diagram" aria-label="Diagram"><pre>${escape(token.content)}</pre></figure>`;
   };
   md.renderer.rules.image = (tokens, idx) => {
     const token = tokens[idx], src = token.attrGet('src') || '';
@@ -33,6 +38,8 @@ export function markdown(source, revision) {
   for (let i = 0; i < tokens.length; i++) {
     const token = tokens[i];
     if (token.map && token.nesting !== -1) token.attrSet('data-source-line', String(token.map[0]));
+    // Inline formulas target their original paragraph, never a search in rendered HTML.
+    for (const child of token.children || []) if (child.type === 'math_inline') child.meta = { sourceLine: token.map?.[0] ?? 0 };
     if (token.type === 'heading_open') {
       const label = (tokens[i + 1]?.children || []).map(t => t.content).join('');
       const base = label.toLowerCase().trim().replace(/[^\p{L}\p{N}\p{Extended_Pictographic}\s_-]/gu, '').replace(/\s+/g, '-') || 'section';
