@@ -32,7 +32,6 @@ extension ReaderTests {
         XCTAssertEqual(try Data(contentsOf: url), Data([0xef, 0xbb, 0xbf]) + Data("# Draft 한글 😀\r\n".utf8))
         XCTAssertTrue(reader.editing.textView?.undoManager?.canUndo == true)
         reader.showSource()
-        print("LEAFLIT_SOURCE_UNDO before=\(reader.editing.textView?.undoManager?.undoActionName ?? "nil") editable=\(reader.editing.textView?.isEditable == true)")
         reader.editing.textView?.undoManager?.undo()
         XCTAssertEqual(reader.editing.textView?.string, "# Original 한글 😀\r\n")
         try await wait { self.reader.editing.isDirty }
@@ -40,6 +39,24 @@ extension ReaderTests {
         XCTAssertEqual(reader.editing.draft?.text, "# Original 한글 😀\r\n")
         reader.editing.textView?.undoManager?.redo()
         XCTAssertFalse(reader.editing.isDirty)
+    }
+    func testSaveSeparatesTypingGroupsAndSameByteReplacementKeepsUndo() async throws {
+        let url = try write("# Original"); reader.open(url); try await wait { self.reader.completedRevision > 0 }
+        try await source("# Saved")
+        let editor = try XCTUnwrap(reader.editing.textView), done = expectation(description: "save typing boundary")
+        reader.editing.save { saved in XCTAssertTrue(saved); done.fulfill() }
+        await fulfillment(of: [done], timeout: 10)
+        try Data("# Saved".utf8).write(to: url, options: .atomic)
+        let identity = try SourceFileSnapshot.read(url, within: nil).identity
+        try await wait { self.reader.editing.baseline?.identity == identity }
+        editor.insertText(" after save", replacementRange: NSRange(location: (editor.string as NSString).length, length: 0))
+        editor.breakUndoCoalescing(); editor.undoManager?.undo()
+        XCTAssertEqual(editor.string, "# Saved"); XCTAssertFalse(reader.editing.isDirty)
+        editor.undoManager?.undo()
+        XCTAssertEqual(editor.string, "# Original"); XCTAssertTrue(reader.editing.isDirty)
+        editor.undoManager?.redo()
+        XCTAssertEqual(editor.string, "# Saved"); XCTAssertFalse(reader.editing.isDirty)
+        XCTAssertEqual(try String(contentsOf: url), "# Saved")
     }
     func testCancelAfterWatcherUpdateRestoresEditorAndKeepsSinglePrompt() async throws {
         try await loaded("# Original"); try await source("# Unsaved")

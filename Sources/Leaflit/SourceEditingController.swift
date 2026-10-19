@@ -37,6 +37,8 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
 
     override init() {
         super.init()
+        NotificationCenter.default.addObserver(self, selector: #selector(undoDidChange), name: .NSUndoManagerDidUndoChange, object: undoHistory)
+        NotificationCenter.default.addObserver(self, selector: #selector(undoDidChange), name: .NSUndoManagerDidRedoChange, object: undoHistory)
         modes.selectedSegment = 0; modes.target = self; modes.action = #selector(modeChanged)
         modes.setAccessibilityLabel("Document mode")
         saveButton.target = self; saveButton.action = #selector(saveAction); saveButton.bezelStyle = .rounded
@@ -69,7 +71,7 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
             try existing.observeDisk(snapshot.data, sameIdentity: baseline?.identity == snapshot.identity)
             draft = existing
             if !wasDirty {
-                let changed = baseline?.identity != snapshot.identity || baseline?.data != snapshot.data
+                let changed = baseline?.data != snapshot.data
                 baseline = snapshot; replaceEditorText(existing.text, clearUndo: changed)
             }
         } else {
@@ -88,6 +90,7 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
     }
     func select(_ mode: Mode, line: Int? = nil, anchor: String? = nil) {
         guard documentURL != nil, !isBusy else { return }
+        if self.mode == .source { textView?.breakUndoCoalescing(); synchronizeDraft() }
         self.mode = mode
         if mode == .source {
             createEditorIfNeeded()
@@ -134,11 +137,17 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
         if clearUndo { editor.undoManager?.removeAllActions() }
     }
     func textDidChange(_ notification: Notification) {
+        synchronizeDraft()
+    }
+    @objc private func undoDidChange(_ notification: Notification) { synchronizeDraft() }
+    private func synchronizeDraft() {
         guard !isSaving, let textView else { return }
         draft?.replaceText(textView.string); updateState()
     }
     func undoManager(for view: NSTextView) -> UndoManager? { undoHistory }
     func stop() {
+        NotificationCenter.default.removeObserver(self, name: .NSUndoManagerDidUndoChange, object: undoHistory)
+        NotificationCenter.default.removeObserver(self, name: .NSUndoManagerDidRedoChange, object: undoHistory)
         textView?.delegate = nil; undoHistory.removeAllActions()
         textView?.string = ""; draft = nil; baseline = nil
     }
@@ -172,7 +181,9 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
         undoHistory.enableUndoRegistration()
     }
     func save(completion: @escaping (Bool) -> Void = { _ in }) {
-        guard !isSaving, unsavedAlert == nil, let baseline, let draft else { completion(false); return }
+        guard !isBusy else { completion(false); return }
+        textView?.breakUndoCoalescing(); synchronizeDraft()
+        guard let baseline, let draft else { completion(false); return }
         guard !draft.hasExternalChanges else { showMessage(SourceFileError.changed.localizedDescription); completion(false); return }
         guard draft.isDirty else { completion(true); return }
         isSaving = true; updateState()
@@ -194,6 +205,7 @@ final class SourceEditingController: NSObject, NSTextViewDelegate {
     }
     func confirmBeforeLeaving(_ completion: @escaping (Bool) -> Void) {
         guard !isBusy else { completion(false); return }
+        synchronizeDraft()
         guard isDirty, let window else { completion(!isDirty); return }
         let alert = NSAlert(); alert.messageText = "Save changes to “\(documentURL?.lastPathComponent ?? "document")”?"
         alert.informativeText = "Your changes will be lost if you discard them."
