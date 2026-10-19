@@ -65,6 +65,21 @@ extension ReaderTests {
         XCTAssertEqual(top, 24, accuracy: 2)
         XCTAssertTrue((reader.window?.firstResponder as? NSView)?.isDescendant(of: reader.webView) == true)
     }
+    func testOutlineCanReturnToExistingReadAnchorWhileFirstSourceReadIsPending() async throws {
+        try await loaded("# Original\n\n" + String(repeating: "Before.\n\n", count: 60) + "## Target\n\n" + String(repeating: "After.\n\n", count: 40))
+        let started = expectation(description: "pending first Source"), gate = DispatchSemaphore(value: 0)
+        reader.sourceReader = { url, folder in
+            let snapshot = try SourceFileSnapshot.read(url, within: folder)
+            started.fulfill(); _ = gate.wait(timeout: .now() + 10); return snapshot
+        }
+        reader.showSource(); await fulfillment(of: [started], timeout: 5)
+        reader.sidebar.onHeadingSelected?("target")
+        XCTAssertEqual(reader.editing.mode, .read)
+        let top = try await js("return document.getElementById('target').getBoundingClientRect().top") as? Double ?? 1000
+        XCTAssertEqual(top, 24, accuracy: 2)
+        gate.signal(); reader.sourceReader = SourceFileSnapshot.read
+        try await wait { self.reader.editing.draft != nil }
+    }
     func testMultiwindowQuitDiscardThenCancelSynchronizesDiscardedEditor() async throws {
         try await loaded("# First"); try await source("# First draft")
         let second = ReaderController(preferences: UserDefaults(suiteName: dir.lastPathComponent)!)

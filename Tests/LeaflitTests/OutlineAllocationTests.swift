@@ -99,7 +99,7 @@ extension ReaderTests {
         weak var sidebar: NavigationSidebarController?
         weak var editing: SourceEditingController?
         weak var editor: NSTextView?
-        init(_ reader: ReaderController) {
+        @MainActor init(_ reader: ReaderController) {
             self.reader = reader; window = reader.window
             webView = reader.webView; sidebar = reader.sidebar
             editing = reader.editing; editor = reader.editing.textView

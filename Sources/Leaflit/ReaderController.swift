@@ -79,7 +79,11 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         }
         sidebar.onHeadingSelected = { [weak self] id in
             guard let self, self.displayedRevision == self.revision.current else { return }
-            if self.editing.mode == .source { self.editing.select(.read, anchor: id); return }
+            if self.editing.mode == .source {
+                let hasDraft = self.editing.draft != nil
+                self.editing.select(.read, anchor: id)
+                if hasDraft { return }
+            }
             self.webView.callAsyncJavaScript("window.Leaflit.anchor(value)", arguments: ["value": id], in: nil, in: .page) { _ in }
         }
         sidebar.onModeChanged = { [weak self] in self?.updateOutlineTracking() }
