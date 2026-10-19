@@ -42,6 +42,18 @@ brew upgrade --cask magicsih/tap/leaflit
 
 The launcher does not change Finder's default application. The [public distribution checks](docs/releases/0.3.0-verification.md) cover the downloaded app and Homebrew installation. See the [release procedure](docs/releasing.md) for signing, publication and artifact verification.
 
+## Work in chda. Read in Leaflit.
+
+[chda](https://magicsih.github.io/chda/) is a terminal with a git worktree sidebar and live coding-agent status. Use it to keep each task and agent in its own worktree, then open a plan or spec in Leaflit from a shell in that worktree:
+
+```sh
+leaflit ./plan.md
+```
+
+Keep the document beside your terminal while the agent works. Leaflit follows saved changes and provides Find, Outline, Mermaid diagrams and LaTeX math in a separate reading window. If generated Markdown needs a small correction, switch to Source and save explicitly.
+
+chda also has a built-in local browser preview for quick Markdown checks. Leaflit is an optional companion for Apple Silicon Macs running macOS 14 or later, and works with any terminal. See [chda's workflow and installation](https://magicsih.github.io/chda/#leaflit) or its [source repository](https://github.com/magicsih/chda).
+
 ## Read
 
 - Open `.md`, `.markdown` and `.mdown` files from Finder, the Open menu, drag and drop, or the `leaflit` launcher.
