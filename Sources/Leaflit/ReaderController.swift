@@ -13,12 +13,14 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
     private(set) var displayedRevision = 0
     private(set) var completedRevision = 0
     private(set) var measurements: [String: Double] = [:]
+    private(set) var displayTimings: [String: String] = [:]
     private var requestedAt = Date()
     private let performanceLog = Logger(subsystem: "io.github.magicsih.leaflit", category: "performance")
     private var ready = false
     private var watcher: FileWatcher?
     private var reading: Task<Void, Never>?
-    private var history: [(URL, [String: Any])] = []
+    private var history: [(URL, [String: Any], FolderTree?)] = []
+    private var documentScope: FolderTree?
     private var pendingLocation: [String: Any]?
     private var lastText: String?
     private let search = NSSearchField()
@@ -29,11 +31,24 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
     private let findBar = NSStackView()
     private let back = NSButton(image: NSImage(systemSymbolName: "chevron.left", accessibilityDescription: "Back")!, target: nil, action: nil)
     private let content = DropView()
+    let sidebar: NavigationSidebarController
+    let splitController = NSSplitViewController()
+    private let documentController = NSViewController()
+    private lazy var sidebarItem = NSSplitViewItem(sidebarWithViewController: sidebar)
+    private let preferences: UserDefaults
+    private var sidebarRequested: Bool
+    private var settingSidebar = false
+    private var sidebarObservation: NSKeyValueObservation?
+    private var navigationSerial = 0
+    var isSidebarVisible: Bool { !sidebarItem.isCollapsed }
     var onClose: (() -> Void)?
     var openFiles: (([URL]) -> Void)?
     var canNavigate: ((URL) -> Bool)?
 
-    init() {
+    init(preferences: UserDefaults = .standard) {
+        self.preferences = preferences
+        sidebar = NavigationSidebarController(preferences: preferences)
+        sidebarRequested = preferences.object(forKey: "sidebar.visible") == nil ? true : preferences.bool(forKey: "sidebar.visible")
         resources = ResourceHandler(root: Bundle.main.resourceURL!.appendingPathComponent("Web"))
         let config = WKWebViewConfiguration()
         config.websiteDataStore = .nonPersistent()
@@ -46,6 +61,24 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         window.title = "Leaflit"; window.minSize = NSSize(width: 480, height: 340); window.center(); window.delegate = self
         window.isReleasedWhenClosed = false
         setupLayout(); setupToolbar()
+        sidebar.onFileSelected = { [weak self] url in
+            guard let self, let folder = self.sidebar.folder else { return }
+            self.navigate(to: url, within: folder)
+        }
+        sidebar.onHeadingSelected = { [weak self] id in
+            guard let self, self.displayedRevision == self.revision.current else { return }
+            self.webView.callAsyncJavaScript("window.Leaflit.anchor(value)", arguments: ["value": id], in: nil, in: .page) { _ in }
+        }
+        sidebar.onModeChanged = { [weak self] in self?.updateOutlineTracking() }
+        sidebarObservation = sidebarItem.observe(\.isCollapsed, options: [.new]) { [weak self] _, _ in
+            guard let self, !self.settingSidebar else { return }
+            if (self.window?.contentView?.bounds.width ?? 900) >= 620 {
+                self.sidebarRequested = !self.sidebarItem.isCollapsed
+                self.preferences.set(self.sidebarRequested, forKey: "sidebar.visible")
+            }
+            self.updateOutlineTracking()
+        }
+        NotificationCenter.default.addObserver(self, selector: #selector(splitResized), name: NSSplitView.didResizeSubviewsNotification, object: splitController.splitView)
         webView.navigationDelegate = self
         config.userContentController.add(self, name: "leaflit")
         webView.setAccessibilityLabel("Markdown document")
@@ -65,7 +98,20 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
     private func setupLayout() {
         content.onDrop = { [weak self] urls in self?.openFiles?(urls) }
         webView.onDrop = { [weak self] urls in self?.openFiles?(urls) }
-        window?.contentView = content
+        let root = DropView(); root.onDrop = { [weak self] in self?.openFiles?($0) }
+        window?.contentView = root
+        documentController.view = content
+        splitController.splitView.isVertical = true; splitController.splitView.dividerStyle = .thin
+        sidebarItem.minimumThickness = 180; sidebarItem.maximumThickness = 320
+        sidebarItem.canCollapse = true; sidebarItem.preferredThicknessFraction = 230.0 / 900.0
+        let documentItem = NSSplitViewItem(viewController: documentController); documentItem.minimumThickness = 300
+        splitController.addSplitViewItem(sidebarItem); splitController.addSplitViewItem(documentItem)
+        let split = splitController.view; split.translatesAutoresizingMaskIntoConstraints = false; root.addSubview(split)
+        NSLayoutConstraint.activate([split.leadingAnchor.constraint(equalTo: root.leadingAnchor), split.trailingAnchor.constraint(equalTo: root.trailingAnchor), split.topAnchor.constraint(equalTo: root.topAnchor), split.bottomAnchor.constraint(equalTo: root.bottomAnchor)])
+        root.layoutSubtreeIfNeeded()
+        let savedWidth = preferences.double(forKey: "sidebar.width")
+        splitController.splitView.setPosition(savedWidth > 0 ? min(320, max(180, savedWidth)) : 230, ofDividerAt: 0)
+        updateSidebarLayout()
         let icon = NSImageView(image: NSImage(systemSymbolName: "doc.text", accessibilityDescription: "Markdown file")!)
         icon.symbolConfiguration = NSImage.SymbolConfiguration(pointSize: 44, weight: .light)
         let title = NSTextField(labelWithString: "Open a Markdown file")
@@ -80,8 +126,10 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         findBar.orientation = .horizontal; findBar.spacing = 8
         [search, resultLabel, button("Previous", #selector(findPrevious)), button("Next", #selector(findNext)), button("Done", #selector(hideFind))].forEach(findBar.addArrangedSubview)
         search.widthAnchor.constraint(greaterThanOrEqualToConstant: 120).isActive = true
+        search.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         errorBar.orientation = .horizontal; errorBar.spacing = 8
         status.lineBreakMode = .byWordWrapping; status.maximumNumberOfLines = 3
+        status.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         status.setAccessibilityRole(.staticText)
         [status, button("Retry", #selector(retry)), button("Open…", #selector(openPanel))].forEach(errorBar.addArrangedSubview)
         let stack = NSStackView(views: [findBar, errorBar, webView]); stack.orientation = .vertical; stack.spacing = 0; stack.alignment = .width
@@ -95,9 +143,13 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         back.target = self; back.action = #selector(goBack); back.isEnabled = false; back.toolTip = "Back (⌘[)"
     }
     func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] { toolbarDefaultItemIdentifiers(toolbar) }
-    func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] { [.init("back"), .init("open"), .flexibleSpace, .init("find"), .init("smaller"), .init("larger")] }
+    func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] { [.init("sidebar"), .init("back"), .init("open"), .flexibleSpace, .init("find"), .init("smaller"), .init("larger")] }
     func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier id: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
         let item = NSToolbarItem(itemIdentifier: id)
+        if id.rawValue == "sidebar" {
+            item.label = "Toggle Sidebar"; item.image = NSImage(systemSymbolName: "sidebar.left", accessibilityDescription: "Toggle Sidebar")
+            item.target = self; item.action = #selector(toggleSidebar); item.toolTip = "Show or hide sidebar (⌃⌘S)"; return item
+        }
         if id.rawValue == "back" { item.view = back; item.label = "Back"; return item }
         let options: [String: (String, String, Selector)] = ["open": ("Open", "folder", #selector(openPanel)), "find": ("Find", "magnifyingglass", #selector(showFind)), "smaller": ("Zoom Out", "minus.magnifyingglass", #selector(zoomOut)), "larger": ("Zoom In", "plus.magnifyingglass", #selector(zoomIn))]
         guard let (label, symbol, action) = options[id.rawValue] else { return nil }
@@ -105,11 +157,15 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         item.image = NSImage(systemSymbolName: symbol, accessibilityDescription: label)
         return item
     }
-    func open(_ url: URL, location: [String: Any]? = nil) {
+    func open(_ url: URL, location: [String: Any]? = nil, within folder: FolderTree? = nil) {
+        guard folder?.canOpen(url) != false else { showError("This file is no longer available in the selected folder."); return }
+        navigationSerial += 1
+        documentScope = folder
         documentURL = DocumentPath.canonical(url); pendingLocation = location
         requestedAt = Date()
         lastText = nil; watcher = nil
         window?.title = url.lastPathComponent; window?.representedURL = documentURL
+        sidebar.setDocument(documentURL)
         watcher = FileWatcher(url: documentURL!) { [weak self] in self?.reload(preserve: true) }
         reload(preserve: false)
     }
@@ -119,8 +175,9 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         let request = readRevision.next()
         let requestDate = preserve ? Date() : requestedAt
         let location = pendingLocation; pendingLocation = nil
+        let scope = documentScope
         reading = Task { [weak self] in
-            let result = await Task.detached(priority: .userInitiated) { Result { try DocumentSnapshot.read(url) } }.value
+            let result = await Task.detached(priority: .userInitiated) { Result { try FolderDocumentReader.read(url, within: scope) } }.value
             guard let self, !Task.isCancelled, self.readRevision.accepts(request) else { return }
             switch result {
             case .failure:
@@ -145,12 +202,20 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         guard message.frameInfo.isMainFrame, let body = message.body as? [String: Any], let type = body["type"] as? String else { return }
         switch type {
-        case "ready": ready = true; reload(preserve: false)
+        case "ready": ready = true; updateOutlineTracking(); reload(preserve: false)
         case "displayed":
             guard documentURL?.path == renderedURL?.path, let number = body["revision"] as? Int, revision.accepts(number), let phase = body["phase"] as? String else { return }
             measurements[phase] = Date().timeIntervalSince(requestedAt) * 1000
-            performanceLog.info("display phase=\(phase, privacy: .public) ms=\(self.measurements[phase] ?? 0, privacy: .public)")
-            if phase == "body" { displayedRevision = number } else if phase == "complete" { completedRevision = number }
+            let timing = body["timing"] as? String ?? "unknown"
+            displayTimings[phase] = ["animationFrames", "timerFallback"].contains(timing) ? timing : "unknown"
+            performanceLog.info("display phase=\(phase, privacy: .public) ms=\(self.measurements[phase] ?? 0, privacy: .public) timing=\(self.displayTimings[phase] ?? "unknown", privacy: .public)")
+            if phase == "body" {
+                displayedRevision = number
+                let messages = body["headings"] as? [[String: Any]] ?? []
+                sidebar.setHeadings(messages.compactMap(DocumentHeading.init(message:)))
+            } else if phase == "complete" { completedRevision = number }
+        case "activeHeading":
+            if documentURL == renderedURL, let number = body["revision"] as? Int, revision.accepts(number), let id = body["id"] as? String { sidebar.setActiveHeading(id) }
         case "navigate":
             if documentURL?.path == renderedURL?.path, let number = body["revision"] as? Int, revision.accepts(number), let href = body["href"] as? String { navigate(href) }
         case "appearance": lastText = nil; reload(preserve: true)
@@ -162,16 +227,48 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
         switch DocumentPath.link(href, from: url) {
         case .anchor(let anchor): webView.callAsyncJavaScript("window.Leaflit.anchor(value)", arguments: ["value": anchor], in: nil, in: .page) { _ in }
         case .document(let target, let anchor):
-            guard canNavigate?(target) != false else { return }
-            webView.callAsyncJavaScript("return window.Leaflit.position()", arguments: [:], in: nil, in: .page) { [weak self] result in
-                guard let self, self.documentURL == url else { return }
-                let location = (try? result.get()) as? [String: Any] ?? [:]
-                self.history.append((url, location)); self.back.isEnabled = true
-                self.open(target, location: anchor.map { ["anchor": $0] })
-            }
+            navigate(to: target, anchor: anchor)
         case .web(let target): NSWorkspace.shared.open(target)
         case .blocked: NSSound.beep()
         }
+    }
+    func navigate(to raw: URL, anchor: String? = nil, within folder: FolderTree? = nil) {
+        let target = DocumentPath.canonical(raw)
+        guard DocumentPath.isMarkdown(target), folder?.canOpen(raw) != false, canNavigate?(target) != false else { sidebar.setDocument(documentURL); return }
+        if target == documentURL { if let anchor { navigate("#" + anchor) }; return }
+        guard let origin = documentURL, ready else { open(raw, location: anchor.map { ["anchor": $0] }, within: folder); return }
+        navigationSerial += 1; let request = navigationSerial
+        webView.callAsyncJavaScript("return window.Leaflit.position()", arguments: [:], in: nil, in: .page) { [weak self] result in
+            guard let self, self.navigationSerial == request, self.documentURL == origin else { return }
+            if let folder, (self.sidebar.folder?.root != folder.root || !folder.canOpen(raw)) { self.sidebar.setDocument(self.documentURL); return }
+            guard self.canNavigate?(target) != false else { self.sidebar.setDocument(self.documentURL); return }
+            let location = (try? result.get()) as? [String: Any] ?? [:]
+            self.history.append((origin, location, self.documentScope)); self.back.isEnabled = true
+            self.open(raw, location: anchor.map { ["anchor": $0] }, within: folder)
+        }
+    }
+    @objc func toggleSidebar() {
+        sidebarRequested = !isSidebarVisible; preferences.set(sidebarRequested, forKey: "sidebar.visible")
+        if sidebarRequested, let window, window.contentView!.bounds.width < 620 {
+            window.setContentSize(NSSize(width: 720, height: window.contentView!.bounds.height))
+        }
+        updateSidebarLayout()
+    }
+    func windowDidResize(_ notification: Notification) { updateSidebarLayout() }
+    private func updateSidebarLayout() {
+        settingSidebar = true
+        sidebarItem.isCollapsed = !sidebarRequested || (window?.contentView?.bounds.width ?? 900) < 620
+        settingSidebar = false
+        updateOutlineTracking()
+    }
+    @objc private func splitResized() {
+        guard !settingSidebar, isSidebarVisible else { return }
+        let width = sidebar.view.frame.width
+        if (180...320).contains(width) { preferences.set(Double(width), forKey: "sidebar.width") }
+    }
+    private func updateOutlineTracking() {
+        guard ready else { return }
+        webView.callAsyncJavaScript("window.Leaflit.setOutlineEnabled(value)", arguments: ["value": isSidebarVisible && sidebar.mode == .outline], in: nil, in: .page) { _ in }
     }
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if navigationAction.request.url?.absoluteString == "leaflit://app/index.html", navigationAction.navigationType == .other { decisionHandler(.allow) }
@@ -186,8 +283,8 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
     }
     @objc func openPanel() { (NSApp.delegate as? AppDelegate)?.openPanel(nil) }
     @objc func goBack() {
-        guard let (url, location) = history.popLast() else { return }
-        back.isEnabled = !history.isEmpty; open(url, location: location)
+        guard let (url, location, scope) = history.popLast() else { return }
+        back.isEnabled = !history.isEmpty; open(url, location: location, within: scope)
     }
     @objc func showFind() { findBar.isHidden = false; window?.makeFirstResponder(search) }
     override func cancelOperation(_ sender: Any?) { hideFind() }
@@ -205,6 +302,7 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
     @objc func actualSize() { webView.pageZoom = 1 }
     func windowWillClose(_ notification: Notification) {
         reading?.cancel(); watcher = nil
+        sidebar.stop(); sidebarObservation = nil; NotificationCenter.default.removeObserver(self)
         webView.configuration.userContentController.removeScriptMessageHandler(forName: "leaflit")
         onClose?()
     }

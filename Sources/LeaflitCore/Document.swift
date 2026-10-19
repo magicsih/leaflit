@@ -37,6 +37,10 @@ public struct DocumentSnapshot: Sendable {
         let url = DocumentPath.canonical(url)
         guard DocumentPath.isMarkdown(url) else { throw CocoaError(.fileReadUnsupportedScheme) }
         let data = try Data(contentsOf: url)
+        return try decode(data, at: url)
+    }
+    public static func decode(_ data: Data, at url: URL) throws -> DocumentSnapshot {
+        guard DocumentPath.isMarkdown(url) else { throw CocoaError(.fileReadUnsupportedScheme) }
         guard let text = String(data: data, encoding: .utf8) else { throw CocoaError(.fileReadInapplicableStringEncoding) }
         return DocumentSnapshot(url: url, text: text, images: LocalImages.references(in: text, document: url))
     }

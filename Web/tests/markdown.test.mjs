@@ -22,3 +22,13 @@ test('Mermaid source is escaped before deferred rendering', () => {
   assert.equal(result.diagrams.length, 1);
   assert.ok(result.html.includes('&lt;script&gt;'));
 });
+test('outline labels share rendered anchors, preserve hierarchy and contain plain text', () => {
+  const result = markdown('# Hello **world**\n\n#### [A link](next.md)\n\n## 한글 😀\n\n## 한글 😀\n\n```md\n# not a heading\n```', 7);
+  assert.deepEqual(result.headings, [
+    { id:'hello-world', title:'Hello world', level:1 },
+    { id:'a-link', title:'A link', level:4 },
+    { id:'한글-😀', title:'한글 😀', level:2 },
+    { id:'한글-😀-1', title:'한글 😀', level:2 }
+  ]);
+  for (const heading of result.headings) assert.ok(result.html.includes(`id="${heading.id}"`));
+});

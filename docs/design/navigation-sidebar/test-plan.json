@@ -1,0 +1,46 @@
+{
+  "feature": "Files and Outline navigation sidebar",
+  "baselineTag": "v0.1.0",
+  "baselineSHA": "af15d5d01d0f11e3c4558c793fad43da3c7fc082",
+  "approval": {
+    "requirements": "2026-10-19 owner selected both Files and Outline with a top or bottom mode control",
+    "designAndTestPlan": "Approved by the owner on 2026-10-19: proceed with the proposed design, complete regression and three independent rendered review rounds through a local Release candidate."
+  },
+  "policyScope": "Personal magicsih repository; follow repository and global development rules, without Seorilabs organization contracts.",
+  "level": "L3",
+  "redesign": true,
+  "independentUIRounds": 3,
+  "executor": "independent reviewer agents for the complete verification and rendered reviews",
+  "environments": ["local macOS development app", "local macOS Release app"],
+  "release": {
+    "target": "Apple Silicon macOS app",
+    "endpoint": "verified-local-release-candidate",
+    "remotePublication": false,
+    "reason": "This proposal selects navigation behavior; a new public release endpoint has not been requested."
+  },
+  "coverage": [
+    "Files and Outline switching preserves document, scroll position and search state",
+    "explicit folder choice, lazy directory expansion, filtering, sorting and root containment",
+    "Unicode and space-containing paths, symbolic links, inaccessible and missing folders",
+    "same-window file navigation, duplicate-window activation, Back and relative links outside the selected root",
+    "directory updates, additions, removals and replacement saves without broad indexing",
+    "nested, skipped-level, duplicate and Unicode headings with rendered anchor identity",
+    "outline selection follows scrolling and updates after saves without stale revision events",
+    "empty files and folders, missing headings and failure/recovery states",
+    "sidebar visibility, resizing, saved preferences and narrow-window collapse",
+    "480pt and 640pt windows, 200% document zoom, light and dark appearances",
+    "actual keyboard input, focus transfer, menu toggle and VoiceOver navigation",
+    "existing opening routes, search, copy, zoom, diagrams, math, images, refresh, security and source immutability",
+    "fixed 100KiB documents, 1MiB and 5MiB documents, and large folder/heading lists",
+    "matched baseline memory and latency with sidebar hidden, Files active and Outline active",
+    "normal Release build on the final verified candidate"
+  ],
+  "plannedCommands": ["./scripts/verify.sh Release", "./scripts/build.sh Release"],
+  "uiReviewRounds": [
+    {"round": 1, "focus": "Files, Outline, same-window navigation and Back"},
+    {"round": 2, "focus": "small windows, zoom, appearance, keyboard, VoiceOver and recovery"},
+    {"round": 3, "focus": "final integrated regression, refresh, stale results, memory and source immutability"}
+  ],
+  "evidence": "Record exact candidate SHA, environment, actual actions, screenshots, logs and observed outcomes. Unexecuted or blocked checks remain unverified. The conceptual preview is not product runtime evidence.",
+  "implementationTesting": "Add meaningful failing core and integration tests before behavior changes. Validate visual layout through the actual app rather than asserting implementation details."
+}

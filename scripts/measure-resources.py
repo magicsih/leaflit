@@ -1,17 +1,25 @@
 #!/usr/bin/env python3
 """Measure the app and new WebKit helpers during one isolated 60-second run."""
+import argparse
+import datetime as dt
 import json
 import os
 from pathlib import Path
+import plistlib
 import re
 import signal
 import subprocess
 import time
 root = Path(__file__).resolve().parent.parent
-app = root / 'build/Leaflit-0.1.0/Leaflit.app'
+version = plistlib.loads((root / 'Sources/Leaflit/Info.plist').read_bytes())['CFBundleShortVersionString']
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--app', type=Path, default=root / f'build/Leaflit-{version}/Leaflit.app')
+parser.add_argument('--output', type=Path, default=root / 'build/benchmarks' / dt.datetime.now().strftime('resources-%Y%m%d-%H%M%S'), help='New evidence directory; existing output is preserved')
+args = parser.parse_args()
+app = args.app.resolve()
 fixture = root / 'Fixtures/Benchmark100KiB.md'
-out = root / 'build/benchmarks'
-out.mkdir(parents=True, exist_ok=True)
+out = args.output.resolve()
+out.mkdir(parents=True, exist_ok=False)
 def processes():
     result = {}
     rows = subprocess.check_output(['/bin/ps', '-axo', 'pid=,rss=,time=,comm='], text=True).splitlines()

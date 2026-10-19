@@ -15,6 +15,7 @@ import shutil
 import subprocess
 
 ROOT = Path(__file__).resolve().parent.parent
+VERSION = plistlib.loads((ROOT / 'Sources/Leaflit/Info.plist').read_bytes())['CFBundleShortVersionString']
 
 
 def run(*args):
@@ -71,7 +72,7 @@ def prepare(args):
         raise ValueError('Commit the release candidate before packaging')
     evidence = json.loads((ROOT / 'build/verification.json').read_text())
     validate_evidence(evidence, source_sha)
-    build = ROOT / 'build/Leaflit-0.1.0'
+    build = ROOT / f'build/Leaflit-{VERSION}'
     info = json.loads((build / 'build-info.json').read_text())
     if info['sourceSHA'] != source_sha:
         raise ValueError('The clean Release build must match the verified candidate')
@@ -81,7 +82,7 @@ def prepare(args):
         raise ValueError('The candidate executable differs from its build record')
     bundle = plistlib.loads((source / 'Contents/Info.plist').read_bytes())
     version = bundle['CFBundleShortVersionString']
-    if bundle['CFBundleIdentifier'] != 'io.github.magicsih.leaflit' or version != '0.1.0':
+    if bundle['CFBundleIdentifier'] != 'io.github.magicsih.leaflit' or version != VERSION:
         raise ValueError('Unexpected bundle identity or version')
     if run('/usr/bin/lipo', '-archs', source / 'Contents/MacOS/Leaflit').strip() != 'arm64':
         raise ValueError('Only the verified Apple Silicon architecture is supported')
@@ -94,7 +95,7 @@ def prepare(args):
     shutil.copy2(ROOT / 'scripts/leaflit', payload / 'leaflit')
     shutil.copy2(ROOT / 'LICENSE', payload / 'LICENSE')
     (payload / 'README.txt').write_text(
-        'Leaflit 0.1.0 for Apple Silicon\n\n'
+        f'Leaflit {version} for Apple Silicon\n\n'
         'Move Leaflit.app to Applications and open it. Keep the standalone leaflit\n'
         'launcher beside the app, or use the launcher inside Contents/Resources.\n'
         'Homebrew also installs the app and command:\n'
@@ -165,7 +166,7 @@ def finalize(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--out', type=Path, default=ROOT / 'build/releases/0.1.0')
+    parser.add_argument('--out', type=Path, default=ROOT / f'build/releases/{VERSION}')
     commands = parser.add_subparsers(dest='command', required=True)
     signing = commands.add_parser('prepare')
     signing.add_argument('--identity', required=True, help='Existing public Developer ID identity or fingerprint')

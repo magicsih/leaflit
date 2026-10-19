@@ -1,0 +1,295 @@
+import XCTest
+import AppKit
+import LeaflitCore
+@testable import Leaflit
+
+@MainActor
+extension ReaderTests {
+    private func fileRow(_ name: String) -> Int? {
+        let list = reader.sidebar.filesView
+        return (0..<list.numberOfRows).first { (list.view(atColumn: 0, row: $0, makeIfNecessary: true) as? NSTableCellView)?.textField?.stringValue == name }
+    }
+    private func sidebarViews(_ view: NSView) -> [NSView] { [view] + view.subviews.flatMap(sidebarViews) }
+
+    func testRenderingAndOutlineProgressWhenAnimationFramesPause() async throws {
+        try await loaded("# Initial")
+        let previous = reader.completedRevision
+        _ = try await js("window.requestAnimationFrame = () => 0; window.cancelAnimationFrame = () => {}; return true")
+        reader.sidebar.setMode(.outline)
+        let text = "# Paused\n\n$x^2$\n\n```mermaid\nflowchart LR\n A[Open] --> B[Read]\n```\n\n" + String(repeating: "A paragraph.\n\n", count: 40) + "## Target\n\n" + String(repeating: "More reading.\n\n", count: 40)
+        let url = try write(text, name: "paused.md")
+        reader.open(url)
+        try await wait({ self.reader.completedRevision > previous && self.reader.sidebar.headings.first?.id == "paused" }, seconds: 5)
+        guard reader.completedRevision > previous else { return }
+        XCTAssertEqual(reader.displayTimings["body"], "timerFallback")
+        XCTAssertEqual(reader.displayTimings["complete"], "timerFallback")
+        try await assertJS("return document.querySelectorAll('.katex').length", 1)
+        try await assertJS("return document.querySelectorAll('.diagram svg').length", 1)
+        _ = try await js("document.getElementById('target').scrollIntoView(); return true")
+        try await wait({ self.reader.sidebar.activeHeadingID == "target" }, seconds: 2)
+        XCTAssertEqual(try String(contentsOf: url, encoding: .utf8), text)
+    }
+
+    func testModeSegmentsRemainVisibleAfterDividerShrinks() async throws {
+        try await loaded("# Sidebar")
+        let sidebar = reader.sidebar, control = sidebar.modeControl
+        func segmentFrames(_ children: [Any]) -> [NSRect] {
+            children.flatMap { child -> [NSRect] in
+                guard let element = child as? NSAccessibilityProtocol else { return [] }
+                if element.accessibilityRole() == .radioButton { return [element.accessibilityFrame()] }
+                return segmentFrames(element.accessibilityChildren() ?? [])
+            }
+        }
+        for width in [320.0, 188.0] {
+            reader.splitController.splitView.setPosition(width, ofDividerAt: 0)
+            reader.window?.contentView?.layoutSubtreeIfNeeded()
+            try await Task.sleep(nanoseconds: 100_000_000)
+            if width < 200 { XCTAssertLessThanOrEqual(sidebar.view.bounds.width, 190, "The divider must actually shrink the pane") }
+            else { XCTAssertGreaterThanOrEqual(sidebar.view.bounds.width, 300) }
+            let frames = segmentFrames(control.accessibilityChildren() ?? [])
+            print("LEAFLIT_SEGMENTS pane=\(sidebar.view.bounds.width) frame=\(control.frame) bounds=\(control.bounds) widths=\(control.width(forSegment: 0)),\(control.width(forSegment: 1)) AX=\(frames)")
+            XCTAssertLessThanOrEqual(control.frame.maxX, sidebar.view.bounds.width)
+            XCTAssertEqual(frames.count, 2)
+            guard frames.count == 2 else { continue }
+            XCTAssertEqual(frames[0].width, frames[1].width, accuracy: 2)
+            for frame in frames {
+                XCTAssertGreaterThanOrEqual(frame.width, 60)
+                XCTAssertLessThanOrEqual(frame.maxX, control.accessibilityFrame().maxX + 1)
+            }
+        }
+    }
+
+    func testScrollDuringInitialPausedFrameWaitIsPreserved() async throws {
+        try await loaded("# Initial")
+        let previous = reader.completedRevision
+        _ = try await js("window.requestAnimationFrame = () => 0; window.cancelAnimationFrame = () => {}; return true")
+        reader.open(try write("# Long\n\n" + String(repeating: "A paragraph to keep reading.\n\n", count: 100)))
+        let during = try await js("for(let n=0;n<100 && document.querySelector('h1')?.textContent !== 'Long';n++) await new Promise(resolve=>setTimeout(resolve,10)); await new Promise(resolve=>setTimeout(resolve,75)); scrollTo(0,1200); return scrollY") as? Double ?? 0
+        XCTAssertGreaterThan(during, 1000)
+        try await wait({ self.reader.completedRevision > previous }, seconds: 3)
+        let y = try await js("return scrollY") as? Double ?? 0
+        XCTAssertGreaterThan(y, 1000, "Completion must preserve scrolling during the first frame wait")
+    }
+
+    func testFindAndRecoveryActionsFitMinimumWindowWidth() async throws {
+        let url = try write("# Recovery\n\nA paragraph.")
+        reader.open(url); try await wait { self.reader.completedRevision > 0 }
+        reader.showFind()
+        let root = try XCTUnwrap(reader.window?.contentView)
+        let search = try XCTUnwrap(sidebarViews(root).compactMap { $0 as? NSSearchField }.first)
+        search.stringValue = String(repeating: "Find a paragraph ", count: 20)
+        try FileManager.default.removeItem(at: url); reader.reload(preserve: true)
+        try await wait { self.sidebarViews(root).compactMap { $0 as? NSTextField }.contains { $0.stringValue.contains("could not be refreshed") } }
+        reader.window?.setContentSize(NSSize(width: 480, height: 500)); root.layoutSubtreeIfNeeded()
+        try await Task.sleep(nanoseconds: 100_000_000)
+        print("LEAFLIT_RECOVERY_LAYOUT frame=\(root.frame) fitting=\(root.fittingSize) search=\(search.frame)")
+        XCTAssertEqual(root.bounds.width, 480, accuracy: 1)
+        XCTAssertLessThanOrEqual(root.fittingSize.width, 480)
+        for button in sidebarViews(root).compactMap({ $0 as? NSButton }) where !button.isHiddenOrHasHiddenAncestor {
+            let frame = root.convert(button.bounds, from: button)
+            XCTAssertGreaterThanOrEqual(frame.minX, 0)
+            XCTAssertLessThanOrEqual(frame.maxX, root.bounds.width + 1)
+        }
+    }
+
+    func testExpandedFolderSettlesWithoutRepeatedExpansionAndAllowsNavigation() async throws {
+        let nested = dir.appendingPathComponent("Guides")
+        try FileManager.default.createDirectory(at: nested, withIntermediateDirectories: true)
+        try "# Guide".write(to: nested.appendingPathComponent("guide.md"), atomically: true, encoding: .utf8)
+        let first = try write("# First", name: "first.md"), next = try write("# Next", name: "next.md")
+        reader.open(first); try await wait { self.reader.completedRevision > 0 }
+        reader.sidebar.chooseFolder(dir); try await wait { self.fileRow("Guides") != nil }
+        let list = reader.sidebar.filesView
+        var expansions = 0
+        let observer = NotificationCenter.default.addObserver(forName: NSOutlineView.itemWillExpandNotification, object: list, queue: .main) { _ in expansions += 1 }
+        defer { NotificationCenter.default.removeObserver(observer) }
+        list.expandItem(list.item(atRow: try XCTUnwrap(fileRow("Guides"))))
+        try await wait { self.fileRow("guide.md") != nil }
+        try await Task.sleep(nanoseconds: 250_000_000)
+        let settledExpansions = expansions
+        try await Task.sleep(nanoseconds: 300_000_000)
+        XCTAssertEqual(expansions, settledExpansions, "A directory with no changes must settle after expansion")
+        let revision = reader.completedRevision
+        list.selectRowIndexes(IndexSet(integer: try XCTUnwrap(fileRow("next.md"))), byExtendingSelection: false)
+        try await wait { self.reader.documentURL == DocumentPath.canonical(next) && self.reader.completedRevision > revision }
+        try await assertJS("return document.querySelector('h1').textContent", "Next")
+    }
+
+    func testReexpandedFolderRefreshesChangesMadeWhileCollapsed() async throws {
+        let nested = dir.appendingPathComponent("Guides")
+        try FileManager.default.createDirectory(at: nested, withIntermediateDirectories: true)
+        try "# Old".write(to: nested.appendingPathComponent("old.md"), atomically: true, encoding: .utf8)
+        reader.sidebar.chooseFolder(dir)
+        try await wait { self.fileRow("Guides") != nil }
+        let list = reader.sidebar.filesView
+        let folder = try XCTUnwrap(list.item(atRow: try XCTUnwrap(fileRow("Guides"))))
+        list.expandItem(folder)
+        try await wait { self.fileRow("old.md") != nil }
+        list.collapseItem(folder)
+        try "# New".write(to: nested.appendingPathComponent("new.md"), atomically: true, encoding: .utf8)
+        try await Task.sleep(nanoseconds: 180_000_000)
+        list.expandItem(folder)
+        try await wait { self.fileRow("new.md") != nil }
+    }
+
+    func testOtherDirectoryRefreshPreservesOutstandingFolderErrorAndRetry() async throws {
+        let a = dir.appendingPathComponent("A"), b = dir.appendingPathComponent("B")
+        for folder in [a, b] { try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true) }
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: a.path) }
+        try "# A".write(to: a.appendingPathComponent("a.md"), atomically: true, encoding: .utf8)
+        try "# B".write(to: b.appendingPathComponent("b.md"), atomically: true, encoding: .utf8)
+        reader.sidebar.chooseFolder(dir)
+        try await wait { self.fileRow("A") != nil && self.fileRow("B") != nil }
+        let list = reader.sidebar.filesView
+        list.expandItem(list.item(atRow: try XCTUnwrap(fileRow("A"))))
+        list.expandItem(list.item(atRow: try XCTUnwrap(fileRow("B"))))
+        try await wait { self.fileRow("a.md") != nil && self.fileRow("b.md") != nil }
+        try FileManager.default.setAttributes([.posixPermissions: 0], ofItemAtPath: a.path)
+        XCTAssertThrowsError(try FolderTree(root: dir).entries(in: a))
+        func hasError() -> Bool { sidebarViews(reader.sidebar.view).compactMap { $0 as? NSTextField }.contains { $0.stringValue == "Could not read A." } }
+        try await wait { hasError() }
+        try "# Added".write(to: b.appendingPathComponent("added.md"), atomically: true, encoding: .utf8)
+        try await wait { self.fileRow("added.md") != nil }
+        XCTAssertTrue(hasError())
+        let retry = try XCTUnwrap(sidebarViews(reader.sidebar.view).compactMap { $0 as? NSButton }.first { $0.title == "Retry" })
+        XCTAssertFalse(retry.isHiddenOrHasHiddenAncestor)
+        try FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: a.path)
+        retry.performClick(nil)
+        try await wait { !hasError() && self.fileRow("a.md") != nil }
+    }
+
+    func testFilesRevalidateAfterAsyncPositionAndRestoreRejectedSelection() async throws {
+        let root = dir.appendingPathComponent("Root")
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        let first = root.appendingPathComponent("first.md"), next = root.appendingPathComponent("next.md")
+        let outside = try write("# Outside", name: "outside.md")
+        try "# First".write(to: first, atomically: true, encoding: .utf8)
+        try "# Next".write(to: next, atomically: true, encoding: .utf8)
+        reader.open(first); try await wait { self.reader.completedRevision > 0 }
+        reader.sidebar.chooseFolder(root); try await wait { self.fileRow("next.md") != nil }
+        let list = reader.sidebar.filesView
+        var activatedExisting = false
+        reader.canNavigate = { _ in activatedExisting = true; return false }
+        list.selectRowIndexes(IndexSet(integer: try XCTUnwrap(fileRow("next.md"))), byExtendingSelection: false)
+        XCTAssertTrue(activatedExisting)
+        XCTAssertEqual(list.selectedRow, fileRow("first.md"))
+        reader.canNavigate = nil
+        _ = try await js("window.Leaflit.position = async () => { await new Promise(resolve => setTimeout(resolve, 250)); return {y:0}; }; return true")
+        list.selectRowIndexes(IndexSet(integer: try XCTUnwrap(fileRow("next.md"))), byExtendingSelection: false)
+        try FileManager.default.removeItem(at: next)
+        try FileManager.default.createSymbolicLink(at: next, withDestinationURL: outside)
+        try await Task.sleep(nanoseconds: 500_000_000)
+        XCTAssertEqual(reader.documentURL, DocumentPath.canonical(first))
+        try await assertJS("return document.querySelector('h1').textContent", "First")
+        XCTAssertThrowsError(try FolderDocumentReader.read(next, within: FolderTree(root: root)))
+        XCTAssertEqual(try FolderDocumentReader.read(first, within: FolderTree(root: root)).text, "# First")
+    }
+
+    func testFileOpenedElsewhereDuringPositionCaptureKeepsOriginalDocument() async throws {
+        let first = try write("# First", name: "first.md"), next = try write("# Next", name: "next.md")
+        reader.open(first); try await wait { self.reader.completedRevision > 0 }
+        reader.sidebar.chooseFolder(dir); try await wait { self.fileRow("next.md") != nil }
+        _ = try await js("window.Leaflit.position = async () => { await new Promise(resolve => setTimeout(resolve, 250)); return {y:0}; }; return true")
+        var openedElsewhere = false, evaluations = 0
+        reader.canNavigate = { target in
+            XCTAssertEqual(target, DocumentPath.canonical(next))
+            evaluations += 1
+            return !openedElsewhere
+        }
+        let list = reader.sidebar.filesView
+        list.selectRowIndexes(IndexSet(integer: try XCTUnwrap(fileRow("next.md"))), byExtendingSelection: false)
+        XCTAssertEqual(evaluations, 1)
+        openedElsewhere = true
+        try await wait { evaluations == 2 }
+        XCTAssertEqual(reader.documentURL, DocumentPath.canonical(first))
+        XCTAssertEqual(list.selectedRow, fileRow("first.md"))
+        try await assertJS("return document.querySelector('h1').textContent", "First")
+    }
+
+    func testSidebarModesPreserveBodyAndNativeOutlineNavigates() async throws {
+        let text = "# Hello **world**\n\n" + (0..<70).map { "## Section \($0)\n\nA paragraph to read.\n\n" }.joined() + "## 한글 😀\n\n## 한글 😀"
+        let url = try write(text); let before = try Data(contentsOf: url)
+        reader.open(url); try await wait { self.reader.completedRevision > 0 && self.reader.sidebar.headings.count == 73 }
+        XCTAssertEqual(reader.sidebar.headings.first?.title, "Hello world")
+        XCTAssertEqual(reader.sidebar.headings.suffix(2).map(\.id), ["한글-😀", "한글-😀-1"])
+        _ = try await js("scrollTo(0, 1600); return true")
+        let y = try await js("return scrollY") as? Double ?? 0
+        let revision = reader.completedRevision
+        reader.showFind()
+        reader.sidebar.setMode(.outline)
+        try await wait { self.reader.sidebar.activeHeadingID != nil }
+        reader.sidebar.setMode(.files)
+        reader.sidebar.setMode(.outline)
+        XCTAssertEqual(reader.completedRevision, revision)
+        let afterY = try await js("return scrollY") as? Double ?? 0
+        XCTAssertEqual(afterY, y, accuracy: 2)
+        let list = reader.sidebar.outlineView
+        let row = (0..<list.numberOfRows).first { (list.view(atColumn: 0, row: $0, makeIfNecessary: true) as? NSTableCellView)?.textField?.stringValue == "Section 40" }
+        list.selectRowIndexes(IndexSet(integer: try XCTUnwrap(row)), byExtendingSelection: false)
+        try await wait { self.reader.sidebar.activeHeadingID == "section-40" }
+        let top = try await js("return document.getElementById('section-40').getBoundingClientRect().top") as? Double ?? 100
+        XCTAssertEqual(top, 24, accuracy: 2)
+        _ = try await js("window.webkit.messageHandlers.leaflit.postMessage({type:'activeHeading',revision:0,id:'obsolete'}); return true")
+        try await Task.sleep(nanoseconds: 80_000_000)
+        XCTAssertEqual(reader.sidebar.activeHeadingID, "section-40")
+        XCTAssertEqual(try Data(contentsOf: url), before)
+    }
+
+    func testFilesNavigationBackAndDirectoryUpdates() async throws {
+        let first = try write("# First\n\nA source document.", name: "first.md")
+        let next = try write("# Next", name: "next space.md")
+        reader.open(first); try await wait { self.reader.completedRevision > 0 }
+        reader.sidebar.chooseFolder(dir)
+        let list = reader.sidebar.filesView
+        func row(_ name: String) -> Int? {
+            (0..<list.numberOfRows).first { (list.view(atColumn: 0, row: $0, makeIfNecessary: true) as? NSTableCellView)?.textField?.stringValue == name }
+        }
+        try await wait { row("next space.md") != nil }
+        let revision = reader.completedRevision
+        list.selectRowIndexes(IndexSet(integer: try XCTUnwrap(row("next space.md"))), byExtendingSelection: false)
+        try await wait { self.reader.documentURL == DocumentPath.canonical(next) && self.reader.completedRevision > revision }
+        try await assertJS("return document.querySelector('h1').textContent", "Next")
+        let nextRevision = reader.completedRevision; reader.goBack()
+        try await wait { self.reader.documentURL == DocumentPath.canonical(first) && self.reader.completedRevision > nextRevision }
+        let added = try write("# Added", name: "new 한글.md")
+        try await wait { row("new 한글.md") != nil }
+        try FileManager.default.removeItem(at: added)
+        try await wait { row("new 한글.md") == nil }
+        XCTAssertEqual(reader.documentURL, DocumentPath.canonical(first))
+    }
+
+    func testOutlineReplacementSaveAndLatestNavigationWins() async throws {
+        let initial = try write("# Initial\n\n## Old", name: "initial.md")
+        reader.open(initial); try await wait { self.reader.completedRevision > 0 }
+        reader.sidebar.setMode(.outline)
+        let revision = reader.completedRevision
+        try "# Updated\n\n#### Deep".write(to: initial, atomically: true, encoding: .utf8)
+        try await wait { self.reader.completedRevision > revision && self.reader.sidebar.headings.first?.id == "updated" }
+        XCTAssertEqual(reader.sidebar.headings.map(\.level), [1, 4])
+        let intermediate = try write("# Intermediate", name: "intermediate.md")
+        let latest = try write("# Latest", name: "latest.md")
+        reader.navigate(to: intermediate); reader.navigate(to: latest)
+        try await wait { self.reader.documentURL == DocumentPath.canonical(latest) && self.reader.completedRevision == self.reader.revision.current }
+        XCTAssertEqual(reader.sidebar.headings.map(\.id), ["latest"])
+        try await assertJS("return document.querySelector('h1').textContent", "Latest")
+    }
+
+    func testSidebarNarrowWindowAndVisibilityPreference() async throws {
+        try await loaded("# Narrow\n\nA readable document.")
+        reader.window?.setContentSize(NSSize(width: 480, height: 500))
+        try await wait { !self.reader.isSidebarVisible }
+        XCTAssertGreaterThan(reader.webView.frame.width, 400)
+        reader.window?.setContentSize(NSSize(width: 900, height: 700))
+        try await wait { self.reader.isSidebarVisible }
+        let menu = try XCTUnwrap(NSApp.mainMenu?.item(withTitle: "View")?.submenu)
+        let item = try XCTUnwrap(menu.item(withTitle: "Toggle Sidebar"))
+        XCTAssertEqual(item.keyEquivalent, "s")
+        XCTAssertTrue(item.keyEquivalentModifierMask.contains([.command, .control]))
+        menu.performActionForItem(at: menu.index(of: item))
+        try await wait { !self.reader.isSidebarVisible }
+        reader.window?.setContentSize(NSSize(width: 640, height: 500))
+        reader.window?.setContentSize(NSSize(width: 900, height: 700))
+        XCTAssertFalse(reader.isSidebarVisible)
+        reader.toggleSidebar(); XCTAssertTrue(reader.isSidebarVisible)
+    }
+}

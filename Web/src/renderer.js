@@ -1,10 +1,31 @@
 import { markdown } from './markdown.js';
+import { waitForFrames } from './frames.js';
 let current = 0;
 let scrollVersion = 0;
-addEventListener('scroll', () => { scrollVersion++; }, { passive: true });
+addEventListener('scroll', () => { scrollVersion++; scheduleOutline(); }, { passive: true });
 const article = document.querySelector('article');
 const post = payload => window.webkit?.messageHandlers?.leaflit?.postMessage(payload);
-const frame = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+let outlineEnabled = false, outlinePending = false, headingIDs = [], headingNodes = [], activeHeading = null;
+function scheduleOutline() {
+  if (!outlineEnabled || outlinePending) return;
+  outlinePending = true;
+  waitForFrames(1).then(() => {
+    outlinePending = false;
+    if (!outlineEnabled) return;
+    let low = 0, high = headingNodes.length - 1, index = 0;
+    while (low <= high) {
+      const middle = (low + high) >> 1;
+      if (headingNodes[middle].getBoundingClientRect().top <= 40) { index = middle; low = middle + 1; }
+      else high = middle - 1;
+    }
+    const id = headingNodes[index]?.id || '';
+    if (id !== activeHeading) { activeHeading = id; post({ type: 'activeHeading', revision: current, id }); }
+  });
+}
+function trackOutline() {
+  headingNodes = outlineEnabled ? headingIDs.map(id => document.getElementById(id)).filter(Boolean) : [];
+  activeHeading = null; scheduleOutline();
+}
 function position() {
   const blocks = [...article.querySelectorAll('[data-source-line]')];
   const block = blocks.find(node => node.getBoundingClientRect().bottom >= 0);
@@ -31,6 +52,7 @@ function failure(node, source, kind) {
 }
 window.Leaflit = {
   position,
+  setOutlineEnabled(value) { const enabled = value === true; if (enabled === outlineEnabled) return; outlineEnabled = enabled; trackOutline(); },
   anchor(value) { document.getElementById(value)?.scrollIntoView(); },
   async render(payload) {
     current = payload.revision;
@@ -39,14 +61,18 @@ window.Leaflit = {
     const result = markdown(payload.text, revision);
     if (revision !== current) return;
     article.innerHTML = result.html;
+    headingIDs = result.headings.map(heading => heading.id); trackOutline();
     article.querySelectorAll('img').forEach(img => {
       img.addEventListener('error', () => { const fallback = document.createElement('span'); fallback.className = 'image-fallback'; fallback.textContent = `${img.alt || 'Image'} — image unavailable`; img.replaceWith(fallback); });
     });
     restore(saved);
-    await frame();
+    const restoredY = scrollY;
+    let timing = await waitForFrames();
     if (revision !== current) return;
+    const movedBeforeBody = Math.abs(scrollY - restoredY) > 0.5;
     const initialScrollVersion = scrollVersion;
-    post({ type: 'displayed', revision, phase: 'body', milliseconds: performance.now() - start });
+    post({ type: 'displayed', revision, phase: 'body', milliseconds: performance.now() - start, timing, headings: result.headings });
+    scheduleOutline();
     if (result.math.length) {
       const { default: katex } = await import('katex');
       if (!document.querySelector('#katex-css')) {
@@ -81,9 +107,9 @@ window.Leaflit = {
       }
     }
     if (revision !== current) return;
-    if (scrollVersion === initialScrollVersion) restore(saved);
-    await frame();
-    if (revision === current) post({ type: 'displayed', revision, phase: 'complete', milliseconds: performance.now() - start });
+    if (!movedBeforeBody && scrollVersion === initialScrollVersion) restore(saved);
+    if (await waitForFrames() === 'timerFallback') timing = 'timerFallback';
+    if (revision === current) { post({ type: 'displayed', revision, phase: 'complete', milliseconds: performance.now() - start, timing }); scheduleOutline(); }
   }
 };
 document.addEventListener('click', event => {
