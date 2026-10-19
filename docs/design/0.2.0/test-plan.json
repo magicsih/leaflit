@@ -1,0 +1,58 @@
+{
+  "feature": "0.2.0 distribution of the existing sidebar and centered icon",
+  "approval": {
+    "date": "2026-10-19",
+    "instruction": "Owner requested public 0.2.0 release",
+    "previousEndpoint": "verified local Release candidate",
+    "currentEndpoint": "public GitHub preview, personal Homebrew and public-artifact verification"
+  },
+  "policyScope": "Personal magicsih repository; repository and global rules apply",
+  "level": "L3",
+  "redesign": false,
+  "executor": "Independent executor for complete source verification; bounded signed/downloaded distribution smoke separately recorded",
+  "environments": [
+    "local macOS development app",
+    "local macOS Release app",
+    "signed extracted distribution",
+    "unauthenticated public download",
+    "isolated Homebrew app directory"
+  ],
+  "release": {
+    "version": "0.2.0",
+    "target": "Apple Silicon macOS",
+    "endpoint": "public",
+    "githubPrerelease": true,
+    "personalHomebrewTap": "magicsih/homebrew-tap"
+  },
+  "carriedEvidence": [
+    "docs/qa/sidebar-ui-round1.md",
+    "docs/qa/sidebar-ui-round2.md",
+    "docs/qa/sidebar-ui-round3.md",
+    "docs/qa/sidebar-report.md",
+    "docs/qa/branding-and-site.md"
+  ],
+  "commands": [
+    "./scripts/verify.sh Release",
+    "./scripts/build.sh Release"
+  ],
+  "distributionChecks": [
+    "Developer ID fingerprint/team and hardened runtime",
+    "Accepted notarization, stapling, strict signature and Gatekeeper",
+    "Exact artifact Files/Outline, navigation, math/diagrams and immutable inputs",
+    "Remote tag and draft asset identity before publication",
+    "Unauthenticated public download identity and actual launch",
+    "Personal cask syntax/style/audit with full outcomes retained",
+    "Isolated quarantined Homebrew install and launcher",
+    "Live README/site version and assets"
+  ],
+  "preservation": "Preserve installed 0.1.0 and existing app processes, preferences, historical build output and user work",
+  "coverageLimits": [
+    "Earlier macOS #5",
+    "Spoken VoiceOver #4",
+    "Actual Finder drops #8",
+    "Network-isolated run #12",
+    "Width persistence #13",
+    "Icon surfaces #9"
+  ],
+  "evidence": "Record exact source, executable/archive hashes, actor, time, environment and executed outcome; preserve failed attempts separately."
+}
