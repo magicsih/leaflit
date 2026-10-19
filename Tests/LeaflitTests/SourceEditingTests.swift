@@ -55,15 +55,15 @@ extension ReaderTests {
     func testSourceOutlineOpensCurrentUnsavedReadPreviewAtAnchor() async throws {
         try await loaded("# Original\n\n## Target\n\nEnd")
         reader.sidebar.setMode(.outline)
-        try await source("# Draft\n\n" + String(repeating: "Paragraph.\n\n", count: 80) + "## Target\n\nEnd")
+        try await source("# Draft\n\n" + String(repeating: "Paragraph.\n\n", count: 80) + "## Target\n\n" + String(repeating: "Tail.\n\n", count: 40))
         let previous = reader.completedRevision
         reader.sidebar.onHeadingSelected?("target")
         try await wait { self.reader.completedRevision > previous && self.reader.completedRevision == self.reader.revision.current }
         XCTAssertEqual(reader.editing.mode, .read); XCTAssertTrue(reader.editing.isDirty)
         try await assertJS("return document.querySelector('h1').textContent", "Draft")
         let top = try await js("return document.getElementById('target').getBoundingClientRect().top") as? Double ?? 1000
-        XCTAssertLessThan(top, 400)
-        XCTAssertTrue(reader.window?.firstResponder === reader.webView)
+        XCTAssertEqual(top, 24, accuracy: 2)
+        XCTAssertTrue((reader.window?.firstResponder as? NSView)?.isDescendant(of: reader.webView) == true)
     }
     func testMultiwindowQuitDiscardThenCancelSynchronizesDiscardedEditor() async throws {
         try await loaded("# First"); try await source("# First draft")
