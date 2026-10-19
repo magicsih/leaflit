@@ -109,9 +109,12 @@ extension ReaderTests {
         weak var releasedWindow = closing?.window
         weak var releasedWebView = closing?.webView
         weak var releasedSidebar = closing?.sidebar
+        var closeCalls = 0
+        closing?.onClose = { closeCalls += 1 }
         closing?.open(url); closing?.showWindow(nil)
         try await wait { (closing?.completedRevision ?? 0) > 0 }
         closing?.close(); closing = nil
+        XCTAssertEqual(closeCalls, 1)
         try await wait({ releasedReader == nil && releasedWindow == nil && releasedWebView == nil && releasedSidebar == nil }, seconds: 5)
         print("LEAFLIT_CLOSED_LIFETIME reader=\(releasedReader != nil) window=\(releasedWindow != nil) webView=\(releasedWebView != nil) sidebar=\(releasedSidebar != nil)")
 

@@ -315,7 +315,8 @@ final class ReaderController: NSWindowController, WKScriptMessageHandler, WKNavi
     @objc func actualSize() { webView.pageZoom = 1 }
     func windowWillClose(_ notification: Notification) {
         reading?.cancel(); watcher = nil
-        sidebar.stop(); sidebarObservation = nil; NotificationCenter.default.removeObserver(self)
+        sidebar.stop(); sidebarObservation = nil
+        NotificationCenter.default.removeObserver(self, name: NSSplitView.didResizeSubviewsNotification, object: splitController.splitView)
         webView.configuration.userContentController.removeScriptMessageHandler(forName: "leaflit")
         onClose?()
     }
