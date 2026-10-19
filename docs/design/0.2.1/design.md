@@ -20,4 +20,4 @@ Use independent L3 regression on local macOS development and ordinary Release ap
 
 Additional native checks target keyboard navigation, appearance and icon surfaces, offline execution and Finder opening routes. Existing tool or environment gaps stay unverified when they cannot be executed faithfully. Earlier macOS and spoken VoiceOver are not inferred from current-host accessibility labels. Android and iOS are outside scope.
 
-The installed 0.1.0 app, public 0.2.0 artifacts, existing processes, preferences and historical evidence are preserved. New outputs use 0.2.1 and ignored `build/product-followups/`. No document editing, migration, credentials, signing or network service is introduced.
+The installed app, public 0.2.0 artifacts, existing processes, preferences and historical evidence are preserved. Live preflight found the installed app already updated to signed 0.2.0 and no Leaflit process running; this work did not update or close them. New outputs use 0.2.1 and ignored `build/product-followups/`. No document editing, migration, credentials, signing or network service is introduced.

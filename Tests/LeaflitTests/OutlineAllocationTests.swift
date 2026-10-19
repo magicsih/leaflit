@@ -113,6 +113,7 @@ extension ReaderTests {
         try await wait { (closing?.completedRevision ?? 0) > 0 }
         closing?.close(); closing = nil
         try await wait({ releasedReader == nil && releasedWindow == nil && releasedWebView == nil && releasedSidebar == nil }, seconds: 5)
+        print("LEAFLIT_CLOSED_LIFETIME reader=\(releasedReader != nil) window=\(releasedWindow != nil) webView=\(releasedWebView != nil) sidebar=\(releasedSidebar != nil)")
 
         try await assertJS("return document.querySelector('h1').textContent", "Survivor")
         let found: Bool = await withCheckedContinuation { continuation in
