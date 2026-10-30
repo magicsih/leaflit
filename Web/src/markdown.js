@@ -5,6 +5,18 @@ import { tex } from '@mdit/plugin-tex';
 export const escape = text => text.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
 export function markdown(source, revision) {
   const md = new MarkdownIt({ html: false, linkify: false, typographer: false }).use(taskLists);
+  md.block.ruler.before('hr', 'front_matter', (state, startLine, endLine, silent) => {
+    if (startLine !== 0 || state.parentType !== 'root') return false;
+    const line = index => state.src.slice(state.bMarks[index], state.eMarks[index]);
+    if (!/^\ufeff?---[ \t]*$/.test(line(0))) return false;
+    for (let end = 1; end < endLine; end++) {
+      if (!/^(?:---|\.\.\.)[ \t]*$/.test(line(end))) continue;
+      // Advance without removing source lines so Edit Source retains original positions.
+      if (!silent) state.line = end + 1;
+      return true;
+    }
+    return false;
+  });
   const math = [], diagrams = [], headings = new Map(), outline = [];
   md.use(tex, { delimiters: 'all', render: () => '' });
   const renderMath = (tokens, idx, display) => {
