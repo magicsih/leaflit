@@ -18,4 +18,4 @@ Preserve original parser line numbers for scroll restoration and Edit Source. So
 
 This follows the top-of-file metadata convention documented by [Obsidian](https://help.obsidian.md/properties) and [Jekyll](https://jekyllrb.com/docs/front-matter/). The Markdown parser's block rule preserves source positions without removing lines from the original text. Reverting the rule restores the previous display without a data migration.
 
-Use [the L1 development test plan](test-plan.json). This is a rendering correction, not a new screen or a release candidate. Publication, signing, notarization and replacing the installed app remain outside this task.
+Use [the L1 development test plan](test-plan.json). This is a rendering correction, not a new screen or a release candidate. App publication, signing, notarization and replacing the installed app remain outside this task. See [the verification record](../../qa/front-matter.md) for executed checks and evidence retention.
