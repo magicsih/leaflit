@@ -7,9 +7,18 @@
   "level": "L3",
   "redesign": false,
   "executor": "Independent agent for complete Release verification, ordinary build and signed-artifact smoke",
-  "environments": ["local macOS development and ordinary Release", "signed, public-download and Homebrew-installed macOS app"],
-  "release": {"target": "Apple Silicon macOS", "endpoint": "public"},
-  "commands": ["scripts/verify.sh Release", "scripts/build.sh Release"],
+  "environments": [
+    "local macOS development and ordinary Release",
+    "signed, public-download and Homebrew-installed macOS app"
+  ],
+  "release": {
+    "target": "Apple Silicon macOS",
+    "endpoint": "public"
+  },
+  "commands": [
+    "scripts/verify.sh Release",
+    "scripts/build.sh Release"
+  ],
   "coverage": [
     "Full existing renderer, core, native Source, file-safety, navigation and packaging regression",
     "Metadata omitted from Read/Outline with unchanged Source and original error-repair positions",
@@ -20,5 +29,16 @@
     "README/website version links, responsive rendering and live Pages readback"
   ],
   "carriedUI": "Three existing Source UI rounds; bounded rendering fix adds no new screen or redesign",
-  "limits": "Older macOS, spoken VoiceOver, Finder drop, true offline isolation and historical performance/clipboard/appearance/initial Read issues remain unverified unless actually executed. No Android or iOS device use."
+  "limits": "Older macOS, spoken VoiceOver, Finder drop, true offline isolation and historical performance/clipboard/appearance/initial Read issues remain unverified unless actually executed. No Android or iOS device use.",
+  "followupReleaseClassification": {
+    "approval": "Owner requested release publication and continuation after the preview on 2026-10-30",
+    "classification": "regular-release-and-latest",
+    "artifactChange": false,
+    "scope": [
+      "Existing GitHub release flags, title and release notes",
+      "Complete online cask audit",
+      "Current README/website wording and live readback"
+    ],
+    "sourceEvidence": "Reuse unchanged fixed product and signed artifact; no new runtime or redesign claim"
+  }
 }

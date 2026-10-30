@@ -1,6 +1,6 @@
 # Public website
 
-This directory is the public English introduction at <https://magicsih.github.io/leaflit/>. It explains the terminal-to-Markdown use case and links the public 0.3.1 preview, including Read, explicit Source editing, Files, Outline and the Leaf Page icon.
+This directory is the public English introduction at <https://magicsih.github.io/leaflit/>. It explains the terminal-to-Markdown use case and links the public 0.3.1 release, including Read, explicit Source editing, Files, Outline and the Leaf Page icon.
 
 ## Local preview
 

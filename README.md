@@ -6,9 +6,9 @@
 
 A read-first Markdown viewer for macOS, built for the plans, specs and notes that come out of LLM terminal workflows. Open a file in a dedicated native window, read rendered tables, Mermaid diagrams and LaTeX math, then return to your terminal. Saved changes appear automatically.
 
-The public **0.3.1 preview** starts in Read and offers native Source editing for small corrections. Preview unsaved changes, then save explicitly. There is no autosave or automatic formatting.
+The public **0.3.1 release** starts in Read and offers native Source editing for small corrections. Preview unsaved changes, then save explicitly. There is no autosave or automatic formatting.
 
-[Website](https://magicsih.github.io/leaflit/), [Download the 0.3.1 preview](https://github.com/magicsih/leaflit/releases/tag/v0.3.1), [Issues](https://github.com/magicsih/leaflit/issues)
+[Website](https://magicsih.github.io/leaflit/), [Download the 0.3.1 release](https://github.com/magicsih/leaflit/releases/tag/v0.3.1), [Issues](https://github.com/magicsih/leaflit/issues)
 
 ## Why Leaflit exists
 
@@ -30,7 +30,7 @@ Built with Swift, AppKit and WKWebView for Apple Silicon. The deployment target 
 
 ## Install
 
-Download the [0.3.1 preview](https://github.com/magicsih/leaflit/releases/tag/v0.3.1), extract the ZIP and move Leaflit.app to Applications. The public app is signed and notarized. Homebrew installs the app and launcher together:
+Download the [0.3.1 release](https://github.com/magicsih/leaflit/releases/tag/v0.3.1), extract the ZIP and move Leaflit.app to Applications. The public app is signed and notarized. Homebrew installs the app and launcher together:
 
 ```sh
 brew install --cask magicsih/tap/leaflit
@@ -105,7 +105,7 @@ The public app includes the Leaf Page icon and optional Files/Outline sidebar. T
 
 Verified with Xcode 27, Node.js 24 and npm 11. Dependencies are pinned in `package-lock.json`. Ruby is needed only when regenerating the Xcode project, not for a normal build.
 
-Source builds produce 0.3.1. The public preview adds Developer ID signing and notarization to that verified product.
+Source builds produce 0.3.1. The public release adds Developer ID signing and notarization to that verified product.
 The [0.3.0 verification report](docs/qa/source-editing-0.3.0.md) records explicit editing and its verification. The historical [0.2.1 report](docs/qa/product-followups-0.2.1.md) retains sidebar fixes, document-switching improvements and its separate measurements.
 
 ```sh
