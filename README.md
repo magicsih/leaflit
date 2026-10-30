@@ -6,9 +6,9 @@
 
 A read-first Markdown viewer for macOS, built for the plans, specs and notes that come out of LLM terminal workflows. Open a file in a dedicated native window, read rendered tables, Mermaid diagrams and LaTeX math, then return to your terminal. Saved changes appear automatically.
 
-The public **0.3.0 preview** starts in Read and offers native Source editing for small corrections. Preview unsaved changes, then save explicitly. There is no autosave or automatic formatting.
+The public **0.3.1 preview** starts in Read and offers native Source editing for small corrections. Preview unsaved changes, then save explicitly. There is no autosave or automatic formatting.
 
-[Website](https://magicsih.github.io/leaflit/), [Download the 0.3.0 preview](https://github.com/magicsih/leaflit/releases/tag/v0.3.0), [Issues](https://github.com/magicsih/leaflit/issues)
+[Website](https://magicsih.github.io/leaflit/), [Download the 0.3.1 preview](https://github.com/magicsih/leaflit/releases/tag/v0.3.1), [Issues](https://github.com/magicsih/leaflit/issues)
 
 ## Why Leaflit exists
 
@@ -30,7 +30,7 @@ Built with Swift, AppKit and WKWebView for Apple Silicon. The deployment target 
 
 ## Install
 
-Download the [0.3.0 preview](https://github.com/magicsih/leaflit/releases/tag/v0.3.0), extract the ZIP and move Leaflit.app to Applications. The public app is signed and notarized. Homebrew installs the app and launcher together:
+Download the [0.3.1 preview](https://github.com/magicsih/leaflit/releases/tag/v0.3.1), extract the ZIP and move Leaflit.app to Applications. The public app is signed and notarized. Homebrew installs the app and launcher together:
 
 ```sh
 brew install --cask magicsih/tap/leaflit
@@ -40,7 +40,7 @@ brew update
 brew upgrade --cask magicsih/tap/leaflit
 ```
 
-The launcher does not change Finder's default application. The [public distribution checks](docs/releases/0.3.0-verification.md) cover the downloaded app and Homebrew installation. See the [release procedure](docs/releasing.md) for signing, publication and artifact verification.
+The launcher does not change Finder's default application. The [public distribution checks](docs/releases/0.3.1-verification.md) cover the downloaded app and Homebrew installation. See the [release procedure](docs/releasing.md) for signing, publication and artifact verification.
 
 ## Work in chda. Read in Leaflit.
 
@@ -58,6 +58,7 @@ chda also has a built-in local browser preview for quick Markdown checks. Leafli
 
 - Open `.md`, `.markdown` and `.mdown` files from Finder, the Open menu, drag and drop, or the `leaflit` launcher.
 - Read tables, strikethrough, disabled task lists, code blocks, local PNG/JPEG images, Mermaid diagrams and KaTeX math.
+- Keep leading YAML metadata out of Read and Outline while retaining it in Source.
 - Search, copy, zoom, follow heading anchors and navigate between relative Markdown links with Back.
 - Browse an explicitly chosen folder with Files, or switch to Outline to jump between headings. Collapse the sidebar for more reading space.
 - Use separate windows for separate files. Opening the same file again activates its existing window.
@@ -104,14 +105,14 @@ The public app includes the Leaf Page icon and optional Files/Outline sidebar. T
 
 Verified with Xcode 27, Node.js 24 and npm 11. Dependencies are pinned in `package-lock.json`. Ruby is needed only when regenerating the Xcode project, not for a normal build.
 
-Source builds produce 0.3.0. The public preview adds Developer ID signing and notarization to that verified product.
+Source builds produce 0.3.1. The public preview adds Developer ID signing and notarization to that verified product.
 The [0.3.0 verification report](docs/qa/source-editing-0.3.0.md) records explicit editing and its verification. The historical [0.2.1 report](docs/qa/product-followups-0.2.1.md) retains sidebar fixes, document-switching improvements and its separate measurements.
 
 ```sh
 ./scripts/build.sh
-open build/Leaflit-0.3.0/Leaflit.app
-./build/Leaflit-0.3.0/leaflit Fixtures/Welcome.md
-open -a "$PWD/build/Leaflit-0.3.0/Leaflit.app" "Fixtures/Next Page.markdown"
+open build/Leaflit-0.3.1/Leaflit.app
+./build/Leaflit-0.3.1/leaflit Fixtures/Welcome.md
+open -a "$PWD/build/Leaflit-0.3.1/Leaflit.app" "Fixtures/Next Page.markdown"
 ```
 
 For Xcode, build the web assets first, then run the Leaflit scheme:
