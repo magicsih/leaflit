@@ -1,0 +1,24 @@
+{
+  "version": "0.3.1",
+  "approval": "Owner requested app update and distribution on 2026-10-30",
+  "baselineTag": "v0.3.0",
+  "endpoint": "Public GitHub preview, personal Homebrew publication, verified public download, normal installed-app upgrade and README/Pages readback",
+  "policyScope": "Personal magicsih repository; repository and global rules apply",
+  "level": "L3",
+  "redesign": false,
+  "executor": "Independent agent for complete Release verification, ordinary build and signed-artifact smoke",
+  "environments": ["local macOS development and ordinary Release", "signed, public-download and Homebrew-installed macOS app"],
+  "release": {"target": "Apple Silicon macOS", "endpoint": "public"},
+  "commands": ["scripts/verify.sh Release", "scripts/build.sh Release"],
+  "coverage": [
+    "Full existing renderer, core, native Source, file-safety, navigation and packaging regression",
+    "Metadata omitted from Read/Outline with unchanged Source and original error-repair positions",
+    "Exact signed artifact, signature, notarization ticket, Gatekeeper and bundled launcher",
+    "Immutable remote tag/assets, unauthenticated download hash/security and actual app execution",
+    "Personal cask syntax, style and complete audit outcome",
+    "Verified backup and normal Homebrew upgrade, receipt, symlink, quarantine and installed execution",
+    "README/website version links, responsive rendering and live Pages readback"
+  ],
+  "carriedUI": "Three existing Source UI rounds; bounded rendering fix adds no new screen or redesign",
+  "limits": "Older macOS, spoken VoiceOver, Finder drop, true offline isolation and historical performance/clipboard/appearance/initial Read issues remain unverified unless actually executed. No Android or iOS device use."
+}
