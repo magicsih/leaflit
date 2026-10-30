@@ -14,3 +14,7 @@ Follow [the L3 test plan](test-plan.json) and [existing release procedure](../..
 6. Update README and the website after public assets exist, retain historical screenshot provenance, and read back the actual Pages deployment and public download links. Keep original evidence on NAS after verified copying and remove temporary build/download outputs.
 
 No credential replacement, official Homebrew cask submission, new architecture or unrelated product fix is included. A failure outside this approved scope remains an explicit gate or a tracked issue.
+
+## Follow-up regular Release publication
+
+After the preview and installed update were complete, the owner requested release publication and continued the operation on 2026-10-30. Promote the existing 0.3.1 release from prerelease to a regular GitHub Release and Latest, using the same release ID, tag, archive, checksum and manifest. Update current public wording, rerun the complete online cask audit, and verify provider/latest and website readback. Preserve the earlier preview observations and known coverage limits. This changes metadata and documentation only; the independently verified product and signed artifact are unchanged, so it does not require another app build or UI redesign review.

@@ -1,6 +1,6 @@
 # Releasing Leaflit
 
-Public distribution uses GitHub Releases and `magicsih/homebrew-tap`. The current public preview is 0.3.1 for Apple Silicon. Publishing a source commit, signing, notarization, release visibility and Homebrew availability are separate states.
+Public distribution uses GitHub Releases and `magicsih/homebrew-tap`. The current public release is 0.3.1 for Apple Silicon. Publishing a source commit, signing, notarization, release visibility and Homebrew availability are separate states.
 
 ## Prepare the candidate
 
@@ -49,7 +49,7 @@ Finalization requires Accepted status, verifies the unchanged upload/executable,
 
 Extract the final ZIP into an isolated folder and launch that actual signed app. Check rendering, opening a document, the bundled launcher and remaining release-specific file routes. Keep inaccessible or unexecuted behavior explicit.
 
-Create the owner-approved `v0.3.1` tag on the fixed candidate and push it. Create a draft GitHub release with the English notes in `docs/releases/0.3.1.md`, the final ZIP, `SHA256SUMS` and manifest. Confirm the remote tag SHA and uploaded asset hashes, then publish the same draft. Keep this release marked as a preview/prerelease.
+Create the owner-approved `v0.3.1` tag on the fixed candidate and push it. Create a draft GitHub release with the English notes in `docs/releases/0.3.1.md`, the final ZIP, `SHA256SUMS` and manifest. Confirm the remote tag SHA and uploaded asset hashes, then publish the same draft. Use the approved release classification. For 0.3.1, the owner subsequently requested a regular Release: clear prerelease status and designate the same verified assets as Latest. Preserve asset IDs, bytes and tag identity when changing release metadata.
 
 Download the public assets without authentication and compare their hashes with the verified local artifact. Extract the downloaded app, validate its signature, stapled ticket and Gatekeeper result, then launch it. Release visibility alone does not establish these checks.
 
