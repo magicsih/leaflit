@@ -309,4 +309,34 @@ extension ReaderTests {
         XCTAssertEqual(prefix, "# 😀\r\n\r\n```mermaid\r\ninvalid!\r\n```\r\n\r\n")
         XCTAssertEqual(try Data(contentsOf: url), Data([0xef, 0xbb, 0xbf]) + Data(raw.utf8))
     }
+    func testFrontMatterStaysInSourceWhileReadAndErrorRepairUseOnlyTheBody() async throws {
+        let metadata = "---\r\ntitle: Internal metadata\r\ntags: [draft, notes]\r\n---\r\n\r\n"
+        let raw = metadata + "# Project notes\r\n\r\n```mermaid\r\ninvalid!\r\n```\r\n"
+        let original = Data([0xef, 0xbb, 0xbf]) + Data(raw.utf8)
+        let url = dir.appendingPathComponent("Front matter.md"); try original.write(to: url)
+        reader.open(url); try await wait { self.reader.completedRevision > 0 }
+        XCTAssertEqual(reader.window?.title, "Front matter.md")
+        try await assertJS("return document.querySelector('article').firstElementChild.textContent", "Project notes")
+        try await assertJS("return document.querySelectorAll('h1,h2,h3,h4,h5,h6').length", 1)
+        try await assertJS("return document.querySelector('article').textContent.includes('Internal metadata')", false)
+        try await assertJS("return document.querySelector('h1').dataset.sourceLine", "5")
+        _ = try await js("document.querySelector('.edit-source').click(); return true")
+        try await wait { self.reader.editing.draft != nil }
+        let editor = try XCTUnwrap(reader.editing.textView)
+        XCTAssertEqual(editor.string, raw)
+        XCTAssertEqual((editor.string as NSString).substring(to: editor.selectedRange().location), metadata + "# Project notes\r\n\r\n")
+        XCTAssertEqual(try Data(contentsOf: url), original)
+
+        let edited = raw.replacingOccurrences(of: "# Project notes", with: "# Updated notes")
+        try await source(edited)
+        let previous = reader.completedRevision; reader.showRead()
+        try await wait { self.reader.completedRevision > previous }
+        try await assertJS("return document.querySelector('h1').textContent", "Updated notes")
+        try await assertJS("return document.querySelector('article').textContent.includes('Internal metadata')", false)
+        XCTAssertEqual(try Data(contentsOf: url), original)
+        let saved = expectation(description: "explicit save preserves front matter")
+        reader.editing.save { success in XCTAssertTrue(success); saved.fulfill() }
+        await fulfillment(of: [saved], timeout: 10)
+        XCTAssertEqual(try Data(contentsOf: url), Data([0xef, 0xbb, 0xbf]) + Data(edited.utf8))
+    }
 }

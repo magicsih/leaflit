@@ -1,6 +1,46 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { markdown } from '../src/markdown.js';
+test('leading front matter is metadata rather than a combined title or outline entry', () => {
+  const source = '---\ntitle: A long internal title\ntags: [draft, notes]\ndescription: Internal metadata\n---\n\n# Project notes\n\nBody text.';
+  const result = markdown(source, 1);
+  assert.deepEqual(result.headings, [{ id: 'project-notes', title: 'Project notes', level: 1 }]);
+  assert.ok(result.html.startsWith('<h1 data-source-line="6"'));
+  assert.ok(!result.html.includes('Internal metadata'));
+  assert.ok(!result.html.includes('A long internal title'));
+  assert.ok(!result.html.includes('<hr'));
+});
+test('front matter preserves original body lines across BOM and line endings', () => {
+  for (const newline of ['\n', '\r\n', '\r']) for (const close of ['---', '...']) {
+    const source = '\ufeff' + ['--- \t', 'title: Metadata', close + '\t', '', '# Body', '', '$\\bad$', '', '```mermaid', 'invalid!', '```'].join(newline);
+    const result = markdown(source, 2);
+    assert.deepEqual(result.headings, [{ id: 'body', title: 'Body', level: 1 }]);
+    assert.ok(result.html.startsWith('<h1 data-source-line="4"'));
+    assert.deepEqual(result.math.map(item => item.line), [6]);
+    assert.deepEqual(result.diagrams.map(item => item.line), [8]);
+  }
+});
+test('metadata does not create body content or activate optional renderers', () => {
+  const source = '---\ntitle: <script>alert(1)</script>\nformula: $x$\nexample: |\n  # Hidden heading\n  ```mermaid\n  invalid!\n  ```\n---';
+  const result = markdown(source, 3);
+  assert.equal(result.html, '');
+  assert.deepEqual(result.headings, []);
+  assert.deepEqual(result.math, []);
+  assert.deepEqual(result.diagrams, []);
+  assert.equal(markdown('---\n---\n\nBody without a title.', 4).html, '<p data-source-line="3">Body without a title.</p>\n');
+});
+test('incomplete front matter and ordinary Markdown separators remain visible', () => {
+  for (const [source, visible] of [
+    ['---\ntitle: Unclosed metadata\n\n# Body', 'Unclosed metadata'],
+    ['\n---\ntitle: Not at the start\n---', 'Not at the start'],
+    ['# Body\n\n---\n\nA real Setext heading\n---', 'A real Setext heading'],
+    ['```yaml\n---\ntitle: A visible example\n---\n```', 'A visible example'],
+    ['> ---\n> title: Quoted Markdown\n> ---', 'Quoted Markdown'],
+    ['- ---\n  title: Nested Markdown\n  ---', 'Nested Markdown']
+  ]) {
+    assert.ok(markdown(source, 5).html.includes(visible), visible);
+  }
+});
 test('GFM, Unicode, duplicate headings and readonly tasks', () => {
   const { html } = markdown('# 안녕 😀\n# 안녕 😀\n\n~~old~~\n\n- [x] done\n\n| A | B |\n|---|---|\n| 1 | 2 |', 1);
   for (const value of ['id="안녕-😀"', 'id="안녕-😀-1"', '<s>old</s>', 'disabled', '<table ']) assert.ok(html.includes(value), value);

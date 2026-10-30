@@ -1,0 +1,21 @@
+{
+  "feature": "Hide leading YAML front matter in Read and Outline",
+  "baselineSHA": "af9c1e89a490e4bd332fa8c095177a4c23fb544f",
+  "approval": "Owner requested conventional Markdown title display and identified leading --- metadata as the source on 2026-10-30",
+  "policyScope": "Personal magicsih repository; repository and global rules apply",
+  "level": "L1",
+  "redesign": false,
+  "executor": "Implementer",
+  "environments": ["local macOS development app", "WKWebView integration tests"],
+  "release": {"target": "Apple Silicon macOS", "endpoint": "verified-development-change", "remotePublication": false},
+  "commands": ["npm test", "scripts/verify.sh Release"],
+  "coverage": [
+    "Leading complete front matter is absent from rendered HTML and Outline",
+    "BOM, LF, CRLF, CR and closing delimiters preserve body source positions",
+    "Incomplete blocks, normal body separators, Setext headings and fenced examples remain visible",
+    "Metadata is not executed as Markdown, formulas, diagrams or scripts",
+    "Native Read/Source switching, draft preview and explicit saving preserve original metadata bytes",
+    "Actual rendered screen with a narrow window and native controls"
+  ],
+  "limits": "No public release, installed-app replacement or new independent L3 release verification."
+}
